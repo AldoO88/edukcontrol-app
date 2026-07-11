@@ -1,0 +1,18 @@
+/* =====================================================================
+   global.css
+   ---------------------------------------------------------------------
+   Hoja de estilos global de Tailwind. Se importa UNA sola vez desde
+   App.js (con `import './global.css';`) y NativeWind v4 se encarga
+   de inyectar las directivas en el bundler nativo.
+   ===================================================================== */
+
+/* Directivas de Tailwind que generan tres "capas" de estilos:
+   - base: reset CSS y estilos por defecto (normalize.css).
+   - components: estilos para clases que se repiten (p.ej. .btn).
+   - utilities: clases de utilidad (p.ej. .bg-slate-900, .rounded-2xl).
+   Estas directivas son interpretadas por NativeWind en build-time
+   y transformadas en StyleSheet nativo. NO se envían como CSS al
+   dispositivo (no tiene sentido, RN no tiene DOM). */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
