@@ -18,15 +18,22 @@ import { useState, useEffect, useCallback } from 'react';
 //     un wrapper de api.get(...) o similar).
 //   - deps: array de dependencias opcional. Si cambia, se vuelve a
 //     fetchear automáticamente. Default: [] (solo al montar).
+//   - options.initialData: valor inicial de data mientras el fetcher
+//     no ha terminado. Útil para que la UI no reciba `null` y pueda
+//     hacer `.length` o `.map` directamente. Default: undefined.
 // Devuelve:
-//   - data: lo que devolvió el fetcher (default: null).
+//   - data: lo que devolvió el fetcher (o initialData mientras carga).
 //   - loading: true mientras está cargando.
 //   - error: Error|null.
 //   - refresh(): recarga invocando fetcher() de nuevo.
 //   - setData: setter manual (útil para optimistic updates).
-export const useApiResource = (fetcher, deps = []) => {
-  // Estado de los datos. Inicia en null (no hemos fetcheado aún).
-  const [data, setData] = useState(null);
+export const useApiResource = (fetcher, deps = [], options = {}) => {
+  // Estado de los datos. Inicia en initialData (default undefined).
+  // Usar undefined (no null) es importante: el destructuring default
+  // `= []` del caller solo se activa cuando el valor es undefined.
+  // Si devolviéramos null, el `[]` nunca se aplicaría y `data.length`
+  // explotaría con "Cannot read property 'length' of null".
+  const [data, setData] = useState(options.initialData);
 
   // Estado de carga. Inicia en true porque asumimos carga al montar.
   const [loading, setLoading] = useState(true);
@@ -45,7 +52,7 @@ export const useApiResource = (fetcher, deps = []) => {
       // Ejecutamos el fetcher. Si el caller no pasa uno, no
       // hacemos nada (útil para hooks condicionales).
       if (typeof fetcher !== 'function') {
-        setData(null);
+        setData(options.initialData);
         return;
       }
       // Esperamos la promesa. Asumimos que el fetcher ya devuelve
@@ -60,7 +67,7 @@ export const useApiResource = (fetcher, deps = []) => {
       // Siempre desactivamos loading, incluso si hubo error.
       setLoading(false);
     }
-  }, [fetcher]);
+  }, [fetcher, options.initialData]);
 
   // useEffect: ejecuta load al montar y cuando cambien las deps.
   // Usamos la firma async-safe: load() devuelve una promesa que

@@ -12,8 +12,10 @@ import React from 'react';
 // Primitivas RN.
 import { View, Text } from 'react-native';
 
-// Hook de navegación.
-import { useNavigation } from '@react-navigation/native';
+// Hook de navegación (expo-router). Reemplaza al useNavigation
+// de @react-navigation/native desde la migración a Expo Router.
+// router.back() es el equivalente exacto de navigation.goBack().
+import { useRouter } from 'expo-router';
 
 // Sub-componentes.
 import IconButton from './IconButton';
@@ -41,16 +43,16 @@ const ScreenHeader = ({
   background = 'white',
   className = '',
 }) => {
-  // useNavigation siempre se llama (regla de hooks), aunque no
+  // useRouter siempre se llama (regla de hooks), aunque no
   // lo usemos si onBack está definido.
-  const navigation = useNavigation();
+  const router = useRouter();
 
-  // Handler de back: usa el custom si existe, si no navigation.goBack.
+  // Handler de back: usa el custom si existe, si no router.back.
   const handleBack = () => {
     if (typeof onBack === 'function') {
       onBack();
-    } else if (navigation && typeof navigation.goBack === 'function') {
-      navigation.goBack();
+    } else if (router && typeof router.back === 'function') {
+      router.back();
     }
   };
 

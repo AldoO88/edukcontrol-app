@@ -20,10 +20,10 @@ module.exports = {
   // incluirá en el bundle final (tree-shaking). Listamos TODOS
   // los directorios relevantes del proyecto.
   content: [
-    // Componentes, screens, hooks, etc. de src/.
+    // Rutas de Expo Router (layouts, screens, route groups).
+    './app/**/*.{js,jsx,ts,tsx}',
+    // Componentes, hooks, services, etc. de src/.
     './src/**/*.{js,jsx,ts,tsx}',
-    // App.js raíz (también usa className para el splash).
-    './App.js',
   ],
 
   // theme.extend: extendemos el theme de Tailwind con valores

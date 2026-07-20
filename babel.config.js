@@ -35,6 +35,14 @@ module.exports = function (api) {
     // Plugins: NativeWind v4 usa react-native-worklets (basado en
     // reanimated) para poder transformar las clases en runtime sin
     // perder rendimiento. El plugin DEBE ir el último en la lista.
+    //
+    // NOTA sobre expo-router/babel:
+    //   A partir de Expo SDK 50, expo-router funciona con
+    //   babel-preset-expo (ya incluido arriba). NO es necesario
+    //   añadir 'expo-router/babel' como plugin extra; el preset de
+    //   Expo ya trae internamente el transformador del filesystem
+    //   que expo-router necesita. Solo se requería en proyectos
+    //   legacy pre-SDK 50.
     plugins: ['react-native-worklets/plugin'],
   };
 };

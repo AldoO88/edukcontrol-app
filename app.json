@@ -7,6 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "scheme": "edukcontrol",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.edukcontrol.app"
@@ -30,7 +31,8 @@
           "icon": "./assets/notification-icon.png",
           "color": "#0f172a"
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

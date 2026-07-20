@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------
 // Instancia única de Axios configurada para toda la aplicación.
 // Centraliza:
-//   - URL base del backend (leída de variables de entorno Expo).
+//   - URL base del backend (leída de config.js).
 //   - Timeout por defecto para todas las peticiones.
 //   - Headers por defecto (Content-Type JSON, Accept JSON).
 //   - Interceptores de request/response para inyectar JWT y manejar
@@ -23,19 +23,23 @@ import axios from 'axios';
 // componentes) también tengan acceso al token.
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Importamos la URL base desde config.js. Este archivo resuelve la
+// IP según la plataforma (iOS/Android) y el puerto del backend.
+import { API_URL } from '../../config';
+
 // Constante con la clave de almacenamiento del token. Debe coincidir
 // con la definida en AuthContext.js. La centralizamos aquí para que
 // cualquier servicio pueda leerla sin importar el contexto de Auth.
 export const TOKEN_STORAGE_KEY = '@edukcontrol/token';
 
 // Creamos la instancia de axios con configuración por defecto.
-// "baseURL" se lee de EXPO_PUBLIC_API_URL (variable pública de Expo
-// disponible en cliente). Si no está definida, usamos un fallback
-// al entorno de desarrollo local: 10.0.2.2 es el alias que usa el
-// emulador de Android para "localhost" del host, y localhost funciona
-// en simulador de iOS. En producción debe inyectarse la URL real.
+// baseURL apunta al backend Node.js. SIN prefijo "/api" porque:
+//   - /auth/login está en la RAÍZ del backend (no bajo /api).
+//   - Los demás endpoints (students, groups, etc.) están bajo /api
+//     y se prefijarán en sus respectivos servicios.
+// "API_URL" ya incluye host:port (e.g. "http://192.168.100.52:5050").
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api',
+  baseURL: API_URL,
   // Timeout de 15 segundos: balance entre UX y tolerancia a redes
   // lentas. Las llamadas que tarden más se cancelarán automáticamente.
   timeout: 15000,

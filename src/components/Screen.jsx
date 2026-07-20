@@ -10,16 +10,20 @@
 // React.
 import React from 'react';
 
-// Primitivas RN: SafeAreaView, KeyboardAvoidingView, ScrollView,
-// Platform, View, RefreshControl.
+// Primitivas RN: KeyboardAvoidingView, ScrollView, Platform, View,
+// RefreshControl. SafeAreaView viene de react-native-safe-area-context
+// (la de react-native está deprecada y será eliminada).
 import {
-  SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   View,
   RefreshControl,
 } from 'react-native';
+
+// SafeAreaView de la librería recomendada (soporta edges, insets
+// actualizados, y no emite warning de deprecation).
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // clsx.
 import { clsx } from 'clsx';

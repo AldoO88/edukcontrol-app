@@ -49,5 +49,6 @@ export const useAuth = () => {
   // Si todo está bien, devolvemos el objeto del contexto. Los
   // consumidores destructurarán lo que necesiten, por ejemplo:
   // const { user, login, logout } = useAuth();
+  console.log('[useAuth] user:', context.user, 'isLoading:', context.isLoading);
   return context;
 };

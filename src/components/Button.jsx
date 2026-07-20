@@ -20,6 +20,7 @@ import { clsx } from 'clsx';
 // estilo de todos los botones tocando un solo lugar.
 const VARIANT_CLASSES = {
   primary: 'bg-slate-900 active:bg-slate-800',
+  sky: 'bg-sky-600 active:bg-sky-700',
   secondary: 'bg-white border border-slate-200 active:bg-slate-50',
   danger: 'bg-rose-500 active:bg-rose-600',
   ghost: 'bg-transparent',
@@ -29,6 +30,7 @@ const VARIANT_CLASSES = {
 // cambiar la variante cambie también el color del texto coherente.
 const VARIANT_TEXT = {
   primary: 'text-white',
+  sky: 'text-white',
   secondary: 'text-slate-900',
   danger: 'text-white',
   ghost: 'text-sky-600',
@@ -61,7 +63,7 @@ const Button = ({
   // Determinamos el color del icono: si no se pasa, derivamos
   // según la variante. Esto evita que el caller tenga que recordar
   // pasar el color cada vez.
-  const resolvedIconColor = iconColor || (variant === 'primary' || variant === 'danger' ? '#ffffff' : '#0f172a');
+  const resolvedIconColor = iconColor || (variant === 'primary' || variant === 'sky' || variant === 'danger' ? '#ffffff' : '#0f172a');
 
   // Flag derivado: el botón está inactivo si loading o disabled.
   // Lo calculamos una vez para no repetir la lógica en varios sitios.
@@ -106,7 +108,7 @@ const Button = ({
       {loading ? (
         <ActivityIndicator
           // Color del spinner coherente con la variante.
-          color={variant === 'primary' || variant === 'danger' ? '#ffffff' : '#0f172a'}
+          color={variant === 'primary' || variant === 'sky' || variant === 'danger' ? '#ffffff' : '#0f172a'}
           size="small"
         />
       ) : Icon ? (
