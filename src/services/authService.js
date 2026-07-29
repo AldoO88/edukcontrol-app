@@ -34,15 +34,37 @@ const payloadToAppUser = (payload) => {
   };
 };
 
-// login: hace POST /auth/login con email+password. Devuelve
+// login: hace POST /auth/login con phone+password. Devuelve
 // { success, user, message }. El caller (AuthContext) se encarga
 // de persistir el token.
-export const login = async (email, password) => {
+//
+// =====================================================================
+// CELULAR COMO IDENTIFICADOR
+// ---------------------------------------------------------------------
+// Anteriormente el login era email + password. Ahora es phone +
+// password, alineado con el flow de activación. El backend debe
+// esperar el campo "phone" en el body del POST /auth/login.
+// =====================================================================
+export const login = async (phone, password) => {
   try {
+    // DEBUG: log de lo que llega a authService. Si aquí el phone
+    // ya viene vacío, el bug está en useLoginForm/useForm (no
+    // nos llega el valor). Si aquí viene bien, el bug está en
+    // axios o en la red.
+    console.log('[DEBUG authService] login() params:', {
+      phone,
+      phoneLen: phone?.length,
+      passwordLen: password?.length,
+    });
+
     // Petición al endpoint real del backend.
     // El backend responde { authToken: "eyJ..." }.
     const response = await api.post('/auth/login', {
-      email: String(email || '').trim().toLowerCase(),
+      // El celular se envía tal cual llega del form (10 dígitos).
+      // No aplicamos lowercase ni trim agresivo: el celular es
+      // numérico, no tiene casing ni espacios significativos, pero
+      // trim() elimina espacios accidentales al inicio/final.
+      phone: String(phone || '').trim(),
       password,
     });
 
@@ -80,21 +102,21 @@ export const login = async (email, password) => {
     return { success: true, user, authToken };
   } catch (error) {
     // Mapear errores HTTP a mensajes amigables. El backend usa:
-    //   404 → "Email is not registered."
+    //   404 → "Phone is not registered."
     //   401 → "Incorrect password." / "This account is deactivated..."
     //   500 → error de servidor.
     const status = error?.response?.status;
     const serverMessage = error?.response?.data?.message;
 
     if (status === 404) {
-      return { success: false, message: 'El correo no está registrado.' };
+      return { success: false, message: 'El número de celular no está registrado.' };
     }
     if (status === 401) {
       // 401 puede ser "contraseña incorrecta" o "cuenta desactivada".
       // Mostramos el mensaje del backend si existe, sino uno genérico.
       return {
         success: false,
-        message: serverMessage || 'Credenciales incorrectas.',
+        message: serverMessage || 'Celular o contraseña incorrectos.',
       };
     }
     if (status === 400) {

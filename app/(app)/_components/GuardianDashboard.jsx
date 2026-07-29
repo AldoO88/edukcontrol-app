@@ -1,12 +1,9 @@
 // =====================================================================
 // app/(app)/_components/GuardianDashboard.jsx
 // ---------------------------------------------------------------------
-// Dashboard del PADRE / TUTOR (rol "guardian"). Pantalla principal
+// Dashboard del PADRE / TUTOR (rol "tutor"). Pantalla principal
 // post-login para usuarios con ese rol. Se monta desde el dispatcher
-// Top header: brand del producto + campana de notificaciones. Cada
-            // dashboard pinta su propio header (no hay uno global en
-            // el Stack raíz); la info del tenant (escuela) vive en
-            // la school info card justo debajo.
+// de app/(app)/dashboard.jsx cuando useAuth().userRole === 'tutor'.
 //
 // Componente privado del route group (app): vive en _components/
 // (prefijo "_") para que Expo Router lo ignore como ruta.
@@ -15,31 +12,32 @@
 //   ┌──────────────────────────────────┐
 //   │ Top header: EdukControl + 🔔    │  ← brand del producto + campana
 //   ├──────────────────────────────────┤
-//   │ School info card                 │  ← nombre de la escuela + ciclo
+//   │ School info card                 │  ← nombre + logo de la escuela
 //   ├──────────────────────────────────┤
-//   │ Hola, [user.name del payload]    │  ← saludo + rol + subtítulo
-//   │ Padre de Familia                 │
+//   │ Hola, [user.greeting del back]  │  ← saludo desde el backend
+//   │ [Padre de Familia]               │
+//   ├──────────────────────────────────┤
+//   │ Stats bar (N hijos activos)      │  ← resumen del backend
 //   ├──────────────────────────────────┤
 //   │ ┌────────────────────────────┐   │
-//   │ │ ChildCard (Carlos)         │   │  ← avatar + estado + métricas
+//   │ │ StudentCard (Juan)    ▌sky │   │  ← borde derecho alternado
 //   │ └────────────────────────────┘   │
 //   │ ┌────────────────────────────┐   │
-//   │ │ ChildCard (Ana)            │   │
+//   │ │ StudentCard (otro)   ▌emerald│
 //   │ └────────────────────────────┘   │
 //   ├──────────────────────────────────┤
 //   │ Bottom tab bar (5 tabs)          │  ← Inicio / Avisos / etc.
 //   └──────────────────────────────────┘
 //
 // =====================================================================
-// SOBRE EL NOMBRE DE USUARIO
+// LOOK & FEEL (alineado con el rediseño del login)
 // ---------------------------------------------------------------------
-// El saludo "Hola, [nombre]" se construye con useAuth().user.name,
-// que viene del payload del JWT (authService.payloadToAppUser extrae
-// payload.name y lo pone en user.name). El backend puede enviar el
-// nombre de la familia (e.g. "Familia González") o el nombre del
-// padre individual; el front lo muestra tal cual.
-// Si user es null (no debería pasar porque el auth gate protege esta
-// ruta), caemos a "Familia" como fallback graceful.
+// Esta pantalla hereda el lenguaje visual que aplicamos al login
+// (julio 2026): cards `rounded-3xl`, sombras más fuertes, acento
+// sky-500, labels en mayúsculas con tracking. La única lógica que
+// cambia respecto al dashboard previo es COSMÉTICA — la carga de
+// datos, el refetch, la navegación y la lectura del backend no se
+// tocan. Ver CHANGELOG abajo.
 // =====================================================================
 
 // React.
@@ -52,398 +50,624 @@ import {
   ScrollView,
   Image,
   Pressable,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 
-// Safe area: el header superior necesita paddingTop dinámico para
-// no chocar con el status bar / Dynamic Island en iOS.
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-// Routing de Expo Router: useRouter para navegar desde el tab bar;
-// useSegments para saber en qué ruta estamos y resaltar el tab activo.
-import { useRouter, useSegments } from 'expo-router';
+// Componentes del chrome compartido del route group (app). Vivir
+// aquí como _components/ permite que Dashboard y Avisos (y futuras
+// rutas) los reutilicen sin duplicar el header / la card de
+// escuela / la tab bar.
+import DashboardHeader from './DashboardHeader';
+import SchoolInfoCard from './SchoolInfoCard';
+import BottomTabBar from './BottomTabBar';
 
 // Iconos vectoriales (lucide).
 import {
-  GraduationCap, // birrete (brand + school card).
-  Bell,          // campana de notificaciones.
-  Clock,         // reloj (último acceso).
-  LogOut,        // salida (cuando está fuera del plant).
-  ChevronRight,  // flecha "Ver detalles".
-  Home,          // tab Inicio.
-  Megaphone,     // tab Avisos.
-  FileText,      // tab Reportes.
-  BookOpen,      // tab Materias.
-  Settings,      // tab Ajustes.
+  GraduationCap, // fallback del logo de la escuela.
+  User,          // fallback del avatar del alumno.
+  AlertCircle,   // ícono de error.
+  RefreshCw,     // ícono de retry.
+  History,       // último evento tipo "entrada" (reloj con flecha).
+  LogOut,        // último evento tipo "salida".
+  Clock,         // fallback cuando no hay last_event.
+  Percent,       // KPI #1: porcentaje de asistencia.
+  Award,         // KPI #2: promedio acumulado (medalla).
+  Star,          // KPI #3: puntos de conducta.
 } from 'lucide-react-native';
 
 // Hook de auth: provee { user, isLoading, userRole, ... }. Aquí
-// solo necesitamos user.name para personalizar el saludo.
+// solo necesitamos user.name como fallback (el backend envía el
+// greeting en data.user.greeting).
 import { useAuth } from '../../../src/hooks/useAuth';
 
-// Tenant mock: nombre de la escuela. Viene del contexto de tenant
-// en producción.
-import { SCHOOL_NAME } from '../../../src/constants/school';
+// Hook del dashboard: encapsula la carga de datos del backend,
+// loading state, error state, y refetch al volver a foco.
+import { useGuardianDashboard } from '../../../src/hooks/useGuardianDashboard';
+
+// Helper de fechas: formatea el timestamp del último evento de
+// entrada/salida como "Hoy, 7:25 a. m." / "Ayer, 2:15 p. m." / etc.
+import { formatRelativeDateTime } from '../../../src/utils/dateHelpers';
 
 // clsx para componer classNames condicionales.
 import { clsx } from 'clsx';
 
 // ---------------------------------------------------------------------
-// MOCK DATA: hijos de la familia
+// Paleta del borde derecho de StudentCard (alternada por índice).
 // ---------------------------------------------------------------------
-// En producción cada uno de estos objetos vendrá de un endpoint
-// del backend (e.g. GET /family/:id/children). Aquí los hardcodeamos
-// para poder maquetar la UI sin depender del server.
-// avatar: URL pública de pravatar (randomuser.me). Se reemplaza
-//   por la foto real del alumno cuando esté disponible.
-// status: 'in_school' → "En la institución" (verde) | 'outside' →
-//   "Fuera del plant" (ámbar).
-// lastAccess.icon: 'clock' para "Último acceso", 'logout' para
-//   "Salida".
-// ---------------------------------------------------------------------
-const CHILDREN = [
-  {
-    id: 'carlos',
-    name: 'Carlos González',
-    group: '2°B',
-    shift: 'Turno Matutino',
-    avatar: 'https://i.pravatar.cc/200?img=12',
-    status: 'in_school',
-    statusText: 'Activo - En la institución',
-    lastAccess: { icon: 'clock', text: 'Último acceso: Hoy, 6:55 AM' },
-    metrics: { attendance: 98, average: 9.4, conduct: 95 },
-  },
-  {
-    id: 'ana',
-    name: 'Ana González',
-    group: '1°A',
-    shift: 'Turno Matutino',
-    avatar: 'https://i.pravatar.cc/200?img=5',
-    status: 'outside',
-    statusText: 'Activo - Fuera del plantel',
-    lastAccess: { icon: 'logout', text: 'Salida: Hoy, 2:15 PM' },
-    metrics: { attendance: 95, average: 9.0, conduct: 100 },
-  },
+// Cuando el tutor tiene varios hijos registrados, cada card lleva
+// una franja vertical de color en el borde derecho para diferenciar
+// visualmente a cada alumno de un vistazo. La alternancia es
+// PAR/IMPAR (índice 0, 2, 4… → sky; 1, 3, 5… → emerald) y se
+// mantiene estable entre renders (no se randomiza).
+const STUDENT_ACCENT_COLORS = [
+  { borderClass: 'border-sky-500', label: 'sky' },     // índice par
+  { borderClass: 'border-emerald-500', label: 'emerald' }, // índice impar
 ];
 
 // ---------------------------------------------------------------------
-// TABS del bottom bar
+// getInitials(name)
 // ---------------------------------------------------------------------
-// Cada tab tiene una ruta destino. Las rutas apuntan a pantallas
-// que AÚN NO EXISTEN (solo /dashboard está implementado). Cuando
-// se creen las pantallas de Avisos/Reportes/etc., el tab bar las
-// encontrará automáticamente vía useSegments.
-// `match` es el segmento de URL que identifica al tab activo
-// (Expo Router oculta los route groups, así que el segmento de
-// /dashboard es literalmente "dashboard", no "(app)/dashboard").
-// ---------------------------------------------------------------------
-const TABS = [
-  { id: 'inicio',   label: 'Inicio',   icon: Home,      route: '/(app)/dashboard', match: 'dashboard' },
-  { id: 'avisos',   label: 'Avisos',   icon: Megaphone, route: '/(app)/avisos',    match: 'avisos' },
-  { id: 'reportes', label: 'Reportes', icon: FileText,  route: '/(app)/reportes',  match: 'reportes' },
-  { id: 'materias', label: 'Materias', icon: BookOpen,  route: '/(app)/materias',  match: 'materias' },
-  { id: 'ajustes',  label: 'Ajustes',  icon: Settings,  route: '/(app)/ajustes',   match: 'ajustes' },
-];
+// Helper: dado un nombre completo, devuelve las iniciales (1-2 chars)
+// para usar como fallback en el avatar. Si el nombre está vacío,
+// devuelve "?" (placeholder genérico).
+const getInitials = (name) => {
+  if (!name || typeof name !== 'string') return '?';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
 // ---------------------------------------------------------------------
 // COMPONENTE PRINCIPAL
 // ---------------------------------------------------------------------
 export default function GuardianDashboard() {
-  // user.name: viene del payload del JWT. Lo usamos en el saludo.
+  // user.name: fallback del AuthContext (viene del JWT). El backend
+  // también manda un greeting en data.user.greeting; preferimos ese.
   const { user } = useAuth();
 
-  // Insets para el top padding del header (status bar / notch).
-  // También lo usamos para el bottom padding del tab bar (home
-  // indicator en iOS).
-  const insets = useSafeAreaInsets();
+  // Hook del dashboard: carga los datos del backend, expone loading
+  // y error, y refetchea al volver a foco.
+  const { data, isLoading, error, refetch } = useGuardianDashboard();
 
-  // Router: para navegar cuando el usuario toca un tab.
-  const router = useRouter();
-
-  // Segmento de URL actual. Usado para resaltar el tab activo.
-  // useSegments() devuelve un array; el último elemento es el
-  // segmento más profundo. Para /dashboard es 'dashboard'.
-  const segments = useSegments();
-  const currentSegment = segments[segments.length - 1] || 'dashboard';
+  // Derivados del payload del backend. Usamos optional chaining
+  // para que la UI no rompa si la data aún no llegó.
+  const userGreeting = data?.user?.greeting || user?.name || 'Familia';
+  const students = data?.students || [];
+  const stats = data?.stats;
 
   return (
-    // Contenedor raíz flex-1. Importante: el SafeAreaView de la
-    // app NO se está usando aquí (el dispatcher devuelve este
-    // componente directamente), por lo que el componente es
-    // responsable de su propia safe area: paddingTop en el header
-    // y paddingBottom en el tab bar.
+    // Contenedor raíz flex-1.
     <View className="flex-1 bg-slate-50">
-      {/* ScrollView con flex-1: ocupa el espacio entre el header
-          y el tab bar. contentContainerStyle.paddingBottom da un
-          respiro al final del scroll para que el último card no
-          quede pegado al tab bar. */}
+      {/* Header compartido: brand + campana. */}
+      <DashboardHeader />
+
+      {/* ScrollView con flex-1. refreshControl permite pull-to-refresh. */}
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading && !!data}
+            onRefresh={refetch}
+            colors={['#0f172a']}
+            tintColor="#0f172a"
+          />
+        }
       >
-        {/* ============================================================
-            TOP HEADER: brand del producto + campana de notificaciones
-            ============================================================
-            Header propio del dashboard (no hay uno global en el
-            Stack raíz). Muestra la marca del producto (EdukControl)
-            + campana con dot de notificación. La info del tenant
-            (escuela) se pinta en una card aparte justo debajo.
-            --------------------------------------------------------
-            - bg-white: fondo blanco para distinguirlo del body slate-50.
-            - border-b border-slate-200: línea sutil de separación.
-            - paddingTop: insets.top + 12 para respetar la safe area
-              superior y dar 12px de padding visual.
-            - flex-row + justify-between: brand a la izquierda,
-              campana a la derecha.
-            ============================================================ */}
-        <View
-          className="bg-white flex-row items-center justify-between px-4 pb-3 border-b border-slate-200"
-          style={{ paddingTop: insets.top + 12 }}
-        >
-          <View className="flex-row items-center">
-            <GraduationCap size={24} color="#1e3a8a" strokeWidth={2.25} />
-            <Text className="text-xl font-bold text-slate-900 ml-2">
-              EdukControl
-            </Text>
-          </View>
-
-          {/* Campana con dot rojo de notificación. El dot está
-              posicionado absolute en la esquina superior derecha
-              del icono. border-2 border-white crea un "halo" que
-              separa el dot del icono. */}
-          <Pressable className="relative" hitSlop={8} accessibilityLabel="Notificaciones">
-            <Bell size={24} color="#64748b" strokeWidth={2} />
-            <View className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white" />
-          </Pressable>
-        </View>
+        {/* School info card compartida. className="mx-4 mt-4" aplica
+            el gutter lateral y el margen superior (antes vivían
+            inline en este archivo). */}
+        <SchoolInfoCard
+          school={data?.school}
+          isLoading={isLoading}
+          className="mx-4 mt-4"
+        />
 
         {/* ============================================================
-            SCHOOL INFO CARD
+            SALUDO
             ============================================================
-            Card blanca con el logo de la escuela (en un cuadrado
-            azul) + nombre + ciclo escolar. Esta info viene del
-            contexto de tenant (SCHOOL_NAME), no del payload del user.
-            ============================================================ */}
-        <View
-          className="bg-white flex-row items-center px-4 py-4 mx-4 mt-4 rounded-2xl border border-slate-100"
-          style={{ elevation: 2 }}
-        >
-          {/* Cuadrado azul con el birrete. w-12 h-12 (48px) coincide
-              con el tamaño del avatar del hijo. */}
-          <View className="w-12 h-12 rounded-xl bg-sky-600 items-center justify-center mr-3">
-            <GraduationCap size={24} color="#ffffff" strokeWidth={2.25} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-base font-bold text-slate-900">
-              {SCHOOL_NAME}
-            </Text>
-            <Text className="text-xs text-slate-500 mt-0.5">
-              Ciclo Escolar 2023-2024
-            </Text>
-          </View>
-        </View>
-
-        {/* ============================================================
-            SALUDO + TIPO DE PERFIL
-            ============================================================
-            - "Hola, [user.name]": viene del payload del JWT. Si el
-              backend envía "Familia González", mostramos eso; si
-              envía el nombre del padre individual, mostramos ese.
-            - "Padre de Familia": etiqueta hardcoded que describe
-              el rol del usuario (sería interesante que también
-              viniera del payload, pero por ahora es UI fija).
-            - Subtítulo gris: invitación a la acción.
+            Mismo patrón que el "Bienvenido" del login: título grande
+            + subtítulo gris. El rol ("Padre de Familia") se muestra
+            ahora como un pill badge con label UPPERCASE tracking,
+            idéntico al estilo de los labels de los inputs del login.
             ============================================================ */}
         <View className="px-4 mt-6">
           <Text className="text-3xl font-bold text-slate-900">
-            Hola, {user?.name || 'Familia'}
+            Hola, {userGreeting}
           </Text>
-          <Text className="text-sm font-semibold text-sky-600 mt-1">
-            Padre de Familia
-          </Text>
-          <Text className="text-sm text-slate-500 mt-2">
-            Sigue el progreso académico de tus hijos en tiempo real.
+
+          {/* Pill "Padre de Familia". self-start para que ocupe solo
+              el ancho de su contenido, no toda la línea. */}
+          <View className="self-start mt-2 px-3 py-1 bg-sky-50 rounded-full">
+            <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
+              Padre de Familia
+            </Text>
+          </View>
+
+          <Text className="text-sm text-slate-500 mt-3">
+            {data?.subtitle ||
+              'Sigue el progreso académico de tus hijos en tiempo real.'}
           </Text>
         </View>
 
         {/* ============================================================
-            CHILD CARDS
+            STATS BAR (opcional)
             ============================================================
-            Una card por hijo. Antes el dashboard tenía un SELECTOR
-            de hijo + un único bloque de status, pero el mockup nuevo
-            muestra una LISTA de cards (uno por hijo), cada una con
-            su propio status, último acceso y métricas. Esto escala
-            mejor cuando una familia tiene 3+ hijos: el usuario hace
-            scroll en vez de tocar pills.
+            Si el backend manda stats, mostramos un resumen pequeño.
+            Si no, no mostramos nada (el backend podría no incluirlos
+            en alguna versión). Lo envolvemos en una card con
+            rounded-2xl para que tenga el mismo lenguaje que el resto.
+            ============================================================ */}
+        {stats && (stats.total_students > 0 || stats.active_students > 0) && (
+          <View className="px-4 mt-3">
+            <View className="bg-sky-50 rounded-2xl px-4 py-3 self-start flex-row items-center">
+              <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
+                {stats.active_students} {stats.active_students === 1 ? 'hijo activo' : 'hijos activos'}
+                {stats.inactive_students > 0 && (
+                  <Text className="text-sky-500 font-medium normal-case">
+                    {' · '}{stats.inactive_students} {stats.inactive_students === 1 ? 'inactivo' : 'inactivos'}
+                  </Text>
+                )}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* ============================================================
+            STUDENT CARDS
             ============================================================ */}
         <View className="px-4 mt-6">
-          {CHILDREN.map((child) => (
-            <ChildCard key={child.id} child={child} />
-          ))}
+          {/* Loading inicial: 2 skeletons. */}
+          {isLoading && !data && (
+            <>
+              <StudentCardSkeleton />
+              <StudentCardSkeleton />
+            </>
+          )}
+
+          {/* Error sin data previa: error state con retry. */}
+          {!isLoading && error && !data && (
+            <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
+              <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
+              <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+                No se pudo cargar el dashboard
+              </Text>
+              <Text className="text-xs text-slate-500 mt-1 text-center">
+                {error}
+              </Text>
+              <Pressable
+                onPress={refetch}
+                className="flex-row items-center mt-4 px-4 py-2 bg-sky-600 active:bg-sky-700 rounded-xl"
+                accessibilityRole="button"
+                accessibilityLabel="Reintentar carga del dashboard"
+              >
+                <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
+                <Text className="text-sm font-semibold text-white ml-1.5">
+                  Reintentar
+                </Text>
+              </Pressable>
+            </View>
+          )}
+
+          {/* Data OK: lista de estudiantes del backend. Pasamos el
+              `index` para que StudentCard pueda alternar el color
+              del borde derecho (sky → emerald → sky → …). */}
+          {!isLoading && data && students.length > 0 && (
+            students.map((student, index) => (
+              <StudentCard
+                key={student._id}
+                student={student}
+                index={index}
+              />
+            ))
+          )}
+
+          {/* Data OK pero students vacío: empty state. */}
+          {!isLoading && data && students.length === 0 && (
+            <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-slate-100">
+              <Text className="text-sm text-slate-500 text-center">
+                Aún no tienes hijos registrados en tu cuenta.
+              </Text>
+              <Text className="text-xs text-slate-400 mt-1 text-center">
+                Contacta a tu institución para agregarlos.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
-      {/* ============================================================
-          BOTTOM TAB BAR
-          ============================================================
-          Barra fija en la parte inferior con 5 tabs. NO está dentro
-          del ScrollView para que se mantenga visible al hacer scroll.
-          paddingBottom: insets.bottom respeta el home indicator de
-          iOS.
-          --------------------------------------------------------
-          El active state se determina comparando el segmento actual
-          de URL con el `match` de cada tab. Esto es robusto: cuando
-          se creen las pantallas de Avisos/Reportes/etc., el tab bar
-          se actualizará automáticamente.
-          ============================================================ */}
-      <View
-        className="bg-white border-t border-slate-200 flex-row"
-        style={{ paddingBottom: insets.bottom }}
-      >
-        {TABS.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = currentSegment === tab.match;
-          return (
-            <Pressable
-              key={tab.id}
-              onPress={() => router.push(tab.route)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: isActive }}
-              accessibilityLabel={tab.label}
-              className="flex-1 items-center justify-center py-2"
-            >
-              <Icon
-                size={24}
-                color={isActive ? '#0ea5e9' : '#94a3b8'}
-                strokeWidth={isActive ? 2.5 : 2}
-              />
-              <Text
-                className={clsx(
-                  'text-xs mt-1',
-                  isActive
-                    ? 'text-sky-600 font-semibold'
-                    : 'text-slate-400',
-                )}
-              >
-                {tab.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      {/* Bottom tab bar compartido. */}
+      <BottomTabBar />
     </View>
   );
 }
 
 // ---------------------------------------------------------------------
-// Sub-componente: ChildCard
+// StudentCardSkeleton
 // ---------------------------------------------------------------------
-// Card blanca con la info de UN hijo: avatar + nombre + grupo,
-// pill de status, último acceso, botón "Ver detalles" y 3 KPIs
-// (ASIST. / PROM. / COND.). Extraído del padre para no inflar el
-// JSX del GuardianDashboard con lógica repetida por cada hijo.
+// Placeholder mientras el backend responde el primer fetch. Mantiene
+// la altura/estructura de una StudentCard real para evitar "jump".
 // ---------------------------------------------------------------------
-function ChildCard({ child }) {
-  // Derivados: in_school → verde, outside → ámbar.
-  const isInSchool = child.status === 'in_school';
-  // El icono de "último acceso" cambia según el status: si está
-  // en la escuela, mostramos un reloj; si salió, un icono de salida.
-  const AccessIcon = child.lastAccess.icon === 'clock' ? Clock : LogOut;
+function StudentCardSkeleton() {
+  return (
+    <View
+      className="bg-white rounded-3xl p-5 mb-4 shadow-sm"
+      style={{ elevation: 1 }}
+    >
+      <View className="flex-row items-center">
+        <View className="w-20 h-20 rounded-full bg-slate-200" />
+        <View className="ml-4 flex-1">
+          <View className="h-5 bg-slate-200 rounded w-2/3" />
+          <View className="h-4 bg-slate-200 rounded w-1/3 mt-2" />
+        </View>
+      </View>
+      <View className="h-6 bg-slate-200 rounded-full w-1/2 mt-4" />
+      <View className="h-12 bg-slate-200 rounded-xl mt-4" />
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------
+// StudentCard
+// ---------------------------------------------------------------------
+// Card blanca con la info de UN estudiante: foto (o iniciales) +
+// nombre completo + grupo + pill de status + último evento de
+// entrada/salida (student.last_event). Diseñada para la shape
+// actual del backend (sin metrics de asistencia/promedio/conducta —
+// se agregarán cuando el backend los exponga).
+//
+// Recibe `index` (entero, posición del alumno en la lista) para
+// alternar el color del borde derecho entre sky (índice par) y
+// emerald (índice impar). Esto permite al tutor identificar de
+// un vistazo a qué hijo corresponde cada card cuando tiene varios.
+// ---------------------------------------------------------------------
+function StudentCard({ student, index = 0 }) {
+  // Nombre completo: combinamos first_name + last_name, manejando
+  // el caso de last_name null (alumnos con un solo nombre).
+  const fullName = [student.first_name, student.last_name]
+    .filter(Boolean)
+    .join(' ')
+    .trim() || 'Alumno';
+
+  // Grupo: priorizamos group_label (texto legible) sobre current_group
+  // (ID). Si ambos son null, mostramos "Sin grupo asignado".
+  const groupLabel =
+    student.group_label ||
+    (student.current_group ? `Grupo ${student.current_group}` : null) ||
+    'Sin grupo asignado';
+
+  // Status pill: derivamos del status del backend.
+  // "active" → verde "Activo" | "inactive" → gris "Inactivo".
+  const isActive = student.status === 'active';
+  const statusLabel = isActive ? 'Activo' : 'Inactivo';
+  const statusColors = isActive
+    ? { bg: 'bg-emerald-50', dot: 'bg-emerald-500', text: 'text-emerald-700' }
+    : { bg: 'bg-slate-100', dot: 'bg-slate-400', text: 'text-slate-500' };
+
+  // Foto: el backend manda photo_url (URL absoluta). Si es null
+  // o falla al cargar (onError), mostramos las iniciales.
+  const [photoError, setPhotoError] = React.useState(false);
+  React.useEffect(() => {
+    setPhotoError(false);
+  }, [student.photo_url]);
+  const showPhoto = student.photo_url && !photoError;
+
+  // ---------------------------------------------------------------------
+  // Último evento de entrada/salida.
+  // ---------------------------------------------------------------------
+  // El backend manda `student.last_event` como:
+  //   {
+  //     event_type: 'entry' | 'exit',
+  //     event_type_label: 'Entrada' | 'Salida',
+  //     event_time: '2026-07-27T13:45:00.000Z', // ISO datetime
+  //     device: 'rfid@reader-01',
+  //     is_currently_in_institution: true | false,
+  //   }
+  // o `null` si el alumno todavía no registra ningún evento (ej. recién
+  // inscrito, o la institución no usa control de acceso).
+  const lastEvent = student.last_event;
+  const lastEventDate = lastEvent?.event_time ? new Date(lastEvent.event_time) : null;
+  const hasValidLastEvent = lastEvent
+    && lastEventDate
+    && !Number.isNaN(lastEventDate.getTime());
+
+  // Etiqueta: preferimos "event_type_label" (ya viene en español desde
+  // el backend); si faltara, derivamos un fallback desde "event_type".
+  const lastEventLabel = lastEvent?.event_type_label
+    || (lastEvent?.event_type === 'exit' ? 'Salida' : 'Entrada');
+
+  // Texto final a mostrar. Si no hay last_event válido, mostramos un
+  // texto alternativo neutro en vez de dejar el espacio vacío.
+  const lastEventText = hasValidLastEvent
+    ? `${lastEventLabel}: ${formatRelativeDateTime(lastEventDate)}`
+    : 'Sin registros de entrada/salida';
+
+  // Ícono: "History" para entrada, "LogOut" para salida, "Clock"
+  // gris como fallback cuando no hay evento registrado.
+  const LastEventIcon = !hasValidLastEvent
+    ? Clock
+    : (lastEvent.event_type === 'exit' ? LogOut : History);
+
+  // Texto "En el plantel" / "Fuera del plantel", derivado directamente
+  // del booleano `is_currently_in_institution` que manda el backend
+  // dentro de last_event. Es independiente del tipo del último evento:
+  // el backend ya resuelve si el alumno sigue dentro AHORA MISMO. Si
+  // no hay last_event (o el campo no viene), no mostramos nada.
+  const institutionLabel = typeof lastEvent?.is_currently_in_institution === 'boolean'
+    ? (lastEvent.is_currently_in_institution ? 'En el plantel' : 'Fuera del plantel')
+    : null;
+
+  // Colores del pill: por defecto usamos statusColors (verde/gris
+  // según status activo/inactivo). PERO si el alumno está fuera del
+  // plantel (is_currently_in_institution === false), sobreescribimos
+  // con ámbar para llamar la atención del tutor, sin importar si el
+  // alumno sigue "Activo" a nivel de inscripción.
+  const isOutsideInstitution = lastEvent?.is_currently_in_institution === false;
+  const pillColors = isOutsideInstitution
+    ? { bg: 'bg-amber-50', dot: 'bg-amber-500', text: 'text-amber-700' }
+    : statusColors;
+
+  // Color del borde derecho (acento alternado por índice). El cálculo
+  // es estable: índice 0 → sky, 1 → emerald, 2 → sky, 3 → emerald…
+  // Si en el futuro hay más de 2 hijos, el patrón sigue siendo
+  // coherente porque se repite cada 2.
+  const accent = STUDENT_ACCENT_COLORS[index % STUDENT_ACCENT_COLORS.length];
 
   return (
-    // Card blanca con shadow multiplataforma (elevation 3 en Android).
+    // Card blanca con borde derecho de color.
+    // - rounded-3xl: bordes muy generosos (mismo lenguaje que el login).
+    // - shadow-md: sombra más fuerte que la anterior (elevation 3).
+    // - border-r-4: 4px de borde en el lado derecho.
+    // - border-r-{color}: color del borde alternado por índice
+    //   (sky-500 o emerald-500). borderRightWidth respeta el
+    //   borderRadius, así que el borde sigue la curva en las
+    //   esquinas — queda como un "ribbon" limpio.
     <View
-      className="bg-white rounded-2xl p-4 mb-4"
+      className={clsx(
+        'bg-white rounded-3xl p-5 mb-4 shadow-md border-r-4',
+        accent.borderClass,
+      )}
       style={{ elevation: 3 }}
     >
-      {/* Avatar circular + nombre + grupo. */}
+      {/* Header: avatar + nombre + grupo. */}
       <View className="flex-row items-center">
-        <Image
-          source={{ uri: child.avatar }}
-          className="w-16 h-16 rounded-full border-2 border-sky-200"
-          accessibilityLabel={`Foto de ${child.name}`}
-        />
-        <View className="ml-3 flex-1">
-          <Text className="text-base font-bold text-slate-900">
-            {child.name}
+        {/* Avatar: 80x80 circular (agrandado para dar más protagonismo
+            a la info del alumno, manteniendo la proporción con el
+            resto de la card). */}
+        <View className="w-20 h-20 rounded-full bg-sky-100 items-center justify-center overflow-hidden">
+          {showPhoto ? (
+            <Image
+              source={{ uri: student.photo_url }}
+              className="w-full h-full"
+              resizeMode="cover"
+              accessibilityLabel={`Foto de ${fullName}`}
+              onError={() => setPhotoError(true)}
+            />
+          ) : (
+            // Fallback: iniciales sobre fondo sky-100. Es mejor que
+            // un ícono genérico porque personaliza la card.
+            <Text className="text-2xl font-bold text-sky-700">
+              {getInitials(fullName)}
+            </Text>
+          )}
+        </View>
+        <View className="ml-4 flex-1">
+          <Text
+            className="text-xl font-bold text-slate-900"
+            numberOfLines={1}
+          >
+            {fullName}
           </Text>
-          <Text className="text-xs text-slate-500 mt-0.5">
-            {child.group} - {child.shift}
+          <Text className="text-sm text-slate-500 mt-1" numberOfLines={1}>
+            {groupLabel}
           </Text>
+          {student.enrollment_number && (
+            <Text className="text-sm text-slate-400 mt-0.5">
+              No. Control: {student.enrollment_number}
+            </Text>
+          )}
         </View>
       </View>
 
-      {/* Pill de status. Color según in_school vs outside. */}
-      <View className="mt-3">
+      {/* Status pill. */}
+      <View className="mt-4">
         <View
           className={clsx(
-            'flex-row items-center self-start px-3 py-1 rounded-full',
-            isInSchool ? 'bg-emerald-50' : 'bg-amber-50',
+            'flex-row items-center self-start px-3.5 py-1.5 rounded-full',
+            pillColors.bg,
           )}
         >
-          <View
-            className={clsx(
-              'w-2 h-2 rounded-full mr-2',
-              isInSchool ? 'bg-emerald-500' : 'bg-amber-500',
-            )}
-          />
-          <Text
-            className={clsx(
-              'text-xs font-semibold',
-              isInSchool ? 'text-emerald-700' : 'text-amber-700',
-            )}
-          >
-            {child.statusText}
+          <View className={clsx('w-2.5 h-2.5 rounded-full mr-2', pillColors.dot)} />
+          <Text className={clsx('text-sm font-semibold', pillColors.text)}>
+            {statusLabel}
+            {institutionLabel ? ` · ${institutionLabel}` : ''}
           </Text>
         </View>
       </View>
 
-      {/* Línea de "último acceso" / "salida" con icono a la izquierda. */}
-      <View className="flex-row items-center mt-2">
-        <AccessIcon size={14} color="#64748b" strokeWidth={2} />
+      {/* Último evento de entrada/salida (o texto alternativo si el
+          backend todavía no tiene ningún registro para este alumno). */}
+      <View className="flex-row items-center mt-3">
+        <LastEventIcon size={15} color="#64748b" strokeWidth={2} />
         <Text className="text-sm text-slate-500 ml-1.5">
-          {child.lastAccess.text}
+          {lastEventText}
         </Text>
       </View>
 
-      {/* Botón "Ver detalles". Es decorativo por ahora (no navega);
-          cuando exista la pantalla de detalle del hijo, lo
-          conectaremos con router.push. */}
-      <Pressable
-        className="flex-row items-center justify-center py-3 border border-sky-200 rounded-xl mt-4"
-        accessibilityRole="button"
-        accessibilityLabel={`Ver detalles de ${child.name}`}
+      {/* ============================================================
+          FILA DE KPIs (3 columnas)
+          ============================================================
+          Tres indicadores académicos del alumno, alineados en una
+          fila horizontal al final de la card. Cada uno se renderiza
+          como <KpiCell> (sub-componente abajo) que centraliza el
+          patrón "icono circular + valor grande + sub-valor + label".
+
+          Visualmente:
+            [Asistencia]  [Promedio]  [Conducta]
+              90 %          8.5          80
+             9/10 días      GPA          Puntos
+
+          border-t border-slate-100 + pt-4 separa visualmente
+          esta sección del bloque de "último evento" sin necesidad
+          de un divider explícito.
+
+          IMPORTANTE: la fila SIEMPRE se renderiza, incluso si el
+          backend no manda `student.kpis` o si los valores vienen
+          null. En esos casos, cada celda muestra "—" como
+          placeholder, manteniendo la altura y alineación de la
+          fila (clave para que las cards de varios hijos no
+          "salten" en altura cuando uno tiene datos y otro no).
+          ============================================================ */}
+      {(() => {
+        // kpis normalizado a {} para evitar optional chaining repetido
+        // y para que la fila se renderice aunque venga undefined.
+        const kpis = student.kpis || {};
+
+        return (
+          <View className="border-t border-slate-100 mt-4 pt-4 flex-row">
+            {/* KPI #1: Asistencia.
+                - Porcentaje redondeado a entero (90% vs 90.0%).
+                - Sub-label con la fracción "X/Y días" para dar
+                  contexto (9/10 días). Si no hay datos, muestra "—". */}
+            <KpiCell
+              icon={Percent}
+              iconBg="bg-emerald-50"
+              iconColor="#10b981"
+              value={
+                typeof kpis.attendance?.percentage === 'number'
+                  ? `${Math.round(kpis.attendance.percentage)}%`
+                  : '—'
+              }
+              subValue={
+                typeof kpis.attendance?.attended_days === 'number'
+                && typeof kpis.attendance?.total_school_days === 'number'
+                  ? `${kpis.attendance.attended_days}/${kpis.attendance.total_school_days} días`
+                  : '—'
+              }
+              label="Asistencia"
+              borderRight
+            />
+
+            {/* KPI #2: Promedio acumulado.
+                - cumulative_gpa puede ser null (alumno sin
+                  evaluaciones todavía). Mostramos "—" en ese caso. */}
+            <KpiCell
+              icon={Award}
+              iconBg="bg-sky-50"
+              iconColor="#0ea5e9"
+              value={
+                typeof kpis.cumulative_gpa === 'number'
+                  ? kpis.cumulative_gpa.toFixed(1)
+                  : '—'
+              }
+              subValue="—"
+              label="Promedio"
+              borderRight
+            />
+
+            {/* KPI #3: Conducta.
+                - score parte en 100 y se descuenta por reportes
+                  "severe" (kpis.conduct.deduction). */}
+            <KpiCell
+              icon={Star}
+              iconBg="bg-amber-50"
+              iconColor="#f59e0b"
+              value={
+                typeof kpis.conduct?.score === 'number'
+                  ? String(kpis.conduct.score)
+                  : '—'
+              }
+              subValue={
+                typeof kpis.conduct?.reports_count === 'number'
+                && kpis.conduct.reports_count > 0
+                  ? `${kpis.conduct.reports_count} ${
+                      kpis.conduct.reports_count === 1 ? 'reporte' : 'reportes'
+                    }`
+                  : '—'
+              }
+              label="Conducta"
+            />
+          </View>
+        );
+      })()}
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------
+// KpiCell
+// ---------------------------------------------------------------------
+// Sub-componente interno del StudentCard. Renderiza UNA celda de la
+// fila de KPIs: ícono en círculo de color + valor grande + sub-valor
+// (SIEMPRE visible, con "—" como placeholder) + label chico.
+// Se usa 3 veces (asistencia, promedio, conducta) con la misma
+// estructura.
+//
+// Props:
+//   - icon: componente Lucide.
+//   - iconBg, iconColor: estilos del círculo del icono.
+//   - value: string con el valor principal (ej: "90%", "8.5", "80",
+//     o "—" si no hay datos).
+//   - subValue: string SIEMPRE presente (puede ser "—"). El caller
+//     es responsable de pasar "—" cuando el dato no esté disponible,
+//     para mantener la altura de la fila constante entre cards.
+//   - label: string con la etiqueta final (ej: "Asistencia").
+//   - borderRight: boolean. Si true, dibuja un divider vertical
+//     sutil a la derecha de la celda para separar visualmente
+//     entre KPIs.
+// ---------------------------------------------------------------------
+function KpiCell({
+  icon: Icon,
+  iconBg,
+  iconColor,
+  value,
+  subValue = '—',
+  label,
+  borderRight = false,
+}) {
+  return (
+    // flex-1: las 3 celdas se reparten el ancho equitativamente.
+    // items-center: centra el contenido en cada celda.
+    // px-2: padding lateral mínimo para que el label no toque los
+    // bordes (sobre todo con borderRight).
+    <View
+      className={clsx(
+        'flex-1 items-center px-2',
+        borderRight && 'border-r border-slate-100',
+      )}
+    >
+      {/* Círculo del icono. w-10 h-10 (40px) es suficiente para un
+          icono size=18. rounded-full para look "badge". */}
+      <View
+        className={clsx('w-10 h-10 rounded-full items-center justify-center', iconBg)}
       >
-        <Text className="text-sky-600 font-semibold">Ver detalles</Text>
-        <ChevronRight size={16} color="#0ea5e9" strokeWidth={2.5} className="ml-1" />
-      </Pressable>
-
-      {/* Divider antes de las métricas. */}
-      <View className="h-px bg-slate-100 mt-4" />
-
-      {/* 3 KPIs: ASIST. (sky-50) / PROM. (sky-50) / COND. (amber-50).
-          COND. usa amber para destacar que es la métrica de
-          "comportamiento", separada del rendimiento académico. */}
-      <View className="flex-row mt-4 gap-3">
-        <View className="flex-1 bg-sky-50 rounded-xl p-3">
-          <Text className="text-xs font-semibold text-sky-700">ASIST.</Text>
-          <Text className="text-lg font-bold text-sky-700 mt-1">
-            {child.metrics.attendance}%
-          </Text>
-        </View>
-        <View className="flex-1 bg-sky-50 rounded-xl p-3">
-          <Text className="text-xs font-semibold text-sky-700">PROM.</Text>
-          <Text className="text-lg font-bold text-sky-900 mt-1">
-            {child.metrics.average}
-          </Text>
-        </View>
-        <View className="flex-1 bg-amber-50 rounded-xl p-3">
-          <Text className="text-xs font-semibold text-amber-700">COND.</Text>
-          <Text className="text-lg font-bold text-amber-700 mt-1">
-            {child.metrics.conduct}
-          </Text>
-        </View>
+        <Icon size={18} color={iconColor} strokeWidth={2.25} />
       </View>
+
+      {/* Valor principal. text-lg (18px) bold, slate-900. */}
+      <Text className="text-lg font-bold text-slate-900 mt-2">
+        {value}
+      </Text>
+
+      {/* Sub-valor SIEMPRE visible. El caller pasa "—" cuando el
+          dato no está disponible, así la altura de la fila se
+          mantiene estable entre cards (clave cuando el tutor tiene
+          varios hijos y uno tiene KPIs y otro no).
+          leading-tight evita separación excesiva entre sub-valor y
+          label cuando ambos están presentes. */}
+      <Text className="text-xs text-slate-500 mt-0.5 leading-tight min-h-[16px]">
+        {subValue}
+      </Text>
+
+      {/* Label: UPPERCASE + tracking-wide + font-bold, slate-500.
+          Mismo patrón que los labels del login → coherencia
+          visual entre pantallas. */}
+      <Text className="text-[10px] font-bold uppercase tracking-wide text-slate-500 mt-1">
+        {label}
+      </Text>
     </View>
   );
 }

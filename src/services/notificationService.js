@@ -15,9 +15,24 @@
 // =====================================================================
 
 // Importamos el módulo completo de expo-notifications como "Notifications".
-// Usamos namespace (import *) porque la SDK expone muchísimas funciones
-// y constantes estáticas; es más legible y compatible con tree-shaking.
-import * as Notifications from 'expo-notifications';
+// Usamos require() dentro de un try/catch (en vez de un import estático)
+// porque en Expo Go en Android desde SDK 53 el simple hecho de cargar
+// este módulo LANZA un error síncrono ("remote notifications fueron
+// removidas de Expo Go"). Con import estático ese throw ocurre durante
+// la evaluación del módulo y no hay forma de atraparlo, tumbando toda
+// la app (ver AGENTS.md trap 5). Con require() dentro de un try/catch sí
+// podemos capturarlo y degradar con gracia (notificaciones deshabilitadas).
+let Notifications = null;
+try {
+  // eslint-disable-next-line global-require
+  Notifications = require('expo-notifications');
+} catch (err) {
+  console.warn(
+    '[notificationService] expo-notifications no disponible '
+      + '(esperado en Expo Go/Android SDK 53+; usa un development build):',
+    err?.message,
+  );
+}
 
 // Importamos Constants para acceder a la configuración nativa de Expo
 // (app.json). Aquí vive el "extra.eas.projectId" que getExpoPushTokenAsync
@@ -37,14 +52,18 @@ import { Platform } from 'react-native';
 // "shouldShowBanner" (¿mostrar alerta visual?) y "shouldShowList"
 // (¿agregar a la lista de notificaciones?). Las opciones de sonido
 // y badge las dejamos en false para no ser intrusivos por defecto.
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+// Solo lo configuramos si el módulo cargó correctamente (ver guarda
+// arriba); si Notifications es null, no hay nada que configurar.
+if (Notifications) {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
 
 // ID canónico del canal de Android. Lo definimos como constante para
 // reutilizarlo en distintas llamadas y evitar errores de tipeo. En
@@ -59,6 +78,10 @@ const ANDROID_CHANNEL_ID = 'edukcontrol_default';
 // Android 13+, si no el prompt de permisos no aparece y nunca
 // obtendremos un push token. En iOS esta función es un no-op.
 export const createAndroidChannel = async () => {
+  // Si el módulo no cargó (Expo Go/Android SDK 53+), no hay nada
+  // que hacer: salimos en silencio.
+  if (!Notifications) return;
+
   // Verificamos Platform.OS para no ejecutar código específico de
   // Android en iOS, lo que provocaría warnings o errores.
   if (Platform.OS !== 'android') return;
@@ -107,6 +130,11 @@ const getProjectId = () => {
 // estado final de los permisos para que useNotifications lo exponga
 // a la UI. Maneja iOS y Android de forma transparente.
 export const requestNotificationPermissions = async () => {
+  // Si el módulo no cargó (Expo Go/Android SDK 53+), no hay permisos
+  // que pedir. Devolvemos 'unsupported' para que el caller lo maneje
+  // como un caso distinto de 'denied'.
+  if (!Notifications) return 'unsupported';
+
   // Primero creamos el canal en Android. Es importante hacerlo antes
   // de requestPermissionsAsync en Android 13+, si no el diálogo no
   // aparece. createAndroidChannel ya es no-op en iOS.
@@ -148,6 +176,10 @@ export const requestNotificationPermissions = async () => {
 // dispositivo). Devuelve null si el usuario no dio permisos o si
 // falta el projectId de EAS.
 export const getExpoPushToken = async () => {
+  // Si el módulo no cargó (Expo Go/Android SDK 53+), no hay token
+  // que obtener.
+  if (!Notifications) return null;
+
   // Verificamos que tengamos permisos. Sin permisos no hay token.
   const { status } = await Notifications.getPermissionsAsync();
   if (status !== 'granted') {
@@ -226,6 +258,10 @@ export const scheduleLocalNotification = async ({
   // Validamos título y body. Sin título la notificación se ve rota.
   if (!title) throw new Error('scheduleLocalNotification requiere un "title".');
 
+  // Si el módulo no cargó (Expo Go/Android SDK 53+), no hay forma
+  // de programar la notificación local.
+  if (!Notifications) return null;
+
   // Llamamos a scheduleNotificationAsync. El "trigger" indica CUÁNDO
   // se dispara. Usamos el tipo TIME_INTERVAL (segundos desde ahora).
   // En SDK 57 la sintaxis explícita es: { type, seconds, repeats? }.
@@ -255,6 +291,7 @@ export const scheduleLocalNotification = async ({
 // Cancela todas las notificaciones locales programadas. Útil cuando
 // el usuario cierra sesión, para no dejar "fantasmas" agendados.
 export const cancelAllScheduledNotifications = async () => {
+  if (!Notifications) return;
   await Notifications.cancelAllScheduledNotificationsAsync();
 };
 

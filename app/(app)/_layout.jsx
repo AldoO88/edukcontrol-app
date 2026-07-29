@@ -29,6 +29,14 @@ import { Stack, Redirect } from 'expo-router';
 // Hook de autenticación.
 import { useAuth } from '../../src/hooks/useAuth';
 
+// Hook de push notifications. Lo montamos SOLO cuando hay user
+// logueado (enabled = !!user). El hook se encarga de pedir
+// permisos, obtener el FCM token, registrarlo en el backend y
+// escuchar rotaciones. La limpieza (unregister) la hace
+// AuthContext.logout() en el momento del logout, NO en el unmount
+// del layout.
+import { usePushNotifications } from '../../src/hooks/usePushNotifications';
+
 // ---------------------------------------------------------------------
 // Splash: mismo estilo que en app/index.jsx. En el futuro se puede
 // extraer a un componente compartido si se duplica en más sitios.
@@ -46,6 +54,13 @@ function RootSplash() {
 
 export default function AppLayout() {
   const { user, isLoading } = useAuth();
+
+  // Hook de push notifications. Lo montamos solo cuando hay user
+  // (enabled = !!user). Antes del login, no hay credenciales para
+  // el endpoint /api/guardians/me/fcm-token, así que es inútil.
+  // El hook maneja internamente permisos, canal, token, registro
+  // y rotación; no necesitamos su return value aquí.
+  usePushNotifications(!!user);
 
   // Mientras carga, splash. Esto evita parpadeos durante el
   // cold-start o al restaurar sesión.
@@ -81,6 +96,28 @@ export default function AppLayout() {
     >
       <Stack.Screen
         name="dashboard"
+        options={{ headerShown: false }}
+      />
+      {/* Ruta /avisos. headerShown:false porque la pantalla pinta
+          su propio header (o, en el futuro, lo heredará del
+          layout cuando se extraiga de GuardianDashboard). */}
+      <Stack.Screen
+        name="avisos"
+        options={{ headerShown: false }}
+      />
+      {/* Ruta /conducta. Mismo patrón que avisos. */}
+      <Stack.Screen
+        name="conducta"
+        options={{ headerShown: false }}
+      />
+      {/* Ruta /calificaciones. Mismo patrón que avisos/conducta. */}
+      <Stack.Screen
+        name="calificaciones"
+        options={{ headerShown: false }}
+      />
+      {/* Ruta /asistencia. Mismo patrón que las otras pantallas. */}
+      <Stack.Screen
+        name="asistencia"
         options={{ headerShown: false }}
       />
     </Stack>

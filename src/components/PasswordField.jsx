@@ -27,13 +27,17 @@ import TextField from './TextField';
 // Props:
 //   - value, onChangeText: controlados.
 //   - placeholder: default "••••••••".
+//   - iconColor: color del candado (default slate-500). El caller
+//     puede sobreescribirlo para dar personalidad al campo
+//     (e.g. amber-500 en el login).
 //   - error: string con mensaje de error.
-//   - Resto de props (autoComplete, textContentType, etc.) se
-//     reenvían al TextField subyacente.
+//   - Resto de props (autoComplete, textContentType, labelClassName,
+//     etc.) se reenvían al TextField subyacente.
 const PasswordField = ({
   value,
   onChangeText,
   placeholder = '••••••••',
+  iconColor = '#64748b',
   error = null,
   ...rest
 }) => {
@@ -49,8 +53,9 @@ const PasswordField = ({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      // Icono del candado a la izquierda.
+      // Icono del candado a la izquierda + color personalizable.
       icon={Lock}
+      iconColor={iconColor}
       // Alternamos secureTextEntry según isVisible.
       secureTextEntry={!isVisible}
       // Atributos de autocompletado correctos para contraseñas

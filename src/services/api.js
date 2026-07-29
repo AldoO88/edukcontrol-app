@@ -73,6 +73,17 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // DEBUG: log de lo que SALE por la red. Si aquí el body
+    // tiene phone vacío pero authService lo logueó bien, el bug
+    // está en axios (improbable pero posible). Lo más útil es
+    // comparar este body con lo que recibe el backend en sus logs.
+    console.log('[DEBUG api] request outgoing:', {
+      method: config.method,
+      url: config.url,
+      data: config.data,
+      contentType: config.headers['Content-Type'],
+    });
+
     // Retornamos la config (modificada o no) para que axios continúe.
     return config;
   },

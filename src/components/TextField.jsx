@@ -27,7 +27,9 @@ import { clsx } from 'clsx';
 //   - rightSlot: nodo opcional que se renderiza a la derecha del
 //     input (útil para el botón de mostrar/ocultar contraseña).
 //   - containerClassName: clases extra del contenedor externo.
-//   - className: clases extra del input.
+//   - labelClassName: clases extra del label (ej. "uppercase
+//     tracking-wide text-slate-500" para labels tipo form SaaS).
+//   - inputClassName: clases extra del input.
 //   - Resto de props del TextInput: keyboardType, autoCapitalize,
 //     secureTextEntry, maxLength, accessibilityLabel, etc.
 const TextField = ({
@@ -43,6 +45,7 @@ const TextField = ({
   disabled = false,
   rightSlot = null,
   containerClassName = '',
+  labelClassName = '',
   inputClassName = '',
   ...rest
 }) => {
@@ -52,9 +55,17 @@ const TextField = ({
   return (
     // Contenedor externo (con label).
     <View className={clsx('mb-4', containerClassName)}>
-      {/* Label opcional arriba del input. */}
+      {/* Label opcional arriba del input. Por defecto usa el estilo
+          "label institucional" (slate-700, sm, semibold). El caller
+          puede sobreescribir estilos pasando labelClassName — útil
+          para labels tipo "TELÉFONO" en mayúsculas con tracking. */}
       {label && (
-        <Text className="text-slate-700 text-sm font-semibold mb-2">
+        <Text
+          className={clsx(
+            'text-slate-700 text-sm font-semibold mb-2',
+            labelClassName,
+          )}
+        >
           {label}
         </Text>
       )}

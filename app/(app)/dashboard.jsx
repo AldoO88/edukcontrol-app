@@ -111,7 +111,7 @@ export default function Dashboard() {
     return <TeacherDashboardPlaceholder />;
   }
 
-  if (userRole === 'parent') {
+  if (userRole === 'tutor') {
     return <GuardianDashboard />;
   }
 

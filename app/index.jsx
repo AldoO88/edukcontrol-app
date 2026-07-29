@@ -21,7 +21,7 @@ import React from 'react';
 // Primitivas RN: View, Text, ActivityIndicator (splash).
 import { View, Text, ActivityIndicator } from 'react-native';
 
-// Redirect de expo-router: navegación declarativa en el render.
+// Redirect de expo-router: navegación declarativa.
 import { Redirect } from 'expo-router';
 
 // Hook de auth: lee { user, isLoading } del AuthContext.
@@ -34,7 +34,7 @@ import Screen from '../src/components/Screen';
 // los esconde del routing de Expo Router).
 import BrandHeader from './_components/BrandHeader';
 import LoginForm from './_components/LoginForm';
-import SecurityNotice from './_components/SecurityNotice';
+import FeatureBadges from './_components/FeatureBadges';
 
 // ---------------------------------------------------------------------
 // Export `options` (específico de Expo Router v5)
@@ -66,6 +66,11 @@ function RootSplash() {
   );
 }
 
+// Versión mostrada en el footer (sincronizada con la app store /
+// la release). Se hardcodea aquí; cuando haya un endpoint público
+// /version se puede hidratar.
+const APP_VERSION = '1.0.0';
+
 export default function LoginScreen() {
   const { user, isLoading } = useAuth();
 
@@ -95,13 +100,27 @@ export default function LoginScreen() {
     >
       <BrandHeader />
 
-      <View className="flex-1 items-center justify-center px-6 py-8 w-full">
+      {/* Contenedor principal: centra verticalmente la card +
+          feature badges + footer. px-6 mantiene el gutter lateral
+          en pantallas anchas. max-w-sm en el form interior evita
+          que la card se estire demasiado en tablets. */}
+      <View className="flex-1 items-center justify-center px-6 py-4 w-full">
         <View className="w-full max-w-sm">
           <LoginForm />
-          <SecurityNotice />
-          <View className="items-center mt-12">
-            <Text className="text-slate-400 text-xs">
-              © {new Date().getFullYear()} EdukControl · Todos los derechos reservados
+
+          {/* Feature badges: tres "value props" (Seguro / Rápido /
+              Nube) bajo la card. Sustituyen al antiguo SecurityNotice
+              — el shield ya no aparece aquí porque la card no tiene
+              el aviso de seguridad (asumimos que el badge "Seguro"
+              comunica lo mismo de forma más visual). */}
+          <FeatureBadges />
+
+          {/* Footer institucional: versión + tagline en mayúsculas,
+              tracking muy ancho (estilo "system status"). Color
+              slate-400 para que NO compita con la card. */}
+          <View className="items-center mt-6 mb-2">
+            <Text className="text-slate-300 text-[10px] font-semibold tracking-[0.2em]">
+              VERSIÓN {APP_VERSION} · SISTEMA DE GESTIÓN ESCOLAR
             </Text>
           </View>
         </View>

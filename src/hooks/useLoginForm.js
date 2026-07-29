@@ -2,11 +2,19 @@
 // useLoginForm.js
 // ---------------------------------------------------------------------
 // Hook específico para la pantalla de Login. Encapsula:
-//   - Estado de los campos (email, password).
-//   - Validación (campos vacíos, formato email, longitud password).
+//   - Estado de los campos (phone, password).
+//   - Validación (celular de 10 dígitos, longitud password).
 //   - Submit contra useAuth().login con manejo de errores.
 // Se apoya en useForm para la parte genérica y solo añade la
 // lógica específica del login.
+//
+// =====================================================================
+// CELULAR COMO IDENTIFICADOR
+// ---------------------------------------------------------------------
+// Anteriormente el login era email + password. Ahora es celular +
+// password, alineado con el flow de activación (que también trabaja
+// con celular). Esto simplifica el modelo: el celular es el único
+// identificador del usuario, y la contraseña es el segundo factor.
 // =====================================================================
 
 // useCallback para memoizar funciones.
@@ -21,9 +29,9 @@ import { useAuth } from './useAuth';
 // Alert para mostrar mensajes nativos al usuario.
 import { Alert } from 'react-native';
 
-// Regex de validación de email. Cubre el 99% de casos reales
-// sin la complejidad de RFC 5322.
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Regex de validación de celular: exactamente 10 dígitos.
+// Misma regla que el flow de activación (app/(auth)/activation).
+const PHONE_REGEX = /^\d{10}$/;
 
 // Longitud mínima de la contraseña. No revelamos la regla exacta
 // por seguridad (sería info útil para un atacante).
@@ -35,14 +43,17 @@ const MIN_PASSWORD_LENGTH = 6;
 const validateLogin = (values) => {
   const errors = {};
   // Limpiamos espacios al inicio/final (común en copy-paste).
-  const cleanEmail = (values.email || '').trim();
+  const cleanPhone = (values.phone || '').trim();
   const cleanPassword = (values.password || '').trim();
 
   // Campo obligatorio.
-  if (!cleanEmail) {
-    errors.email = 'El correo es obligatorio.';
-  } else if (!EMAIL_REGEX.test(cleanEmail)) {
-    errors.email = 'El correo no tiene un formato válido.';
+  if (!cleanPhone) {
+    errors.phone = 'El número de celular es obligatorio.';
+  } else if (!PHONE_REGEX.test(cleanPhone)) {
+    // PHONE_REGEX.test exige exactamente 10 dígitos. El filtro
+    // de no-dígitos en LoginForm.jsx ya descarta letras/espacios,
+    // pero dejamos el check por defensa.
+    errors.phone = 'Ingresa un número de 10 dígitos.';
   }
 
   if (!cleanPassword) {
@@ -62,7 +73,7 @@ export const useLoginForm = () => {
 
   // useForm con valores iniciales vacíos y la validación específica.
   const form = useForm(
-    { email: '', password: '' },
+    { phone: '', password: '' },
     validateLogin,
   );
 
@@ -73,10 +84,20 @@ export const useLoginForm = () => {
     // Ejecutamos el submit. useForm ya validará internamente.
     // Si pasa la validación, llama a onValid(values).
     return form.handleSubmit(async (values) => {
+      // DEBUG: log de lo que llega al callback onValid. Esto
+      // confirma si el bug está ANTES de aquí (el `values` llega
+      // vacío) o DESPUÉS (algo en authService/api lo pierde).
+      console.log('[DEBUG useLoginForm] onValid values:', {
+        phone: values.phone,
+        phoneLen: values.phone?.length,
+        passwordLen: values.password?.length,
+        hasPhone: !!values.phone,
+        hasPassword: !!values.password,
+      });
       try {
-        // Llamamos al login del contexto. Si todo va bien, AppNavigator
-        // detecta el cambio de user y navega automáticamente.
-        const result = await login(values.email.trim(), values.password);
+        // Llamamos al login del contexto con celular + password.
+        // El contexto llama a authService.login(phone, password).
+        const result = await login(values.phone.trim(), values.password);
         // Si success === false, mostramos el mensaje del backend.
         if (!result?.success) {
           Alert.alert(
