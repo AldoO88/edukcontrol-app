@@ -71,17 +71,16 @@ import { clsx } from 'clsx';
 //   - match: segmento de URL que marca esta tab como activa.
 //
 // IMPORTANTE: el `match` DEBE coincidir con el nombre del archivo
-// en app/(app)/. Hoy solo existen 'dashboard' y 'avisos'; las
-// otras 3 ('conducta', 'calificaciones', 'asistencia') son rutas
-// pendientes — al pulsarlas, router.push fallará con 404 hasta
-// que se creen los archivos.
+// en app/(app)/. Los nombres de ruta (y los ids de tab) van en
+// INGLÉS igual que el resto del código; solo el `label` está en
+// español porque es copy visible para el tutor.
 // ---------------------------------------------------------------------
 const DEFAULT_TABS = [
-  { id: 'inicio',         label: 'Inicio',         icon: Home,            route: '/(app)/dashboard',       match: 'dashboard' },
-  { id: 'avisos',         label: 'Avisos',         icon: Megaphone,       route: '/(app)/avisos',          match: 'avisos' },
-  { id: 'conducta',       label: 'Conducta',       icon: UserCheck,       route: '/(app)/conducta',        match: 'conducta' },
-  { id: 'calificaciones', label: 'Calificaciones', icon: GraduationCap,   route: '/(app)/calificaciones',  match: 'calificaciones' },
-  { id: 'asistencia',     label: 'Asistencia',     icon: ClipboardCheck,  route: '/(app)/asistencia',      match: 'asistencia' },
+  { id: 'home',          label: 'Inicio',         icon: Home,            route: '/(app)/dashboard',      match: 'dashboard' },
+  { id: 'announcements', label: 'Avisos',         icon: Megaphone,       route: '/(app)/announcements',  match: 'announcements' },
+  { id: 'conduct',       label: 'Conducta',       icon: UserCheck,       route: '/(app)/conduct',        match: 'conduct' },
+  { id: 'grades',        label: 'Calificaciones', icon: GraduationCap,   route: '/(app)/grades',         match: 'grades' },
+  { id: 'attendance',    label: 'Asistencia',     icon: ClipboardCheck,  route: '/(app)/attendance',     match: 'attendance' },
 ];
 
 const BottomTabBar = ({ tabs = DEFAULT_TABS }) => {
@@ -90,8 +89,8 @@ const BottomTabBar = ({ tabs = DEFAULT_TABS }) => {
   const insets = useSafeAreaInsets();
 
   // Segmento de URL actual. Usado para resaltar el tab activo.
-  // El último segmento del array es la ruta hoja (e.g. "avisos"
-  // para la URL /avisos, "dashboard" para /dashboard).
+  // El último segmento del array es la ruta hoja (e.g. "announcements"
+  // para la URL /announcements, "dashboard" para /dashboard).
   const currentSegment = segments[segments.length - 1] || 'dashboard';
 
   return (

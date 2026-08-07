@@ -98,26 +98,42 @@ export default function AppLayout() {
         name="dashboard"
         options={{ headerShown: false }}
       />
-      {/* Ruta /avisos. headerShown:false porque la pantalla pinta
-          su propio header (o, en el futuro, lo heredará del
-          layout cuando se extraiga de GuardianDashboard). */}
+      {/* Ruta /announcements (pantalla "Avisos"). headerShown:false
+          porque la pantalla pinta su propio header (o, en el futuro,
+          lo heredará del layout cuando se extraiga de
+          GuardianDashboard). Los nombres de ruta van en inglés
+          (igual que componentes, hooks y services); el copy visible
+          sigue en español. */}
       <Stack.Screen
-        name="avisos"
+        name="announcements"
         options={{ headerShown: false }}
       />
-      {/* Ruta /conducta. Mismo patrón que avisos. */}
+      {/* Ruta dinámica /announcements/:kind/:id. El :kind discrimina
+          entre 'announcement' y 'citation' (endpoints separados
+          en el backend). headerShown:false + back button custom
+          dentro de la propia pantalla. El name sigue la convención
+          de path relativo de Expo Router:
+          "announcements/[kind]/[id]". */}
       <Stack.Screen
-        name="conducta"
+        name="announcements/[kind]/[id]"
         options={{ headerShown: false }}
       />
-      {/* Ruta /calificaciones. Mismo patrón que avisos/conducta. */}
+      {/* Ruta /conduct (pantalla "Conducta"). Mismo patrón que
+          announcements. */}
       <Stack.Screen
-        name="calificaciones"
+        name="conduct"
         options={{ headerShown: false }}
       />
-      {/* Ruta /asistencia. Mismo patrón que las otras pantallas. */}
+      {/* Ruta /grades (pantalla "Calificaciones"). Mismo patrón que
+          announcements/conduct. */}
       <Stack.Screen
-        name="asistencia"
+        name="grades"
+        options={{ headerShown: false }}
+      />
+      {/* Ruta /attendance (pantalla "Asistencia"). Mismo patrón que
+          las otras pantallas. */}
+      <Stack.Screen
+        name="attendance"
         options={{ headerShown: false }}
       />
     </Stack>

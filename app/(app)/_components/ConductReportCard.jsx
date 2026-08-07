@@ -2,7 +2,7 @@
 // app/(app)/_components/ConductReportCard.jsx
 // ---------------------------------------------------------------------
 // Card de un reporte individual de conducta para la pantalla
-// "Conducta" (conducta.jsx). Mismo lenguaje visual que
+// "Conducta" (conduct.jsx). Mismo lenguaje visual que
 // AnnouncementCard.jsx: borde izquierdo grueso coloreado, header
 // con tipo + meta, body con título + descripción, footer con fecha.
 //
@@ -32,6 +32,7 @@ import { View, Text, Pressable } from 'react-native';
 // Iconos Lucide.
 import {
   TriangleAlert, // warning triangle (falta_leve).
+  CircleAlert,   // círculo de alerta (falta_moderada).
   Flag,          // bandera (falta_grave, más "fuerte" que el triángulo).
   Star,          // estrella (mérito).
   Calendar,      // icono de fecha en el footer.
@@ -48,11 +49,15 @@ import { clsx } from 'clsx';
 // tipos (reconocimiento, observación positiva, etc.) en el futuro.
 //
 // Cada entrada tiene:
-//   - borderClass: color del borde izquierdo (clase NativeWind).
+//   - borderClass: color del borde inferior (clase NativeWind).
 //   - iconBg / iconColor: estilos del círculo del icono.
 //   - badge: { bg, text, label } — estilos del pill de tipo.
-//   - pointsClass: color del "+N pts" / "-N pts" (verde si positivo,
-//     rojo si negativo).
+//
+// Tipos soportados (alineados con el spec del backend):
+//   - falta_leve:     rose (incidencia menor, -5 a -3 pts).
+//   - falta_moderada: orange (incidencia moderada, -10 a -7 pts).
+//   - falta_grave:    red (incidencia mayor, -20 a -10 pts).
+//   - merito:         sky (conducta ejemplar, +2 a +10 pts).
 // ---------------------------------------------------------------------
 const TYPE_CONFIG = {
   falta_leve: {
@@ -65,6 +70,17 @@ const TYPE_CONFIG = {
       label: 'FALTA LEVE',
     },
     icon: TriangleAlert,
+  },
+  falta_moderada: {
+    borderClass: 'border-orange-500',
+    iconBg: 'bg-orange-100',
+    iconColor: '#ea580c', // orange-600
+    badge: {
+      bg: 'bg-orange-100',
+      text: 'text-orange-700',
+      label: 'FALTA MODERADA',
+    },
+    icon: CircleAlert,
   },
   falta_grave: {
     borderClass: 'border-red-600',

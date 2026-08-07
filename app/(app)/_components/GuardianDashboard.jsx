@@ -187,7 +187,7 @@ export default function GuardianDashboard() {
             </Text>
           </View>
 
-          <Text className="text-sm text-slate-500 mt-3">
+          <Text className="text-sm text-slate-500 mt-1">
             {data?.subtitle ||
               'Sigue el progreso académico de tus hijos en tiempo real.'}
           </Text>
@@ -202,8 +202,8 @@ export default function GuardianDashboard() {
             rounded-2xl para que tenga el mismo lenguaje que el resto.
             ============================================================ */}
         {stats && (stats.total_students > 0 || stats.active_students > 0) && (
-          <View className="px-4 mt-3">
-            <View className="bg-sky-50 rounded-2xl px-4 py-3 self-start flex-row items-center">
+          <View className="px-4 mt-1">
+            <View className="bg-sky-50 rounded-2xl px-4 py-2 self-start flex-row items-center">
               <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
                 {stats.active_students} {stats.active_students === 1 ? 'hijo activo' : 'hijos activos'}
                 {stats.inactive_students > 0 && (
@@ -219,7 +219,7 @@ export default function GuardianDashboard() {
         {/* ============================================================
             STUDENT CARDS
             ============================================================ */}
-        <View className="px-4 mt-6">
+        <View className="px-4 mt-4">
           {/* Loading inicial: 2 skeletons. */}
           {isLoading && !data && (
             <>
@@ -464,9 +464,9 @@ function StudentCard({ student, index = 0 }) {
           <Text className="text-sm text-slate-500 mt-1" numberOfLines={1}>
             {groupLabel}
           </Text>
-          {student.enrollment_number && (
+          {student.controlNumber && (
             <Text className="text-sm text-slate-400 mt-0.5">
-              No. Control: {student.enrollment_number}
+              No. Control: {student.controlNumber}
             </Text>
           )}
         </View>

@@ -13,15 +13,13 @@
 //   - Fila "Promedio" con bg-sky-50 + texto sky-600
 //
 // Props:
-//   - subjects: array de { id, name, icon, t1, t2, t3 } donde
+//   - subjects: array de { id, name, icon?, t1, t2, t3 } donde
 //               t1/t2/t3 son number|null. null se renderiza como "—".
-//   - averageByTrimester: { t1, t2, t3 } con el promedio del
-//                         alumno por trimestre. Misma convención.
-//
-// Cambia respecto a la versión anterior (que mostraba solo 1
-// columna): ahora se renderizan 3 columnas (T1, T2, T3) con
-// ancho fijo (w-12) para que las notas calcen en columnas
-// consistentes entre filas.
+//   - averageByPeriod: { t1, t2, t3 } con el promedio del
+//                      alumno por periodo. Misma convención.
+//   - periods: array de { period, name } para headers dinámicos.
+//              Ej: [{ period: 1, name: "Trimestre 1" }].
+//              Si no se provee, se usan T1/T2/T3 por defecto.
 // =====================================================================
 
 // React.
@@ -32,6 +30,22 @@ import { View, Text } from 'react-native';
 
 // clsx.
 import { clsx } from 'clsx';
+
+// ---------------------------------------------------------------------
+// DEFAULT_PERIOD_LABELS
+// ---------------------------------------------------------------------
+// Labels por defecto para los periodos (T1, T2, T3). Se usan
+// cuando NO se provee el prop `periods` (backward compatibility).
+// ---------------------------------------------------------------------
+const DEFAULT_PERIOD_LABELS = ['T1', 'T2', 'T3'];
+
+// ---------------------------------------------------------------------
+// PERIOD_KEYS
+// ---------------------------------------------------------------------
+// Keys de las notas en el objeto de subject. Orden consistente
+// con los labels por defecto.
+// ---------------------------------------------------------------------
+const PERIOD_KEYS = ['t1', 't2', 't3'];
 
 // ---------------------------------------------------------------------
 // renderGrade(value)
@@ -49,11 +63,10 @@ const renderGrade = (value) => {
 // ---------------------------------------------------------------------
 // GradesRow
 // ---------------------------------------------------------------------
-// Sub-componente interno: renderiza la fila con las 3 notas
-// (T1, T2, T3) de un subject. Se usa tanto en las filas de
-// materia como en la fila de promedio. La prop `accent` cambia
-// el color del texto (slate-900 para notas individuales,
-// sky-600 para el promedio).
+// Sub-componente interno: renderiza la fila con las notas de un
+// subject. Acepta un array de grades (longitud dinámica según
+// periodos). La prop `accent` cambia el color del texto
+// (slate-900 para notas individuales, sky-600 para el promedio).
 const GradesRow = ({ grades, accent = false }) => {
   return (
     <View className="flex-row">
@@ -62,9 +75,6 @@ const GradesRow = ({ grades, accent = false }) => {
           key={i}
           className={clsx(
             'w-12 text-center text-sm font-bold',
-            // Si hay nota y accent=true → sky-600 (promedio).
-            // Si hay nota y accent=false → slate-900 (materia).
-            // Si no hay nota → "—" slate-300 + font-normal.
             typeof grade === 'number' && !Number.isNaN(grade)
               ? accent
                 ? 'text-sky-600'
@@ -82,54 +92,55 @@ const GradesRow = ({ grades, accent = false }) => {
 // ---------------------------------------------------------------------
 // CalificacionesTable
 // ---------------------------------------------------------------------
-const CalificacionesTable = ({ subjects = [], averageByTrimester = {} }) => {
+const CalificacionesTable = ({
+  subjects = [],
+  averageByPeriod = {},
+  periods = [],
+}) => {
+  // Determinar los labels de las columnas. Si `periods` tiene
+  // datos, usamos sus names; si no, fallback a T1/T2/T3.
+  const columnLabels = periods.length > 0
+    ? periods.map((p) => {
+        // Extraer "T1", "T2", etc. del name ("Trimestre 1" → "T1").
+        // Si el name ya es corto (<=3 chars), usarlo directamente.
+        if (p.name && p.name.length <= 3) return p.name;
+        const match = p.name?.match(/(\d+)/);
+        return match ? `T${match[1]}` : `P${p.period}`;
+      })
+    : DEFAULT_PERIOD_LABELS;
+
+  // Determinar las keys de las notas según la cantidad de periodos.
+  const periodKeys = periods.length > 0
+    ? periods.map((_, i) => PERIOD_KEYS[i] || `t${i + 1}`)
+    : PERIOD_KEYS;
+
   return (
     // Contenedor de la tabla.
-    // - bg-white: fondo blanco sobre el slate-50 de la pantalla.
-    // - rounded-2xl: bordes consistentes con el resto de cards.
-    // - border-t-[5px] border-t-sky-500: CINTA de color sky-500
-    //   en el borde superior (5px). Es el "ribbon" que identifica
-    //   visualmente a esta card.
-    // - border border-slate-200: contorno sutil slate-200 en
-    //   los otros 3 lados.
-    // - shadow-md + elevation 3: sombra prominente.
-    // - overflow-hidden: necesario para que el borderRadius
-    //   respete los hijos internos.
     <View
       className="bg-white rounded-2xl border border-slate-200 border-t-[5px] border-t-sky-500 shadow-md overflow-hidden"
       style={{ elevation: 3 }}
     >
       {/* ------------------------------------------------------
           HEADER DE COLUMNAS
-          ------------------------------------------------------
-          MATERIA a la izquierda (flex-1) + 3 columnas T1/T2/T3
-          (w-12 cada una, centradas) a la derecha. bg-slate-50
-          + border-b para separar del cuerpo.
           ------------------------------------------------------ */}
       <View className="flex-row items-center px-5 py-3 bg-slate-50">
         <Text className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Materia
         </Text>
         <View className="flex-row">
-          <Text className="w-12 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            T1
-          </Text>
-          <Text className="w-12 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            T2
-          </Text>
-          <Text className="w-12 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            T3
-          </Text>
+          {columnLabels.map((label, i) => (
+            <Text
+              key={i}
+              className="w-12 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              {label}
+            </Text>
+          ))}
         </View>
       </View>
 
       {/* ------------------------------------------------------
           FILAS DE MATERIAS
-          ------------------------------------------------------
-          flex-row con:
-            - Icono en cuadrado sky-100 (w-9 h-9)
-            - Nombre de la materia (flex-1)
-            - 3 notas a la derecha (GradesRow)
           ------------------------------------------------------ */}
       {subjects.map((subject, index) => {
         const Icon = subject.icon;
@@ -153,7 +164,7 @@ const CalificacionesTable = ({ subjects = [], averageByTrimester = {} }) => {
               </Text>
             </View>
             <GradesRow
-              grades={[subject.t1, subject.t2, subject.t3]}
+              grades={periodKeys.map((k) => subject[k] ?? null)}
             />
           </View>
         );
@@ -161,11 +172,6 @@ const CalificacionesTable = ({ subjects = [], averageByTrimester = {} }) => {
 
       {/* ------------------------------------------------------
           FILA DE PROMEDIO (destacada)
-          ------------------------------------------------------
-          bg-sky-50 + icono Σ en cuadrado blanco. Las 3 notas
-          (T1, T2, T3) van en sky-600 para reforzar la
-          jerarquía "resumen vs detalle". border-t slate-200
-          para marcar el corte.
           ------------------------------------------------------ */}
       <View className="flex-row items-center px-5 py-4 bg-sky-50 border-t border-slate-200">
         <View className="flex-1 flex-row items-center">
@@ -177,11 +183,7 @@ const CalificacionesTable = ({ subjects = [], averageByTrimester = {} }) => {
           </Text>
         </View>
         <GradesRow
-          grades={[
-            averageByTrimester.t1,
-            averageByTrimester.t2,
-            averageByTrimester.t3,
-          ]}
+          grades={periodKeys.map((k) => averageByPeriod[k] ?? null)}
           accent
         />
       </View>
