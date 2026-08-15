@@ -52,14 +52,14 @@ const SCHOOL_DAY_KEYS = {
 //
 // Input shape (backend):
 //   {
-//     "1": { day_name: "LUN", classes: [{ subject, subject_code, teacher, start, end, classroom }] },
+//     "1": { day_name: "LUN", classes: [{ subject, subject_code, teacher, start, end, classroom, block_count, block_names, is_taller }] },
 //     "2": { day_name: "MAR", classes: [...] },
 //     ...
 //   }
 //
 // Output shape (UI):
 //   {
-//     lunes: [{ time, subject, subjectFull, teacher, color }],
+//     lunes: [{ time, subject, subjectFull, teacher, color, classroom, blockCount, blockNames, isTaller }],
 //     martes: [...],
 //     ...
 //   }
@@ -87,6 +87,14 @@ const mapScheduleByDay = (rawSchedule) => {
     const classes = dayData?.classes || [];
 
     result[dayId] = classes.map((cls) => {
+      // Fila de receso: el backend la manda con type === "receso".
+      if (cls.type === 'receso') {
+        return {
+          type: 'receso',
+          time: `${cls.start} - ${cls.end}`,
+        };
+      }
+
       const code = cls.subject_code || cls.subject?.slice(0, 3)?.toUpperCase() || '---';
 
       // Asignar color determinista por subject_code.
@@ -101,6 +109,11 @@ const mapScheduleByDay = (rawSchedule) => {
         subjectFull: cls.subject || 'Sin materia',
         teacher: cls.teacher || 'Sin asignar',
         color: subjectColorMap[code],
+        // Nuevos campos del endpoint actualizado.
+        classroom: cls.classroom || null,
+        blockCount: cls.block_count || 1,
+        blockNames: cls.block_names || [],
+        isTaller: cls.is_taller || false,
       };
     });
   });

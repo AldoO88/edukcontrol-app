@@ -23,21 +23,34 @@ Aplicación móvil escolar (Expo SDK 57 + React Native 0.86 + React 19.2.3) con 
 ```
 school-parents-app/
 ├── app/                       # Raíz del routing (Expo Router, file-based).
-│   ├── _layout.jsx            # Layout raíz: providers + AuthGate + Stack + SchoolHeader global.
+│   ├── _layout.jsx            # Layout raíz: providers + Stack global.
 │   ├── index.jsx              # Ruta "/". Pantalla de Login (placeholder).
-│   └── (app)/                 # Route group "logueado" — no aparece en la URL.
-│       ├── _layout.jsx        # Auth gate defensivo: Redirect "/" si !user.
-│       ├── dashboard.jsx      # Ruta "/dashboard". Render condicional por userRole.
-│       └── _components/       # Carpeta privada (prefijo "_" la oculta del routing).
-│           ├── TeacherDashboardPlaceholder.jsx
-│           └── GuardianDashboardPlaceholder.jsx
+│   ├── (guardian)/            # Route group del TUTOR — no aparece en la URL.
+│   │   ├── _layout.jsx        # Auth gate + role gate + Stack + usePushNotifications.
+│   │   ├── dashboard.jsx      # Ruta "/dashboard". Renderiza GuardianDashboard.
+│   │   ├── announcements.jsx  # Ruta "/announcements". Feed de avisos/citatorios.
+│   │   ├── announcements/[kind]/[id].jsx  # Ruta "/announcements/:kind/:id".
+│   │   ├── conduct.jsx        # Ruta "/conduct". Reportes de conducta.
+│   │   ├── grades.jsx         # Ruta "/grades". Calificaciones.
+│   │   ├── attendance.jsx     # Ruta "/attendance". Asistencia.
+│   │   └── _components/       # UI privada del grupo (GuardianDashboard, cards, tables).
+│   ├── (teacher)/             # Route group del MAESTRO — no aparece en la URL.
+│   │   ├── _layout.jsx        # Auth gate + role gate + Stack + usePushNotifications.
+│   │   ├── dashboard.jsx      # Ruta "/dashboard". Renderiza TeacherDashboard.
+│   │   ├── announcements.jsx  # Ruta "/announcements". Avisos del maestro (spec visual).
+│   │   ├── take-attendance.jsx# Ruta "/take-attendance". Tomar asistencia.
+│   │   └── _components/       # UI privada del grupo (TeacherDashboard).
+│   └── (auth)/                # Route group de activación de cuenta.
+│       └── activation/        # index, verify, set-password.
 ├── src/
-│   ├── components/            # UI reutilizable (cards, inputs, botones, badges, SchoolHeader, Screen).
+│   ├── components/            # UI reutilizable + chrome compartido (cards, inputs, botones,
+│   │                          #   badges, DashboardHeader, SchoolInfoCard, BottomTabBar, StudentFilter, Screen).
 │   ├── context/               # AuthContext y futuros contextos globales.
-│   ├── hooks/                 # useAuth, useLoginForm, useNotifications (lógica separada de UI).
-│   ├── services/              # api.js (Axios), authService.js, notificationService.js.
-│   ├── constants/             # Tokens de diseño, URLs, mocks multi-tenant.
-│   └── utils/                 # Helpers puros (formateo de fechas, etc.).
+│   ├── hooks/                 # useAuth, useLoginForm, useNotifications, useTeacherDashboard,
+│   │                          #   useGuardianDashboard (lógica separada de UI).
+│   ├── services/              # api.js (Axios), authService.js, teacherService.js, notificationService.js.
+│   ├── constants/             # Tokens de diseño, URLs, mocks multi-tenant, navigationTabs.js.
+│   └── utils/                 # Helpers puros (formateo de fechas, announcementHelpers, etc.).
 ├── assets/                    # Iconos, splash, imágenes nativas.
 ├── App.jsx                    # NO EXISTE. Reemplazado por app/_layout.jsx.
 ├── index.js                   # NO EXISTE. Lo gestiona expo-router/entry (main en package.json).
@@ -52,8 +65,10 @@ Reglas:
 - `app/**/_components/` (prefijo `_`) y `app/**/_hooks/` son carpetas **privadas** dentro de un route group: expo-router las ignora para el routing y sirven para co-localizar UI/lógica específica de ese grupo.
 - `src/hooks/` NUNCA importa de `app/`, `src/components/` ni viceversa. Los hooks solo consumen contextos y servicios.
 - `app/**` (rutas) NUNCA hace `fetch`/`axios` directo. Toda llamada pasa por un hook o por `src/services/`.
-- `src/components/` no conoce navegación ni contextos de negocio — son primitives reutilizables.
-- Los **route groups** (carpetas entre paréntesis como `(app)/`) NO añaden segmentos a la URL: existen solo para compartir layouts y agrupar rutas por dominio/rol.
+- `src/components/` no conoce navegación ni contextos de negocio — son primitives reutilizables. El chrome compartido entre roles (DashboardHeader, SchoolInfoCard, BottomTabBar, StudentFilter) vive aquí.
+- Los **route groups** (carpetas entre paréntesis como `(guardian)/`) NO añaden segmentos a la URL: existen solo para compartir layouts y agrupar rutas por dominio/rol.
+- **Shared routes por rol:** como cada rol tiene su propio route group, varios grupos pueden declarar la MISMA ruta (p. ej. `dashboard` en `(guardian)` y `(teacher)` → URL `/dashboard`). Navegar SIEMPRE con el prefijo del grupo (`/(guardian)/dashboard`, `/(teacher)/announcements`); el role gate de cada `_layout.jsx` redirige al grupo correcto si el rol no coincide.
+- **Fuente única de tabs:** `src/constants/navigationTabs.js` exporta `GUARDIAN_TABS` (default de `<BottomTabBar />`) y `TEACHER_TABS` (se pasa explícito). No duplicar arrays de tabs en las pantallas.
 
 ## Sistema de diseño (NativeWind tokens)
 
@@ -119,11 +134,11 @@ NativeWind no siempre aplica `elevation` (Android) además de `shadow*` (iOS). P
 - **Comentarios en español, línea por línea, exhaustivos.** El usuario lo pidió explícitamente para este proyecto. NO es la regla por defecto del sistema — es una excepción documentada.
 - **Componentes funcionales con hooks.** No clases.
 - **Nombres de archivos:**
-  - **`.jsx`** (PascalCase) para todo lo que renderiza UI: `app/_layout.jsx`, `app/(app)/dashboard.jsx`, `src/components/Card.jsx`, `src/components/SchoolHeader.jsx`.
+  - **`.jsx`** (PascalCase) para todo lo que renderiza UI: `app/_layout.jsx`, `app/(guardian)/dashboard.jsx`, `src/components/Card.jsx`, `src/components/SchoolHeader.jsx`.
   - **`.js`** (camelCase) para módulos que NO renderizan JSX: hooks (`src/hooks/useAuth.js`), services (`src/services/api.js`) y módulos de contexto (`src/context/AuthContext.js`, híbrido: exporta el objeto Context + el Provider, pero se considera módulo de estado, no componente de UI).
 - **No barrel files** (`index.js` re-exportando) salvo que se pida — el árbol de imports debe ser explícito.
 - **Strings de UI en español.** Hardcoded en esta fase; cuando se introduzca i18n, mover a `src/i18n/es.json`.
-- **Componentes privados de un route group:** usar prefijo `_` en el nombre de archivo/carpeta (`_components/`, `_hooks/`, `TeacherDashboardPlaceholder.jsx` SIN prefijo porque se importa, pero la carpeta que los contiene sí lo lleva). Expo Router ignora estos archivos para routing.
+- **Componentes privados de un route group:** usar prefijo `_` en el nombre de archivo/carpeta (`_components/`, `_hooks/`, `TeacherDashboard.jsx` SIN prefijo porque se importa, pero la carpeta que los contiene sí lo lleva). Expo Router ignora estos archivos para routing.
 
 ## Entry points y orden de providers
 
@@ -133,16 +148,18 @@ Orden obligatorio de providers en `app/_layout.jsx` (de fuera hacia adentro):
 
 1. `SafeAreaProvider` (de `react-native-safe-area-context`)
 2. `AuthProvider` (de `src/context/AuthContext.js`)
-3. `AuthGate` (sub-componente local) — usa `useAuth()` + `useSegments()` para redirigir según el estado de sesión.
-4. `<Stack />` de `expo-router` — navigator raíz. `screenOptions.header` renderiza `<SchoolHeader />` como header global.
+3. `<Stack />` de `expo-router` — navigator raíz, SIN hijos (`headerShown: false` global). Las rutas se auto-descubren del filesystem; cada route group pinta su propio chrome.
 
-Flujo del auth gate (declarativo con `<Redirect />`):
-- `isLoading` → splash (`<RootSplash />`).
-- `!user` y segmento en `(app)` → `Redirect href="/"`.
-- `user` y segmento en `/` o `index` → `Redirect href="/(app)/dashboard"`.
-- Resto → render normal del Stack.
+El **auth flow NO vive en el root layout**: cada route group tiene su propio `_layout.jsx` con sus gates:
 
-**Render condicional por rol** vive en `app/(app)/dashboard.jsx`: según `userRole` (`'teacher'` | `'guardian'`) se monta el placeholder correspondiente. Esto evita la colisión de URLs que generaría tener `dashboard.jsx` en múltiples route groups.
+- `app/(guardian)/_layout.jsx` (rol `'tutor'`) y `app/(teacher)/_layout.jsx` (rol `'teacher'`) implementan:
+  - `isLoading` → splash (`<RootSplash />`).
+  - `!user` → `Redirect href="/"` (auth gate).
+  - rol equivocado → `Redirect` al dashboard del otro grupo (role gate, p. ej. `/(teacher)/dashboard`).
+  - `usePushNotifications(!!user)` montado SOLO con user logueado.
+- `app/index.jsx` (login): si `user` existe, `Redirect` rol-aware — `user.role === 'teacher'` → `/(teacher)/dashboard`, si no → `/(guardian)/dashboard`.
+
+**Dashboards por rol (sin dispatcher):** `app/(guardian)/dashboard.jsx` renderiza `GuardianDashboard` y `app/(teacher)/dashboard.jsx` renderiza `TeacherDashboard`. Ambos comparten la URL `/dashboard` (shared route); la navegación siempre lleva el prefijo de grupo y el role gate descarta accesos cruzados.
 
 ## Comandos
 

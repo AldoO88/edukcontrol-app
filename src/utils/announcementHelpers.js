@@ -188,7 +188,7 @@ const getFullName = (person) => {
 //     el detail mostrarían "General" — incluso los que son para un
 //     grupo o un alumno específico. La pantalla de detalle usa el
 //     null para decidir si oculta la card "Para:" (ver
-//     app/(app)/announcements/[kind]/[id].jsx).
+//     app/(guardian)/announcements/[kind]/[id].jsx).
 //   - El audience.type es un valor desconocido o faltan los datos
 //     para componer el label.
 // ---------------------------------------------------------------------

@@ -12,9 +12,11 @@
 // ---------------------------------------------------------------------
 // 1) El root layout exporta UN NAVIGADOR (Stack/Tabs) SIN hijos.
 //    Las rutas se infieren del filesystem:
-//      app/index.jsx          → "/"
-//      app/(app)/_layout.jsx  → route group "(app)" con su propio Stack
-//      app/(app)/dashboard.jsx → "/dashboard"
+//      app/index.jsx                    → "/"
+//      app/(guardian)/_layout.jsx       → route group "(guardian)" con su Stack
+//      app/(guardian)/dashboard.jsx     → "/dashboard" (shared route con teacher)
+//      app/(teacher)/_layout.jsx        → route group "(teacher)" con su Stack
+//      app/(teacher)/dashboard.jsx      → "/dashboard" (shared route con guardian)
 // 2) Para opciones de UNA pantalla específica, se usa el export
 //    `options` desde el archivo de la pantalla:
 //      // app/index.jsx
@@ -58,13 +60,14 @@ export default function RootLayout() {
         <StatusBar style="light" />
 
         {/* Stack raíz SIN hijos. Las rutas se descubren del
-            filesystem: app/index.jsx, app/(app)/_layout.jsx +
-            app/(app)/dashboard.jsx, etc.
+            filesystem: app/index.jsx, app/(guardian)/_layout.jsx,
+            app/(teacher)/_layout.jsx, etc.
 
             No inyectamos un header global porque cada screen/layout
             file es responsable del suyo propio:
               - app/index.jsx           → pinta su propio BrandHeader "EdukControl"
-              - app/(app)/_layout.jsx   → los dashboards pintan su propio header
+              - app/(guardian)/_layout.jsx y app/(teacher)/_layout.jsx
+                                        → cada rol pinta su propio header
 
             `headerShown: false` en screenOptions desactiva el
             header nativo de Expo Router (la barra con título de la

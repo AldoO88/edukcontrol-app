@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }) => {
 
     // Actualizar el estado global. Esto dispara re-render de todos
     // los consumers de useAuth() y la redirección automática al
-    // dashboard en el (app)/_layout.jsx.
+    // dashboard en el _layout.jsx del route group correspondiente.
     setUser(user);
   }, []);
 
@@ -223,11 +223,11 @@ export const AuthProvider = ({ children }) => {
       // cualquier petición accidental no viaje con un token muerto.
       delete api.defaults.headers.common.Authorization;
 
-      // 4. Limpiar el estado global. El (app)/_layout.jsx verá
-      // user=null y redirigirá al login. El hook usePushNotifications
-      // se quedará con enabled=false, su effect cleanup se ejecuta
-      // y remueve el listener de rotación (sin tocar el backend,
-      // eso ya lo hicimos en el paso 1).
+      // 4. Limpiar el estado global. El _layout.jsx de cada route
+      // group verá user=null y redirigirá al login. El hook
+      // usePushNotifications se quedará con enabled=false, su effect
+      // cleanup se ejecuta y remueve el listener de rotación (sin
+      // tocar el backend, eso ya lo hicimos en el paso 1).
       setUser(null);
     } catch (error) {
       // Si algo falla al limpiar la sesión, lo registramos pero

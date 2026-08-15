@@ -6,7 +6,9 @@
 //
 // Auth flow (DECLARATIVO, dentro del screen — NO en el layout raíz):
 //   - isLoading === true   → splash.
-//   - user existe          → <Redirect href="/dashboard" />.
+//   - user existe          → <Redirect href="/dashboard" />, rol-aware:
+//                            teacher → '/(teacher)/dashboard',
+//                            tutor → '/(guardian)/dashboard'.
 //   - sin user             → renderizar la pantalla de login.
 // El <Redirect> declarativo es el patrón canónico de Expo Router
 // v5: navega en la fase de render sin necesidad de useEffect ni
@@ -80,11 +82,14 @@ export default function LoginScreen() {
     return <RootSplash />;
   }
 
-  // Si el usuario YA está autenticado, saltamos al dashboard.
-  // El <Redirect> se monta durante el render → Expo Router navega
-  // sin remontar el AuthProvider (que está arriba del Stack).
+  // Si el usuario YA está autenticado, saltamos a su dashboard.
+  // Con route groups por rol, el redirect es rol-aware: cada grupo
+  // tiene su propio dashboard.jsx (shared route /dashboard), así que
+  // navegamos explícitamente al grupo correcto según user.role.
   if (user) {
-    return <Redirect href="/dashboard" />;
+    return (
+      <Redirect href={user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard'} />
+    );
   }
 
   // Sin user: renderizar la pantalla de login.

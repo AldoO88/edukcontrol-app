@@ -18,9 +18,9 @@
 // =====================================================================
 // ¿DÓNDE SE MONTA?
 // ---------------------------------------------------------------------
-// En app/(app)/_layout.jsx, SOLO cuando hay user logueado. El
-// hook recibe `enabled` como parámetro para que el componente
-// padre controle cuándo activarlo. Esto evita:
+// En app/(guardian)/_layout.jsx y app/(teacher)/_layout.jsx, SOLO
+// cuando hay user logueado. El hook recibe `enabled` como parámetro
+// para que el componente padre controle cuándo activarlo. Esto evita:
 //   - Pedir permisos a un usuario NO logueado.
 //   - Registrar el token contra un endpoint que requiere auth
 //     (el JWT se setea en useAuth().login, no antes).

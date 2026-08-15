@@ -133,12 +133,13 @@ export default function SetPasswordScreen() {
       // debe estar en el history. Si el usuario presiona back tras
       // activar, debe ir al dashboard, no a esta pantalla.
       //
-      // El dispatcher de app/(app)/dashboard.jsx lee userRole del
-      // AuthContext y renderiza el GuardianDashboard cuando es
-      // 'tutor' (rol que envía el backend para padres). Con
-      // setSession() ya seteó el user, el dispatcher va a ver
-      // userRole === 'tutor' y montar el dashboard correcto.
-      router.replace('/(app)/dashboard');
+      // Con route groups por rol ya NO hay dispatcher: cada rol tiene
+      // su propio grupo ((guardian) o (teacher)). setSession() ya
+      // seteó el user global con su role, así que navegamos
+      // explícitamente al dashboard del grupo correcto.
+      const dashboardHref =
+        sessionResult.user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard';
+      router.replace(dashboardHref);
     } catch (error) {
       console.error('[Activation set-password] Error inesperado:', error);
       Alert.alert(
