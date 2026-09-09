@@ -87,9 +87,13 @@ export default function LoginScreen() {
   // tiene su propio dashboard.jsx (shared route /dashboard), así que
   // navegamos explícitamente al grupo correcto según user.role.
   if (user) {
-    return (
-      <Redirect href={user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard'} />
-    );
+    const roleRedirectMap = {
+      teacher: '/(teacher)/dashboard',
+      prefect: '/(prefect)/dashboard',
+      tutor: '/(guardian)/dashboard',
+    };
+    const href = roleRedirectMap[user.role] || '/(guardian)/dashboard';
+    return <Redirect href={href} />;
   }
 
   // Sin user: renderizar la pantalla de login.

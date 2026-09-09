@@ -63,8 +63,9 @@ import { useRouter } from 'expo-router';
 // Iconos Lucide.
 import {
   Megaphone,      // Avisos (grid).
-  AlertCircle,    // Citatorios (grid) + error state.
-  ClipboardCheck, // Asistencia (grid).
+  AlertCircle,    // Citas (grid) + error state.
+  BarChart3,      // Resumen Asistencia (grid) — vista analytics.
+  ClipboardCheck, // (legacy; reservado si se agrega otra action).
   Calendar,       // Horario (grid).
   UsersRound,     // Grupo de la clase actual.
   Clock,          // Hora de la clase.
@@ -72,14 +73,12 @@ import {
   RefreshCw,      // Retry en error state.
 } from 'lucide-react-native';
 
-// Tabs del bottom bar para el rol teacher. Fuente única en
-// src/constants/navigationTabs.js.
-import { TEACHER_TABS } from '../../../src/constants/navigationTabs';
+// (BottomTabBar eliminado: lo pinta el Tabs navigator raíz.)
+// (TEACHER_TABS eliminado: solo se usaba para pasar al BottomTabBar.)
 
 // Componentes del chrome compartido (src/components).
 import DashboardHeader from '../../../src/components/DashboardHeader';
 import SchoolInfoCard from '../../../src/components/SchoolInfoCard';
-import BottomTabBar from '../../../src/components/BottomTabBar';
 
 // Hook de auth: provee { user }.
 import { useAuth } from '../../../src/hooks/useAuth';
@@ -95,14 +94,14 @@ import { clsx } from 'clsx';
 // ---------------------------------------------------------------------
 // Accesos rápidos del grid 2x2 del maestro. Tras el cambio de la
 // barra inferior (Mis Grupos y Calificaciones pasaron a ser TABs),
-// aquí quedan las otras cuatro: Avisos, Citatorios, Asistencia y
+// aquí quedan las otras cuatro: Avisos, Citas, Asistencia y
 // Horario. Cada uno tiene un icono, label y color de fondo del icono
 // (mismo patrón que los pills del guardian).
 // ---------------------------------------------------------------------
 const QUICK_ACTIONS = [
   { id: 'announcements', label: 'Avisos',     icon: Megaphone,      iconBg: 'bg-sky-100',     iconColor: '#0284c7' },
-  { id: 'citations',     label: 'Citatorios', icon: AlertCircle,    iconBg: 'bg-amber-100',   iconColor: '#b45309' },
-  { id: 'attendance',    label: 'Asistencia', icon: ClipboardCheck, iconBg: 'bg-emerald-100', iconColor: '#047857' },
+  { id: 'citations',     label: 'Citatorios',       icon: AlertCircle,    iconBg: 'bg-amber-100',   iconColor: '#b45309' },
+  { id: 'attendance',    label: 'Resumen Asistencia', icon: BarChart3,        iconBg: 'bg-emerald-100', iconColor: '#047857' },
   { id: 'schedule',      label: 'Horario',    icon: Calendar,       iconBg: 'bg-purple-100',  iconColor: '#7c3aed' },
 ];
 
@@ -327,11 +326,8 @@ export default function TeacherDashboard() {
               
               <Pressable
                 onPress={() => router.push({
-                  pathname: '/(teacher)/take-attendance',
-                  params: {
-                    groupId: currentClass.group?._id,
-                    subjectId: currentClass.subject?._id,
-                  },
+                  pathname: `/(teacher)/groups/${currentClass.group?._id}/attendance/today`,
+                  params: { subjectId: currentClass.subject?._id },
                 })}
                 className="flex-row items-center justify-center mt-5 bg-teal-700 active:bg-teal-800 rounded-2xl py-4"
                 accessibilityRole="button"
@@ -384,25 +380,9 @@ export default function TeacherDashboard() {
                   <Text className="text-xs font-semibold text-slate-700 flex-1" numberOfLines={1}>
                     {cls.subject?.name}
                   </Text>
-                  <Text className="text-[11px] text-slate-500 w-12 text-right">
+                  <Text className="text-[11px] text-slate-500 w-22 text-left">
                     {cls.group?.label}
                   </Text>
-                  <Pressable
-                    onPress={() => router.push({
-                      pathname: '/(teacher)/take-attendance',
-                      params: {
-                        groupId: cls.group?._id,
-                        subjectId: cls.subject?._id,
-                      },
-                    })}
-                    className="ml-2 bg-teal-600 px-2 py-1 rounded-lg"
-                    accessibilityRole="button"
-                    accessibilityLabel={`Tomar asistencia de ${cls.subject?.name}`}
-                  >
-                    <Text className="text-[9px] font-bold text-white">
-                      Lista
-                    </Text>
-                  </Pressable>
                 </View>
               ))}
             </View>
@@ -427,9 +407,17 @@ export default function TeacherDashboard() {
               <Pressable
                 key={action.id}
                 onPress={() => {
-                  // Navegación del quick action. "Avisos", "Asistencia"
-                  // y "Horario" tienen pantalla propia (prototipo del
-                  // maestro). "Citatorios" aún no tiene ruta → TODO.
+                  // Navegación del quick action.
+                  //   - "Avisos"     → pantalla propia de comunicados.
+                  //   - "Resumen Asistencia" → vista de analytics
+                  //                            (read-only, distinto a las
+                  //                            acciones de escritura
+                  //                            "Tomar Asistencia" /
+                  //                            matrix per-grupo).
+                  //   - "Horario"    → pantalla propia de horario
+                  //                     (fuera de tabs).
+                  //   - "Citas"       → pantalla de gestión de citaciones
+                  //                     y citas con padres.
                   if (action.id === 'announcements') {
                     router.push('/(teacher)/announcements');
                   }
@@ -437,9 +425,11 @@ export default function TeacherDashboard() {
                     router.push('/(teacher)/attendance');
                   }
                   if (action.id === 'schedule') {
-                    router.push('/(teacher)/grades');
+                    router.push('/(teacher)/schedule');
                   }
-                  // citations: TODO pendiente (aún no hay pantalla).
+                  if (action.id === 'citations') {
+                    router.push('/(teacher)/citations');
+                  }
                 }}
                 className="bg-white rounded-2xl border border-slate-100 shadow-sm items-center justify-center py-5 px-4"
                 style={{ elevation: 1, width: '47%' }}
@@ -460,8 +450,9 @@ export default function TeacherDashboard() {
         )}
       </ScrollView>
 
-      {/* Bottom tab bar con tabs del maestro. */}
-      <BottomTabBar tabs={TEACHER_TABS} />
+      {/* El BottomTabBar es pintado por el Tabs navigator raíz
+          (app/(teacher)/(tabs)/_layout.jsx) vía `tabBar` prop. NO
+          debe pintarse aquí dentro para evitar doble render. */}
     </View>
   );
 }

@@ -1,12 +1,13 @@
 // =====================================================================
-// app/(teacher)/matrix.jsx
+// app/(teacher)/(tabs)/groups/[groupId]/attendance.jsx
 // ---------------------------------------------------------------------
-// Ruta "/matrix" del route group (teacher). Pantalla "Pase de Lista
-// Matricial" del MAESTRO: tabla de asistencias alumno × fecha con
-// columnas dinámicas (agregar / eliminar fechas desde la UI).
+// Ruta "/groups/:groupId/attendance" del route group (teacher).
+// Pantalla "Pase de Lista Matricial" del MAESTRO: tabla de
+// asistencias alumno × fecha con columnas dinámicas (agregar /
+// eliminar fechas desde la UI).
 //
-// Se abre desde el botón "Asistencia" / "Pase de Lista" de la card
-// de grupo en "Mis Grupos" (groups.jsx), pasando { groupId, groupName }.
+// Se abre desde el botón "Asistencia" del detalle del grupo
+// (`/groups/[groupId]`). Recibe `groupId` por URL.
 //
 // NOTA DE ARQUITECTURA (mock visual):
 //   PROTOTIPO VISUAL. Los alumnos y las fechas son datos estáticos
@@ -25,7 +26,7 @@
 // =====================================================================
 
 // React.
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 // Primitivas RN.
 import {
@@ -35,49 +36,76 @@ import {
   Pressable,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 // Navegación.
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 // Iconos Lucide.
-import { ChevronLeft, Users, Plus } from 'lucide-react-native';
+import { ChevronLeft, Users, Plus, ChevronDown } from 'lucide-react-native';
 
 // Safe area.
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Chrome compartido.
-import { useTeacherDashboard } from '../../src/hooks/useTeacherDashboard';
-import SchoolInfoCard from '../../src/components/SchoolInfoCard';
-import DashboardHeader from '../../src/components/DashboardHeader';
+import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import SchoolInfoCard from '@/src/components/SchoolInfoCard';
+import DashboardHeader from '@/src/components/DashboardHeader';
+
+// Servicio para obtener períodos de evaluación y sesiones de asistencia.
+import {
+  getGradingPeriods,
+  getAttendanceSessions,
+  createAttendanceSession,
+  updateAttendanceRecord,
+} from '@/src/services/teacherService';
 
 // Helpers puros.
 import {
   todayIso,
   formatShort,
   formatFull,
-} from '../../src/utils/attendanceHelpers';
-
+  STATUS_STYLES,
+} from '@/src/utils/attendanceHelpers';
 // Modales privados del route group (teacher).
-import EditAttendanceModal from './_components/EditAttendanceModal';
-import AddDateModal from './_components/AddDateModal';
+import EditAttendanceModal from '@/app/(teacher)/_components/EditAttendanceModal';
+import AddDateModal from '@/app/(teacher)/_components/AddDateModal';
 
 // ---------------------------------------------------------------------
-// PALETA DE ESTADOS DE LA MATRIZ
+// STATUS_STYLES → importado de '@/src/utils/attendanceHelpers' (status
+// colors y labels compartidos con el today view).
+// '@/src/utils/attendanceHelpers' (compartidos con la today view).
 // ---------------------------------------------------------------------
-const STATUS_STYLES = {
-  P:  { soft: '#DCFCE7', color: '#16A34A', label: 'Presente' },
-  F:  { soft: '#FEE2E2', color: '#DC2626', label: 'Falta' },
-  R:  { soft: '#FEF3C7', color: '#D97706', label: 'Retardo' },
-  FJ: { soft: '#E0F2FE', color: '#0284C7', label: 'F. Justificada' },
-  '-': { soft: '#F1F5F9', color: '#94A3B8', label: 'Sin registro' },
+
+// ---------------------------------------------------------------------
+// HELPERS: mapeo de status del backend al código del front.
+// ---------------------------------------------------------------------
+const mapBackendStatus = (status) => {
+  const map = { present: 'P', absent: 'F', retard: 'R', justified: 'FJ' };
+  return map[status] || '-';
 };
 
-// Ciclo de estados al tap en una celda: P → F → R → FJ → - → P …
-const STATUS_CYCLE = ['P', 'F', 'R', 'FJ', '-'];
+// Mapeo inverso: código del front → status del backend.
+const mapToFrontendStatus = (code) => {
+  const map = { P: 'present', F: 'absent', R: 'retard', FJ: 'justified' };
+  return map[code] || 'present';
+};
+
+const buildRecordsFromSessions = (sessions, studentId) => {
+  const records = {};
+  sessions.forEach((sess) => {
+    const record = sess.records.find((r) => r.student_id === studentId);
+    if (record) {
+      const dateKey = sess.date.split('T')[0];
+      records[dateKey] = mapBackendStatus(record.status);
+    }
+  });
+  return records;
+};
 
 // ---------------------------------------------------------------------
-// MOCK_STUDENTS
+// MOCK_STUDENTS — fallback si el endpoint no devuelve datos.
 // ---------------------------------------------------------------------
 const MOCK_STUDENTS = [
   {
@@ -155,12 +183,11 @@ const CELL_SIZE = 40;
 // =====================================================================
 // COMPONENTE: MatrixCell
 // =====================================================================
-function MatrixCell({ status, onPress, onLongPress }) {
+function MatrixCell({ status, onPress }) {
   const style = STATUS_STYLES[status] || STATUS_STYLES['-'];
   return (
     <Pressable
       onPress={onPress}
-      onLongPress={onLongPress}
       className="items-center justify-center"
       style={{
         width: DATE_COL_WIDTH,
@@ -198,6 +225,7 @@ export default function TeacherMatrixScreen() {
 
   const groupId = params.groupId;
   const groupName = params.groupName || 'Grupo';
+  const subjectId = params.subjectId;
 
   // Datos de la escuela (SchoolInfoCard).
   const { data } = useTeacherDashboard();
@@ -210,16 +238,88 @@ export default function TeacherMatrixScreen() {
     };
   }, [data?.school, data?.currentSchoolYear]);
 
-  const teacherName = data?.teacher?.last_name || data?.teacher?.fullName || 'Juárez';
   const currentDate = data?.currentDate || 'Lunes, 10 de agosto';
 
   // -----------------------------------------------------------------
   // ESTADO
   // -----------------------------------------------------------------
-  const [dates, setDates] = useState(INITIAL_DATES);
-  const [matrix, setMatrix] = useState(MOCK_STUDENTS);
+  const [dates, setDates] = useState([]);
+  const [matrix, setMatrix] = useState([]);
   const [editingCell, setEditingCell] = useState(null);
   const [addDateVisible, setAddDateVisible] = useState(false);
+  const [periods, setPeriods] = useState([]);
+  const [periodsLoading, setPeriodsLoading] = useState(true);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [periodDropdownVisible, setPeriodDropdownVisible] = useState(false);
+  const [loadingSessions, setLoadingSessions] = useState(true);
+
+  // ============================================================
+  // FETCH: períodos de evaluación
+  // ============================================================
+  useEffect(() => {
+    let cancelled = false;
+    const fetchPeriods = async () => {
+      setPeriodsLoading(true);
+      const result = await getGradingPeriods();
+      if (cancelled) return;
+      if (result.success && result.data?.periods) {
+        setPeriods(result.data.periods);
+        // Auto-seleccionar el primer período
+        if (result.data.periods.length > 0) {
+          setSelectedPeriod(result.data.periods[0]);
+        }
+      }
+      setPeriodsLoading(false);
+    };
+    fetchPeriods();
+    return () => { cancelled = true; };
+  }, []);
+
+  // ============================================================
+  // FETCH: sesiones de asistencia + alumnos
+  // ============================================================
+  useEffect(() => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) return;
+
+    let cancelled = false;
+    const fetchSessions = async () => {
+      setLoadingSessions(true);
+      const result = await getAttendanceSessions({
+        groupId,
+        subjectId,
+        periodId: selectedPeriod._id,
+      });
+      if (cancelled) return;
+      if (result.success && result.data) {
+        const { sessions = [], students = [] } = result.data;
+
+        // Mapear students del endpoint a matrix
+        const mappedMatrix = students.map((s) => ({
+          _id: s._id,
+          name: s.fullName,
+          photoUrl: null,
+          records: buildRecordsFromSessions(sessions, s._id),
+        }));
+        setMatrix(mappedMatrix);
+
+        // Mapear sessions a dates (incluyendo sessionId para PATCH)
+        const mappedDates = sessions.map((sess) => {
+          const iso = sess.date.split('T')[0];
+          return {
+            iso,
+            short: formatShort(iso),
+            full: formatFull(iso),
+            day: iso === todayIso(),
+            sessionId: sess._id,
+          };
+        });
+        setDates(mappedDates);
+      }
+      setLoadingSessions(false);
+    };
+    fetchSessions();
+    return () => { cancelled = true; };
+  }, [groupId, subjectId, selectedPeriod?._id]);
 
   // Iniciales para el avatar de la columna izquierda.
   const getInitials = (name) =>
@@ -228,50 +328,98 @@ export default function TeacherMatrixScreen() {
   // -----------------------------------------------------------------
   // HANDLERS
   // -----------------------------------------------------------------
-  // Tap en celda: cicla el estado.
+  // Tap en celda: abre el EditAttendanceModal con la lista de opciones
+  // (P / F / R / FJ) + nota. Mismo flujo que el today view — el
+  // docente toca UNA opción y el modal hace el PATCH + notifica.
+  // (Ya no ciclamos: el modal reemplaza el ciclo con la UX de lista
+  // de opciones que pidió el usuario.)
   const handleCellTap = (student, date) => {
-    const current = student.records[date.iso] || '-';
-    const idx = STATUS_CYCLE.indexOf(current);
-    const next = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
-    setMatrix((prev) =>
-      prev.map((s) =>
-        s._id === student._id
-          ? { ...s, records: { ...s.records, [date.iso]: next } }
-          : s,
-      ),
-    );
-  };
-
-  // Long press: abre el modal con nota.
-  const handleCellLongPress = (student, date) => {
     const currentStatus = student.records[date.iso] || '-';
     setEditingCell({ student, date, currentStatus });
   };
 
-  // Guardado desde EditAttendanceModal (local).
-  const handleCellSaved = (student, status) => {
-    setMatrix((prev) =>
-      prev.map((s) =>
-        s._id === student._id
-          ? { ...s, records: { ...s.records, [editingCell.date.iso]: status } }
-          : s,
-      ),
-    );
+  // Guardado desde EditAttendanceModal. Llama al endpoint PATCH.
+  const handleCellSaved = async (student, status) => {
+    if (!editingCell?.date?.sessionId) {
+      // Fallback: solo actualizar local si no hay sessionId
+      setMatrix((prev) =>
+        prev.map((s) =>
+          s._id === student._id
+            ? { ...s, records: { ...s.records, [editingCell.date.iso]: status } }
+            : s,
+        ),
+      );
+      return;
+    }
+
+    const backendStatus = mapToFrontendStatus(status);
+    const result = await updateAttendanceRecord({
+      sessionId: editingCell.date.sessionId,
+      studentId: student._id,
+      status: backendStatus,
+    });
+
+    if (result.success) {
+      // Actualizar local con el status seleccionado
+      setMatrix((prev) =>
+        prev.map((s) =>
+          s._id === student._id
+            ? { ...s, records: { ...s.records, [editingCell.date.iso]: status } }
+            : s,
+        ),
+      );
+    } else {
+      Alert.alert('Error', result.message || 'No se pudo actualizar la asistencia.');
+    }
   };
 
-  // Agregar nueva fecha (desde AddDateModal). Las celdas inician en 'P'.
-  const handleAddDate = (iso) => {
-    const newDate = {
-      iso,
-      short: formatShort(iso),
-      full: formatFull(iso),
-      day: iso === todayIso(),
-    };
-    setDates((prev) => [...prev, newDate]);
-    setMatrix((prev) =>
-      prev.map((s) => ({ ...s, records: { ...s.records, [iso]: 'P' } })),
-    );
-    setAddDateVisible(false);
+  // Agregar nueva fecha (desde AddDateModal). Llama al endpoint POST.
+  const handleAddDate = async (iso) => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) {
+      Alert.alert('Error', 'Faltan datos del grupo o período para crear la sesión.');
+      return;
+    }
+
+    const result = await createAttendanceSession({
+      groupId,
+      subjectId,
+      date: iso,
+      periodId: selectedPeriod._id,
+    });
+
+    if (result.success && result.data?.session) {
+      const sess = result.data.session;
+      const newDate = {
+        iso: sess.date.split('T')[0],
+        short: formatShort(sess.date.split('T')[0]),
+        full: formatFull(sess.date.split('T')[0]),
+        day: sess.date.split('T')[0] === todayIso(),
+        sessionId: sess._id,
+      };
+      setDates((prev) => [...prev, newDate]);
+
+      // Actualizar matrix con los records de la nueva sesión
+      setMatrix((prev) =>
+        prev.map((s) => {
+          const record = sess.records.find((r) => r.student_id === s._id);
+          return {
+            ...s,
+            records: {
+              ...s.records,
+              [newDate.iso]: record ? mapBackendStatus(record.status) : 'P',
+            },
+          };
+        }),
+      );
+      setAddDateVisible(false);
+    } else {
+      // Manejar error 409 (ya existe sesión para esa fecha)
+      if (result.reason === 'conflict') {
+        Alert.alert('Fecha duplicada', 'Ya existe una sesión para esta fecha.');
+      } else {
+        Alert.alert('Error', result.message || 'No se pudo crear la sesión.');
+      }
+    }
   };
 
   // Confirmar y eliminar una columna de fecha.
@@ -310,16 +458,16 @@ export default function TeacherMatrixScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
-        teacherName={teacherName}
+        teacher={data?.teacher}
         date={currentDate}
       />
 
-      {/* Botón "Volver". */}
+      {/* Botón "Volver" → group detail. */}
       <Pressable
         onPress={() => router.back()}
         className="flex-row items-center px-4 mt-4"
         accessibilityRole="button"
-        accessibilityLabel="Volver a mis grupos"
+        accessibilityLabel="Volver al detalle del grupo"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
         <Text className="text-sm font-semibold text-sky-600 ml-1">
@@ -335,11 +483,59 @@ export default function TeacherMatrixScreen() {
           Control de Asistencias
         </Text>
         <View className="mt-2 flex-row items-center justify-between">
-          <View className="px-3 py-1.5 rounded-full bg-white border border-slate-200">
-            <Text className="text-xs font-bold text-slate-700">
-              1er Periodo - Agosto 2026
+          <Pressable
+            onPress={() => setPeriodDropdownVisible((v) => !v)}
+            className="flex-row items-center bg-white border border-[#E2E8F0] rounded-full px-4 py-2"
+            accessibilityRole="button"
+            accessibilityLabel="Seleccionar periodo"
+          >
+            <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
+              {selectedPeriod?.name || (periodsLoading ? 'Cargando...' : 'Sin períodos')}
             </Text>
-          </View>
+            <ChevronDown
+              size={16}
+              color="#0F172A"
+              strokeWidth={2.25}
+              style={{ marginLeft: 6 }}
+            />
+          </Pressable>
+
+          {/* Panel dropdown (absolute, anclado bajo el trigger). */}
+          {periodDropdownVisible && periods.length > 0 && (
+            <View
+              className="absolute top-full left-0 mt-1 bg-white rounded-xl border border-[#E2E8F0] shadow-sm z-50"
+              style={{ elevation: 3, minWidth: 200 }}
+            >
+              {periods.map((period) => {
+                const isActive = selectedPeriod?._id === period._id;
+                return (
+                  <Pressable
+                    key={period._id}
+                    onPress={() => {
+                      setSelectedPeriod(period);
+                      setPeriodDropdownVisible(false);
+                    }}
+                    className="px-4 py-2.5 border-b border-slate-100"
+                    style={{ backgroundColor: isActive ? '#F0F9FF' : '#FFFFFF' }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Seleccionar ${period.name}`}
+                    accessibilityState={{ selected: isActive }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: isActive ? '700' : '500',
+                        color: isActive ? '#0284C7' : '#0F172A',
+                      }}
+                    >
+                      {period.name}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          )}
+
           <Text
             className="font-bold text-[#0F172A] ml-3"
             style={{ fontSize: 13 }}
@@ -429,6 +625,18 @@ export default function TeacherMatrixScreen() {
           className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden"
           style={{ elevation: 2, flex: 1 }}
         >
+          {/* Loading state para sesiones */}
+          {loadingSessions && (
+            <View className="flex-1 items-center justify-center py-10">
+              <ActivityIndicator size="large" color="#0284C7" />
+              <Text className="text-slate-400 text-sm mt-3">
+                Cargando asistencia...
+              </Text>
+            </View>
+          )}
+
+          {/* Matriz (solo si no está cargando) */}
+          {!loadingSessions && (
           <ScrollView
             vertical
             showsVerticalScrollIndicator={false}
@@ -555,7 +763,6 @@ export default function TeacherMatrixScreen() {
                             key={date.iso}
                             status={status}
                             onPress={() => handleCellTap(student, date)}
-                            onLongPress={() => handleCellLongPress(student, date)}
                           />
                         );
                       })}
@@ -565,6 +772,7 @@ export default function TeacherMatrixScreen() {
               </ScrollView>
             </View>
           </ScrollView>
+          )}
         </View>
       </View>
 
@@ -587,6 +795,7 @@ export default function TeacherMatrixScreen() {
         onAdd={handleAddDate}
         onClose={() => setAddDateVisible(false)}
       />
+
     </View>
   );
 }

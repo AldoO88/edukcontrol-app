@@ -80,6 +80,7 @@ const GradeKeypadModal = ({
   onNext,
   onSave,
   onClose,
+  singleStudentMode = false,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -150,6 +151,11 @@ const GradeKeypadModal = ({
   const handlePrev = () => {
     onSave(student._id, column.id, display);
     onPrev();
+  };
+
+  const handleSaveAndClose = () => {
+    onSave(student._id, column.id, display);
+    onClose();
   };
 
   // ---------------- Render ----------------
@@ -253,8 +259,12 @@ const GradeKeypadModal = ({
                 {student.name}
               </Text>
               <Text style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
-                N.L. {studentIndex + 1}
-                {totalStudents ? ` de ${totalStudents}` : ''}
+                {!singleStudentMode && (
+                  <>
+                    N.L. {studentIndex + 1}
+                    {totalStudents ? ` de ${totalStudents}` : ''}
+                  </>
+                )}
               </Text>
             </View>
           </View>
@@ -330,17 +340,47 @@ const GradeKeypadModal = ({
 
           {/* BARRA DE ACCIONES. */}
           <View className="flex-row mt-5" style={{ gap: 8 }}>
-            <PrevButton disabled={!hasPrev} onPress={handlePrev} />
-            <SaveAndNextButton
-              hasNext={hasNext}
-              onPress={handleSaveAndNext}
-            />
-            <DoneButton
-              onPress={() => {
-                onSave(student._id, column.id, display);
-                onClose();
-              }}
-            />
+            {singleStudentMode ? (
+              <>
+                {/* Modo acordeón: solo Guardar y Listo. */}
+                <Pressable
+                  onPress={handleSaveAndClose}
+                  accessibilityRole="button"
+                  accessibilityLabel="Guardar calificación"
+                  style={{
+                    flex: 1,
+                    height: 48,
+                    borderRadius: 12,
+                    backgroundColor: '#0284C7',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4,
+                  }}
+                >
+                  <Check size={16} color="#ffffff" strokeWidth={2.5} />
+                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#ffffff' }}>
+                    Guardar
+                  </Text>
+                </Pressable>
+                <DoneButton onPress={onClose} />
+              </>
+            ) : (
+              <>
+                {/* Modo normal: Anterior, Guardar y Siguiente, Listo. */}
+                <PrevButton disabled={!hasPrev} onPress={handlePrev} />
+                <SaveAndNextButton
+                  hasNext={hasNext}
+                  onPress={handleSaveAndNext}
+                />
+                <DoneButton
+                  onPress={() => {
+                    onSave(student._id, column.id, display);
+                    onClose();
+                  }}
+                />
+              </>
+            )}
           </View>
         </View>
       </KeyboardAvoidingView>

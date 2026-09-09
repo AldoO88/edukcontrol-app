@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------
 // Fila con Accordion del directorio de alumnos. Tiene dos estados:
 //   - COLLAPSED (default): una sola fila compacta con avatar + nombre
-//     + NL/Ctrl + score badge + chat + chevron-down.
+//     + NL/Ctrl + score badge + chevron-down.
 //   - EXPANDED: bloque de detalles con (1) métricas 3-col,
 //     (2) tutor contact bar, (3) action buttons. NO repite avatar
 //     ni nombre — esos ya están en el row header.
@@ -11,7 +11,7 @@
 // Reglas de color (basadas en el PROMEDIO, no en student.status):
 //   - average >= 6.0  → PASSING.  Borde #22C55E, badge verde
 //                        (#DCFCE7 / #15803D).
-//   - average <  6.0  → AT RISK.  Borde #EF4444, badge rojo
+//   - average <  6.0  → AT RIESGO.  Borde #EF4444, badge rojo
 //                        (#FEE2E2 / #DC2626).
 //
 // Props:
@@ -19,6 +19,7 @@
 //   - isExpanded:   boolean — si el accordion está abierto.
 //   - onToggle:     fn() — abrir/cerrar el accordion de este row.
 //   - onCitatorio:  fn() — handler botón "Citatorio".
+//   - onAviso:      fn() — handler botón "Aviso".
 //   - onExpediente: fn() — handler botón "Ver Expediente".
 //   - onMessageTutor: fn() — handler chat del tutor.
 //   - onNoteTutor:  fn() — handler nota del tutor.
@@ -34,11 +35,10 @@ import { View, Text, Image, Pressable } from 'react-native';
 import {
   ChevronDown,
   ChevronUp,
-  MessageCircle,
-  PencilLine,
   AlertCircle,
   FileText,
-  User, // Icono genérico de tutor en la contact bar.
+  User,
+  Phone,
 } from 'lucide-react-native';
 
 // Helpers de texto.
@@ -78,21 +78,33 @@ const Avatar = ({ student, size = 40 }) => {
 };
 
 // Score badge compacto: color según el promedio del alumno.
-//   - passing (>= 6.0) → fondo #DCFCE7, texto #15803D.
-//   - at_risk (< 6.0)  → fondo #FEE2E2, texto #DC2626.
+//   - 8.0 - 10.0 → verde  (#DCFCE7 / #15803D).
+//   - 6.0 - 7.9  → ámbar  (#FEF3C7 / #92400E).
+//   - 5.0 - 5.9  → rojo   (#FEE2E2 / #DC2626).
+//   - < 5.0      → rojo   (#FEE2E2 / #DC2626).
 const ScoreBadge = ({ score }) => {
   const numeric = Number(score || 0);
-  const isPassing = numeric >= 6.0;
+  let bgColor, textColor;
+  if (numeric >= 8.0) {
+    bgColor = '#DCFCE7';
+    textColor = '#15803D';
+  } else if (numeric >= 6.0) {
+    bgColor = '#FEF3C7';
+    textColor = '#92400E';
+  } else {
+    bgColor = '#FEE2E2';
+    textColor = '#DC2626';
+  }
   return (
     <View
       className="px-2 py-1 rounded-full"
-      style={{ backgroundColor: isPassing ? '#DCFCE7' : '#FEE2E2' }}
+      style={{ backgroundColor: bgColor }}
     >
       <Text
         style={{
           fontSize: 12,
           fontWeight: '800',
-          color: isPassing ? '#15803D' : '#DC2626',
+          color: textColor,
         }}
       >
         {numeric.toFixed(1)}
@@ -109,6 +121,7 @@ const StudentAccordionRow = ({
   isExpanded,
   onToggle,
   onCitatorio,
+  onAviso,
   onExpediente,
   onMessageTutor,
   onNoteTutor,
@@ -118,14 +131,21 @@ const StudentAccordionRow = ({
   const attendance = Number(student.metrics?.attendance || 0);
   const citatorios = Number(student.metrics?.citatorios || 0);
 
-  // Regla estricta de aprobación → controla BORDE + BADGE del row.
-  //   average >= 6.0  → passing (verde).
-  //   average <  6.0  → at_risk (rojo).
-  const isPassing = average >= 6.0;
-  const borderColor = isPassing ? '#22C55E' : '#EF4444';
-
-  // Colores semánticos por métrica en el bloque expandido.
-  const averageColor = isPassing ? '#16A34A' : '#DC2626';
+  // Regla de color por promedio → controla BORDE + BADGE del row.
+  //   average >= 8.0  → verde (excelente).
+  //   average >= 6.0  → ámbar (aprobado).
+  //   average <  6.0  → rojo (en riesgo).
+  let borderColor, averageColor;
+  if (average >= 8.0) {
+    borderColor = '#22C55E';
+    averageColor = '#16A34A';
+  } else if (average >= 6.0) {
+    borderColor = '#D97706';
+    averageColor = '#D97706';
+  } else {
+    borderColor = '#EF4444';
+    averageColor = '#DC2626';
+  }
   const attendanceColor = attendance >= 85 ? '#16A34A' : '#D97706';
   const citatoriosColor = citatorios > 0 ? '#DC2626' : '#16A34A';
 
@@ -174,26 +194,10 @@ const StudentAccordionRow = ({
           </Text>
         </View>
 
-        {/* Acciones derechas: score badge (solo colapsado) + chat + chevron. */}
+        {/* Acciones derechas: score badge (solo colapsado). */}
         {!isExpanded && (
           <View className="flex-row items-center">
             <ScoreBadge score={average} />
-
-            <Pressable
-              onPress={onMessageTutor}
-              accessibilityRole="button"
-              accessibilityLabel={`Mensaje al tutor de ${student.name}`}
-              className="items-center justify-center ml-2"
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                backgroundColor: '#E0F2FE',
-              }}
-              hitSlop={6}
-            >
-              <MessageCircle size={15} color="#0284C7" strokeWidth={2.25} />
-            </Pressable>
           </View>
         )}
 
@@ -288,7 +292,7 @@ const StudentAccordionRow = ({
               </Text>
             </View>
 
-            {/* Citatorios. */}
+            {/* Citas. */}
             <View className="flex-1 items-center">
               <Text
                 style={{
@@ -299,7 +303,7 @@ const StudentAccordionRow = ({
                   letterSpacing: 0.4,
                 }}
               >
-                Citatorios
+                Citas
               </Text>
               <Text
                 style={{
@@ -315,11 +319,10 @@ const StudentAccordionRow = ({
           </View>
 
           {/* ============================================================
-              TUTOR CONTACT BAR (pill gris + User icon + chat + nota)
+              TUTOR CONTACT BAR (pill gris + User icon + nombre + teléfono)
               ============================================================
-              El avatar genérico del tutor es un icono <User /> de
-              Lucide (equivalente a <Feather name="user" />) en lugar
-              de las iniciales del alumno.
+              Muestra nombre completo del tutor y teléfono con icono.
+              Si no hay tutor, muestra "Sin Padre/Tutor asignado".
               ============================================================ */}
           <View
             className="flex-row items-center mt-3"
@@ -342,54 +345,41 @@ const StudentAccordionRow = ({
               <User size={14} color="#64748B" strokeWidth={2.25} />
             </View>
 
-            <Text
-              className="flex-1 ml-2"
-              style={{ fontSize: 12, color: '#334155' }}
-              numberOfLines={1}
-            >
-              <Text style={{ fontWeight: '700', color: '#0F172A' }}>
-                {student.tutor?.name}
+            {student.tutor ? (
+              <>
+                <Text
+                  className="flex-1 ml-2"
+                  style={{ fontSize: 12, fontWeight: '700', color: '#0F172A' }}
+                  numberOfLines={1}
+                >
+                  {student.tutor.name}
+                </Text>
+                {student.tutor.phone ? (
+                  <View className="flex-row items-center">
+                    <Phone size={12} color="#64748B" strokeWidth={2.25} />
+                    <Text
+                      style={{ fontSize: 12, color: '#334155', marginLeft: 4 }}
+                    >
+                      {student.tutor.phone}
+                    </Text>
+                  </View>
+                ) : null}
+              </>
+            ) : (
+              <Text
+                className="flex-1 ml-2"
+                style={{ fontSize: 12, color: '#64748B', fontStyle: 'italic' }}
+              >
+                Sin Padre/Tutor asignado
               </Text>
-              {` (${student.tutor?.relationship || 'Tutor'})`}
-            </Text>
-
-            <Pressable
-              onPress={onMessageTutor}
-              accessibilityRole="button"
-              accessibilityLabel={`Mensaje al tutor ${student.tutor?.name}`}
-              hitSlop={8}
-              className="items-center justify-center"
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 14,
-                backgroundColor: '#E0F2FE',
-                marginLeft: 4,
-              }}
-            >
-              <MessageCircle size={14} color="#0284C7" strokeWidth={2.25} />
-            </Pressable>
-
-            <Pressable
-              onPress={onNoteTutor}
-              accessibilityRole="button"
-              accessibilityLabel={`Agregar nota sobre ${student.tutor?.name}`}
-              hitSlop={8}
-              className="items-center justify-center"
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 14,
-                backgroundColor: '#E0F2FE',
-                marginLeft: 6,
-              }}
-            >
-              <PencilLine size={14} color="#0284C7" strokeWidth={2.25} />
-            </Pressable>
+            )}
           </View>
 
           {/* ============================================================
-              ACTION BUTTONS (Citatorio outline + Ver Expediente solid)
+              ACTION BUTTONS
+              ============================================================
+              Fila 1: Citatorio (outline rojo) + Aviso (outline amarillo).
+              Fila 2: Ver Expediente (solid azul, full width).
               ============================================================ */}
           <View className="flex-row mt-3" style={{ gap: 8 }}>
             <Pressable
@@ -418,10 +408,37 @@ const StudentAccordionRow = ({
             </Pressable>
 
             <Pressable
+              onPress={onAviso}
+              accessibilityRole="button"
+              accessibilityLabel={`Enviar aviso a tutor de ${student.name}`}
+              className="flex-1 flex-row items-center justify-center"
+              style={{
+                borderWidth: 1.5,
+                borderColor: '#16A34A',
+                borderRadius: 12,
+                paddingVertical: 9,
+                gap: 6,
+              }}
+            >
+              <AlertCircle size={14} color="#16A34A" strokeWidth={2.25} />
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: '700',
+                  color: '#16A34A',
+                }}
+              >
+                Aviso
+              </Text>
+            </Pressable>
+          </View>
+
+          <View className="mt-2">
+            <Pressable
               onPress={onExpediente}
               accessibilityRole="button"
               accessibilityLabel={`Ver expediente de ${student.name}`}
-              className="flex-1 flex-row items-center justify-center"
+              className="flex-row items-center justify-center"
               style={{
                 backgroundColor: '#0284C7',
                 borderRadius: 12,

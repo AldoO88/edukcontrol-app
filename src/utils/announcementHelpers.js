@@ -84,6 +84,10 @@ const CITATION_TYPE_LABELS = {
   administrative: 'Administrativo',
 };
 
+// Export para que otros módulos (e.g. GenerarCitatorioModal) usen
+// la misma fuente de verdad para los labels en español.
+export { CITATION_TYPE_LABELS };
+
 // ---------------------------------------------------------------------
 // formatAnnouncementDate(iso)
 // ---------------------------------------------------------------------
@@ -348,16 +352,17 @@ export const citatorioStatusInfo = (item) => {
     };
   }
 
-  // Citatorio pendiente: derivamos urgencia desde scheduledDate.
-  const scheduled = item.scheduledDate ? new Date(item.scheduledDate) : null;
-  if (!scheduled || Number.isNaN(scheduled.getTime())) {
+  if (item.status === 'pending') {
     return {
-      label: 'PENDIENTE',
-      bgClass: 'bg-amber-50',
-      textClass: 'text-amber-700',
+      label: 'CONFIRMACION PENDIENTE',
+      bgClass: 'bg-yellow-50',
+      textClass: 'text-yellow-700',
     };
   }
+  
 
+  // Citatorio pendiente: derivamos urgencia desde scheduledDate.
+  const scheduled = item.scheduledDate ? new Date(item.scheduledDate) : null;
   const now = new Date();
   if (scheduled.getTime() < now.getTime()) {
     return {
@@ -367,26 +372,6 @@ export const citatorioStatusInfo = (item) => {
     };
   }
 
-  const hoursUntil = (scheduled.getTime() - now.getTime()) / (1000 * 60 * 60);
-  if (hoursUntil < 24) {
-    return {
-      label: 'HOY',
-      bgClass: 'bg-sky-50',
-      textClass: 'text-sky-700',
-    };
-  }
-  if (hoursUntil < 72) {
-    return {
-      label: 'PRÓXIMO',
-      bgClass: 'bg-amber-50',
-      textClass: 'text-amber-700',
-    };
-  }
-  return {
-    label: 'FUTURO',
-    bgClass: 'bg-slate-100',
-    textClass: 'text-slate-700',
-  };
 };
 
 // ---------------------------------------------------------------------
@@ -464,4 +449,88 @@ export const transformFeedItemToCard = (item) => {
 export const transformFeedToCards = (items) => {
   if (!Array.isArray(items)) return [];
   return items.map(transformFeedItemToCard).filter(Boolean);
+};
+
+// =====================================================================
+// HELPERS PARA EL MAESTRO (teacher announcements)
+// =====================================================================
+
+// ---------------------------------------------------------------------
+// extractUniqueGroups(allClasses)
+// ---------------------------------------------------------------------
+// Extrae grupos únicos desde el array `allClasses` que viene de
+// todaySchedule.allClasses del endpoint GET /teacher-subjects/me/dashboard.
+// El backend devuelve un objeto por clase del día, y un mismo grupo
+// puede aparecer múltiples veces si el maestro le da varias materias.
+//
+// Deduplica por `group._id` y retorna un array de objetos planos
+// listos para usar como chips de destinatarios:
+//
+//   [{ id: string, label: "3°A", grade: number, section: string }]
+//
+// Si allClasses es null/undefined/vacío, devuelve [].
+// ---------------------------------------------------------------------
+export const extractUniqueGroups = (allClasses) => {
+  if (!Array.isArray(allClasses) || allClasses.length === 0) return [];
+
+  const seen = new Set();
+  const groups = [];
+
+  for (const cls of allClasses) {
+    const g = cls?.group;
+    if (!g?._id || seen.has(g._id)) continue;
+    seen.add(g._id);
+    groups.push({
+      id: g._id,
+      label: g.label || `${g.grade}°${g.section}`,
+      grade: g.grade,
+      section: g.section,
+    });
+  }
+
+  return groups;
+};
+
+// ---------------------------------------------------------------------
+// formatTeacherAnnouncementTag(group)
+// ---------------------------------------------------------------------
+// Formatea el label de un grupo para el chip/tag del feed del maestro.
+// Ej: { grade: 1, section: "A" } → "1°A"
+// Devuelve '' si faltan datos.
+// ---------------------------------------------------------------------
+export const formatTeacherAnnouncementTag = (group) => {
+  if (!group) return '';
+  if (group.label) return group.label;
+  if (group.grade != null && group.section) {
+    return `${group.grade}°${group.section}`;
+  }
+  return '';
+};
+
+// ---------------------------------------------------------------------
+// formatPriorityLabel(priority)
+// ---------------------------------------------------------------------
+// Traduce el priority raw del backend al label en español para UI:
+//   "informative" → "Informativo"
+//   "urgent"      → "Urgente"
+// Devuelve '' para valores desconocidos.
+// ---------------------------------------------------------------------
+export const formatPriorityLabel = (priority) => {
+  const map = {
+    informative: 'Informativo',
+    urgent: 'Urgente',
+  };
+  return map[priority] || '';
+};
+
+// ---------------------------------------------------------------------
+// formatReadscount(read, total)
+// ---------------------------------------------------------------------
+// Formatea la cadena de lecturas para el footer de la card:
+//   formatReadscount(28, 35) → "28/35 Lecturas"
+// Si read o total son null/undefined, devuelve ''.
+// ---------------------------------------------------------------------
+export const formatReadsCount = (read, total) => {
+  if (read == null || total == null) return '';
+  return `${read}/${total} Lecturas`;
 };

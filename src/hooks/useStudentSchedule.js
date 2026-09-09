@@ -43,7 +43,14 @@ const DAY_NAMES = {
 //   {
 //     student_id, school_year, group, taller_group, shift_info,
 //     schedule: {
-//       1: { day_name, classes: [{ subject_id, subject, subject_code, teacher, start, end, classroom, block_count, block_names, is_taller }] },
+//       1: { day_name, classes: [{
+//           subject_id, subject, subject_code,
+//           color, icon,                 // hex + nombre Lucide del backend
+//           teacher, start, end,
+//           classroom, block_count, block_names,
+//           is_taller,                   // true si es clase del taller
+//           type                         // "receso" para recesos
+//         }] },
 //       2: { ... },
 //       ...
 //     }
@@ -53,7 +60,13 @@ const DAY_NAMES = {
 //   {
 //     studentId, schoolYear, group, tallerGroup, shiftInfo,
 //     days: [
-//       { dayNumber, dayName, classes: [{ id, subject, subjectCode, teacher, start, end, classroom, blockCount, blockNames, isTaller }] }
+//       { dayNumber, dayName, classes: [{
+//           id, subject, subjectCode, subjectId,
+//           color, icon,                 // pasados del backend al UI
+//           teacher, start, end,
+//           classroom, blockCount, blockNames,
+//           isTaller, type
+//         }] }
 //     ]
 //   }
 // ---------------------------------------------------------------------
@@ -76,6 +89,8 @@ const mapScheduleData = (raw) => {
           subject: cls.subject,
           subjectCode: cls.subject_code,
           subjectId: cls.subject_id,
+          color: cls.color,
+          icon: cls.icon,
           teacher: cls.teacher,
           start: cls.start,
           end: cls.end,
@@ -83,6 +98,7 @@ const mapScheduleData = (raw) => {
           blockCount: cls.block_count,
           blockNames: cls.block_names,
           isTaller: cls.is_taller,
+          type: cls.type,
         })),
       };
     }),

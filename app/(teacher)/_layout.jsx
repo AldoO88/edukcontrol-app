@@ -3,21 +3,36 @@
 // ---------------------------------------------------------------------
 // Layout del ROUTE GROUP "(teacher)" — pantallas del MAESTRO.
 //
-// Mismo patrón que app/(guardian)/_layout.jsx pero con el role gate
-// invertido: si userRole NO es 'teacher' → Redirect al dashboard del
-// tutor ('/(guardian)/dashboard').
+// Responsabilidades:
+//   1. Auth gate: si no hay user logueado → Redirect a "/" (login).
+//   2. Role gate: si user.role !== 'teacher' → Redirect al dashboard
+//      del tutor ('(guardian)/dashboard').
+//   3. Push notifications: registra el push token (usePushNotifications)
+//      cuando hay user.
+//   4. Stack raíz: contiene únicamente las rutas top-level que NO
+//      viven bajo el Tabs navigator. Todo el contenido real del
+//      maestro (Inicio / Mis Grupos / Calificaciones / Perfil) está
+//      anidado bajo (tabs)/, que provee su propio navigator.
 //
-// Pantallas del grupo:
-//   - dashboard           → /dashboard (shared route con (guardian)).
-//   - take-attendance     → /take-attendance (tomar asistencia).
-//   - announcements       → /announcements (avisos y comunicados).
-//   - attendance          → /attendance (shared route; placeholder maestro).
-//   - grades              → /grades (shared route; tab "Horario" del maestro).
-//   - groups              → /groups (Mis Grupos y Asignaturas).
-//   - roster              → /roster (alumnos de un grupo; dest. "Alumnos" legacy).
-//   - student-directory  → /student-directory (Directorio y Expediente).
-//   - matrix              → /matrix (Pase de Lista Matricial; dest. "Asistencia").
-//   - grade-entry         → /grade-entry (Registro de Calificaciones; dest. "Calificar").
+// Top-level routes actuales (placeholders):
+//   - announcements  → /announcements  (quick action del dashboard).
+//   - attendance     → /attendance     (placeholder huérfano, no se usa
+//                                       activamente pero se conserva
+//                                       por si hay deep links).
+//
+// Top-level routes (fuera de tabs):
+//   - schedule          → /schedule (horario semanal del docente).
+//   - attendance        → /attendance (tomar asistencia).
+//   - announcements     → /announcements (comunicados).
+//   - citations         → /citatorios (gestión de citaciones).
+//   - groups/[groupId]/grades → /groups/:groupId/grades (calificar).
+//
+// Todo lo demás vive bajo /(tabs)/:
+//   - dashboard           → /
+//   - groups/index        → /groups
+//   - groups/[groupId]/*  → /groups/:groupId/{attendance|students}
+//   - groups/[groupId]/students/[studentId]/file → /groups/:groupId/students/:studentId/file
+//   - profile             → /profile (con change-password como hijo)
 // =====================================================================
 
 // React.
@@ -78,16 +93,21 @@ export default function TeacherLayout() {
         animation: 'slide_from_right',
       }}
     >
-      <Stack.Screen name="dashboard" options={{ headerShown: false }} />
-      <Stack.Screen name="take-attendance" options={{ headerShown: false }} />
+      {/* Tabs root: contiene TODO el flujo del maestro (Inicio, Mis
+          Grupos, Calificaciones, Perfil) con stacks anidados para
+          drill-down. Ver app/(teacher)/(tabs)/_layout.jsx. */}
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+      {/* Top-level routes (placeholders / quick actions). */}
       <Stack.Screen name="announcements" options={{ headerShown: false }} />
+      <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="attendance" options={{ headerShown: false }} />
-      <Stack.Screen name="grades" options={{ headerShown: false }} />
-      <Stack.Screen name="groups" options={{ headerShown: false }} />
-      <Stack.Screen name="roster" options={{ headerShown: false }} />
-      <Stack.Screen name="student-directory" options={{ headerShown: false }} />
-      <Stack.Screen name="matrix" options={{ headerShown: false }} />
-      <Stack.Screen name="grade-entry" options={{ headerShown: false }} />
+      <Stack.Screen name="citations" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="citations/[id]"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="schedule" options={{ headerShown: false }} />
     </Stack>
   );
 }

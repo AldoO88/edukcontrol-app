@@ -15,7 +15,7 @@
 // =====================================================================
 
 // Componente privado del grupo: vive en _components/, no es ruta.
-import TeacherDashboard from './_components/TeacherDashboard';
+import TeacherDashboard from '../../(teacher)/_components/TeacherDashboard.jsx'
 
 export default function TeacherDashboardScreen() {
   return <TeacherDashboard />;

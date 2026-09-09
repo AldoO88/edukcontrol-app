@@ -434,6 +434,43 @@ export default function DetalleAvisoScreen() {
   }, [item?.student?._id, dashboardData?.students]);
 
   // -----------------------------------------------------------------
+  // ITEM FILTRADO POR PRIVACIDAD (audience.students)
+  // -----------------------------------------------------------------
+  // El backend puede retornar TODOS los students del audience en el
+  // detail del announcement, pero solo debemos mostrar los hijos del
+  // tutor autenticado. Clonamos el item y filtramos audience.students
+  // para que solo incluya los _id que están en dashboardData.students.
+  // Si no hay dashboardData (aún cargando) o no hay audience.students,
+  // devolvemos el item original sin modificar.
+  const filteredItem = useMemo(() => {
+    if (!item) return null;
+    const audienceStudents = item?.audience?.students;
+    if (!audienceStudents || audienceStudents.length === 0) return item;
+
+    const guardianStudentIds = new Set(
+      (dashboardData?.students || []).map((s) => s._id),
+    );
+    // Si no tenemos los hijos del guardian aún, no filtramos
+    // (evita borrar todo el audience durante la carga).
+    if (guardianStudentIds.size === 0) return item;
+
+    const filtered = audienceStudents.filter((s) => guardianStudentIds.has(s._id));
+    // Si el filtrado deja 0 students (el guardian no tiene hijos en
+    // el audience), devolvemos el item original — es mejor mostrar
+    // algo que un "Para:" vacío (puede ser un aviso general que el
+    // backend mistakenly mandó con audience.students).
+    if (filtered.length === 0) return item;
+
+    return {
+      ...item,
+      audience: {
+        ...item.audience,
+        students: filtered,
+      },
+    };
+  }, [item, dashboardData?.students]);
+
+  // -----------------------------------------------------------------
   // HANDLER: Confirmar asistencia
   // -----------------------------------------------------------------
   // useCallback para que la referencia sea estable entre renders.
@@ -745,7 +782,7 @@ function AnnouncementDetail({ item, visualConfig, senderName, roleLabel }) {
           También lleva el accent de borde derecho (mismo color
           que el resto de la pantalla).
           ============================================================ */}
-      {audienceTargetTypeLabel(item) && (
+      {audienceTargetTypeLabel(filteredItem) && (
         <View
           className={clsx(
             'bg-white rounded-2xl p-4 mt-3 shadow-sm',
@@ -757,14 +794,14 @@ function AnnouncementDetail({ item, visualConfig, senderName, roleLabel }) {
           style={{ elevation: 1 }}
         >
           <View className="w-11 h-11 rounded-full bg-slate-100 items-center justify-center mr-3">
-            <AudienceIcon audienceType={item.audience?.type} />
+            <AudienceIcon audienceType={filteredItem.audience?.type} />
           </View>
           <View className="flex-1">
             <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
               Para
             </Text>
             <Text className="text-base font-semibold text-slate-900 mt-0.5">
-              {audienceTargetTypeLabel(item)}
+              {audienceTargetTypeLabel(filteredItem)}
             </Text>
             {/* Ya no mostramos el subtítulo "Turno {shift}" porque
                 el label del helper ahora lo incluye (formato

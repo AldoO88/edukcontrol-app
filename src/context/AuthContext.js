@@ -264,7 +264,7 @@ export const AuthProvider = ({ children }) => {
       isLoading,
       // Helpers convenientes derivados del estado:
       isAuthenticated: !!user, // true si hay usuario logueado.
-      userRole: user?.role || null, // 'tutor' (padre) | 'teacher' (maestro) | null.
+      userRole: user?.role || null, // 'tutor' (padre) | 'teacher' (maestro) | 'prefect' (prefecto) | null.
     }),
     [user, login, logout, setSession, isLoading], // Dependencias del memo.
   );

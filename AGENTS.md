@@ -140,6 +140,47 @@ NativeWind no siempre aplica `elevation` (Android) además de `shadow*` (iOS). P
 - **Strings de UI en español.** Hardcoded en esta fase; cuando se introduzca i18n, mover a `src/i18n/es.json`.
 - **Componentes privados de un route group:** usar prefijo `_` en el nombre de archivo/carpeta (`_components/`, `_hooks/`, `TeacherDashboard.jsx` SIN prefijo porque se importa, pero la carpeta que los contiene sí lo lleva). Expo Router ignora estos archivos para routing.
 
+### Imports: rutas absolutas con alias `@/` (convención)
+
+A partir del refactor de rutas (route groups anidados), **todos los imports usan el alias `@/` que apunta a la raíz del proyecto** (`school-parents-app/`). Configurado vía `babel-plugin-module-resolver` en `babel.config.js`.
+
+```js
+// ✅ CORRECTO — funciona desde cualquier profundidad
+import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import DashboardHeader from '@/src/components/DashboardHeader';
+import EvaluacionTab from '@/app/(teacher)/_components/EvaluacionTab';
+
+// ❌ EVITAR — relativas largas son frágiles ante refactors
+import { useTeacherDashboard } from '../../../../src/hooks/useTeacherDashboard';
+```
+
+**Reglas:**
+
+1. **Para `src/`** (componentes chrome, hooks, utils, constants, types, services): `@/src/...`
+2. **Para componentes privados del route group `_components/`**: `@/app/(teacher)/_components/...` o `@/app/(guardian)/_components/...` según el grupo.
+3. **Para paquetes npm**: sin alias (import normal: `import Foo from 'foo'`).
+4. **NO usar barrel files** (`index.js` re-exportando) — el árbol de imports debe ser explícito.
+5. Los archivos con profundidad ≤ 3 niveles (top-level routes como `dashboard.jsx`, `grades.jsx`, `profile.jsx`) pueden seguir usando relativas cortas — el alias no es obligatorio ahí.
+
+**Por qué @/ y no relativas:** las rutas de este proyecto tienen hasta 7 niveles de profundidad (`app/(teacher)/(tabs)/groups/[groupId]/students/[studentId]/file.jsx`). Calcular manualmente `'../../../../'` es propenso a errores y se rompe cada vez que se mueve un archivo. Con `@/` los imports son refactor-safe.
+
+### BottomTabBar — renderizado UNA vez por el Tabs navigator
+
+**Regla:** el `<BottomTabBar tabs={TEACHER_TABS} />` se renderiza **una sola vez**, vía la prop `tabBar` del `<Tabs>` en `app/(teacher)/(tabs)/_layout.jsx`:
+
+```jsx
+<Tabs
+  screenOptions={{ headerShown: false }}
+  tabBar={(props) => <BottomTabBar {...props} tabs={TEACHER_TABS} />}
+>
+```
+
+**Las pantallas que viven bajo `(tabs)/` NUNCA deben pintar su propio `<BottomTabBar>`.** Pintarlo dentro de la pantalla provoca doble render (una barra del navigator, otra de la pantalla) con la misma UI duplicada. Esto se rompe especialmente en el dashboard del maestro.
+
+- ❌ NO hacer: `<BottomTabBar tabs={TEACHER_TABS} />` dentro de `dashboard.jsx`, `groups/index.jsx`, `groups/[groupId]/index.jsx`, `profile.jsx`, `grades.jsx` ni cualquier screen bajo `(tabs)/`.
+- ✅ Hacer: dejar que el Tabs navigator pinte la barra vía `tabBar={...}`.
+- 🟡 Excepción: `app/(teacher)/attendance.jsx` (placeholder top-level orphan, NO vive bajo `(tabs)/`) puede pintarla porque es una ruta plana fuera del Tabs tree. Considerar eliminarla si no se va a usar.
+
 ## Entry points y orden de providers
 
 **NO existe `App.jsx`.** El entry point está en `package.json` (`"main": "expo-router/entry"`) y carga automáticamente `app/_layout.jsx` como raíz del routing.

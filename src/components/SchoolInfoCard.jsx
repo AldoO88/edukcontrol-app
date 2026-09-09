@@ -15,13 +15,24 @@
 //   - className: clases extra para el contenedor externo (útil para
 //     márgenes desde el padre, e.g. "mx-4 mt-4").
 //   - style: style extra (útil para pasar margin/positioning).
-//   - teacherName: string opcional. Si se pasa, la card se vuelve
-//     "compuesta": añade un divisor horizontal y una fila inferior con
-//     "Prof. {teacherName}" + pill de rol + fecha (ver `date`). Es el
-//     card compuesto que usa la pantalla "Mis Grupos" del maestro.
+//   - teacher: objeto con los datos del maestro (rol teacher). Cuando
+//     se pasa, la card se vuelve "compuesta": añade un divisor
+//     horizontal y una fila inferior con "{title} {name}" + pill de
+//     rol + fecha (ver `date`). Es el card compuesto que usa la
+//     pantalla "Mis Grupos" del maestro.
+//
+//     Shape esperada:
+//       { name, last_name, fullName, sex: 'male'|'female' }
+//     El prefijo se deriva del campo `sex`:
+//       - male   → "Prof."
+//       - female → "Profa."
+//       - null/undefined → "Prof." (default)
+//
+//     El componente usa internamente getTeacherFullName() y
+//     getTeacherTitle() para componer la cadena final.
 //   - date: string opcional. Fecha que se muestra en la fila inferior
-//     cuando `teacherName` está presente (p. ej. "Lunes, 10 de agosto").
-//     Sin `teacherName` no tiene efecto.
+//     cuando `teacher` está presente (p. ej. "Lunes, 10 de agosto").
+//     Sin `teacher` no tiene efecto.
 //
 // Self-contained: maneja internamente el estado de error de la
 // imagen (logoError) y el reset cuando cambia la URL. No necesita
@@ -40,17 +51,31 @@ import { GraduationCap } from 'lucide-react-native';
 // clsx para componer classNames condicionales.
 import { clsx } from 'clsx';
 
+// Helpers para componer el nombre completo del maestro y el prefijo
+// dinámico según `teacher.sex`.
+import {
+  getTeacherFullName,
+  getTeacherTitle,
+} from '@/src/utils/teacherName';
+
 const SchoolInfoCard = ({
   school,
   isLoading = false,
   className = '',
   style,
-  teacherName,
+  teacher,
   date,
 }) => {
-  // Modo compuesto: activo solo cuando el padre pasa el nombre del
-  // maestro. En ese modo se añade el divisor + la fila inferior con
-  // el nombre, el pill de rol y la fecha.
+  // Derivados del maestro (modo compuesto).
+  // - teacherName: "Aldo Omar González Juárez"
+  // - teacherTitle: "Prof." | "Profa." | "Prof." (default)
+  const teacherName = teacher ? getTeacherFullName(teacher) : null;
+  const teacherTitle = teacher ? getTeacherTitle(teacher.sex) : null;
+
+  // Modo compuesto: activo solo cuando el padre pasa el objeto del
+  // maestro y se pudo derivar un nombre. En ese modo se añade el
+  // divisor + la fila inferior con el prefijo+nombre, el pill de
+  // rol y la fecha.
   const isComposite = !!teacherName;
   // Estado local: si la URL del logo falla al cargar (404, red
   // caída, formato no soportado), el onError del <Image> setea
@@ -159,12 +184,15 @@ const SchoolInfoCard = ({
       </View>
 
       {/* ============================================================
-          MODO COMPUESTO (solo si teacherName está presente)
+          MODO COMPUESTO (solo si se pasó `teacher` y se pudo
+          derivar un nombre)
           ============================================================
           Cuando la card es compuesta se añade:
             - Divisor horizontal #F1F5F9 que separa la escuela.
-            - Fila inferior: "Prof. {teacherName}" + pill de rol +
-              fecha a la derecha.
+            - Fila inferior: "{teacherTitle} {teacherName}" + pill de
+              rol + fecha a la derecha.
+          El prefijo (Prof./Profa.) se deriva del campo `teacher.sex`
+          con getTeacherTitle(); el nombre con getTeacherFullName().
           Este es el mismo card que implementé en la pantalla "Mis
           Grupos" del maestro (groups.jsx), ahora como parte del
           chrome compartido para reutilizarlo también en los avisos.
@@ -175,7 +203,7 @@ const SchoolInfoCard = ({
 
           {/* ------------------------------------------------------------------
               FILA INFERIOR (modo compuesto): COLUMNA derecha? No — izquierda.
-              - Left (stack vertical): nombre del maestro ARRIBA + pill "Docente"
+              - Left (stack vertical): "{title} {name}" ARRIBA + pill "Docente"
                 justo DEBAJO (alignSelf flex-start, pill azul claro #E0F2FE).
               - Right: fecha alineada a flex-end (#64748B, fontSize 12).
               ------------------------------------------------------------------ */}
@@ -187,7 +215,7 @@ const SchoolInfoCard = ({
                 style={{ fontSize: 15, fontWeight: '700', color: '#0F172A' }}
                 numberOfLines={1}
               >
-                Prof. {teacherName}
+                {teacherTitle} {teacherName}
               </Text>
 
               {/* Pill de rol "Docente" debajo del nombre. */}

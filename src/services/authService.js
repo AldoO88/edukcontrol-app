@@ -156,11 +156,30 @@ export const verify = async () => {
   }
 };
 
+/**
+ * Cambiar contraseña del usuario autenticado.
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ * @returns {{ success: boolean, message?: string, error?: string }}
+ */
+export const changePassword = async (currentPassword, newPassword) => {
+  try {
+    await api.put('/auth/change-password', { currentPassword, newPassword });
+    return { success: true, message: 'Contraseña actualizada correctamente.' };
+  } catch (error) {
+    if (error.response) {
+      return { success: false, error: error.response.data?.message || 'Error al cambiar la contraseña.' };
+    }
+    return { success: false, error: 'No se pudo conectar al servidor. Intenta de nuevo.' };
+  }
+};
+
 // Export default como objeto con todos los métodos. Esto facilita
 // la importación en AuthContext: "import authService from '...'".
 const authService = {
   login,
   verify,
+  changePassword,
 };
 
 export default authService;

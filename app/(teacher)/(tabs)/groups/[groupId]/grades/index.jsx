@@ -1,15 +1,15 @@
 // =====================================================================
-// app/(teacher)/grade-entry.jsx
+// app/(teacher)/(tabs)/groups/[groupId]/grades/index.jsx
 // ---------------------------------------------------------------------
-// Ruta "/grade-entry" del route group (teacher). Pantalla "Registro
-// de Calificaciones" del MAESTRO: matriz alumno × evaluaciones
-// (Estándar o Puntos Extra) con cálculo del promedio final en vivo.
-// Cada celda abre un teclado numérico (GradeKeypadModal) que permite
-// editar la nota del alumno y navegar al siguiente/anterior sin
-// cerrar el modal.
+// Ruta "/groups/:groupId/grades" del route group (teacher). Pantalla
+// "Registro de Calificaciones" del MAESTRO: matriz alumno ×
+// evaluaciones (Estándar o Puntos Extra) con cálculo del promedio
+// final en vivo. Cada celda abre un teclado numérico (GradeKeypadModal)
+// que permite editar la nota del alumno y navegar al siguiente/
+// anterior sin cerrar el modal.
 //
-// Se abre desde el botón "Calificar" de la card de grupo en "Mis
-// Grupos" (groups.jsx), pasando { groupId, groupName }.
+// Se abre desde el botón "Calificar" del detalle del grupo
+// (`/groups/[groupId]`). Recibe `groupId` por URL.
 //
 // NOTA DE ARQUITECTURA (mock visual):
 //   PROTOTIPO VISUAL. Los alumnos y las evaluaciones son datos
@@ -36,7 +36,7 @@
 // =====================================================================
 
 // React + hooks.
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 // Primitivas RN.
 import {
@@ -47,6 +47,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 
 // Navegación.
@@ -65,38 +66,40 @@ import {
   Trash2,
   Star,
   Users,
+  Lock,
 } from 'lucide-react-native';
 
 // Safe area.
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Hook del dashboard docente (escuela + maestro).
-import { useTeacherDashboard } from '../../src/hooks/useTeacherDashboard';
+import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+
+// Servicios de calificaciones del docente.
+import {
+  getGradingPeriods,
+  getGradeValidation,
+  updateGradeConfig,
+  createEvaluationType,
+  deleteEvaluationType,
+  updateEvaluationType,
+  getGrades,
+  saveGrade,
+} from '@/src/services/teacherService';
 
 // Card compuesta de la escuela + maestro.
-import SchoolInfoCard from '../../src/components/SchoolInfoCard';
+import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
 // Helpers puros reutilizables.
-import { getInitials } from '../../src/utils/textHelpers';
-
+import { getInitials } from '@/src/utils/textHelpers';
 // Modales privados del route group (teacher).
-import AddEvaluationModal from './_components/AddEvaluationModal';
-import ConfigModal from './_components/ConfigModal';
-import GradeKeypadModal from './_components/GradeKeypadModal';
+import AddEvaluationModal from '@/app/(teacher)/_components/AddEvaluationModal';
+import ConfigModal from '@/app/(teacher)/_components/ConfigModal';
+import GradeKeypadModal from '@/app/(teacher)/_components/GradeKeypadModal';
 
 // Chrome compartido: toast flotante.
-import Toast from '../../src/components/Toast';
-import DashboardHeader from '../../src/components/DashboardHeader';
-
-// ---------------------------------------------------------------------
-// MOCK_STUDENTS
-// ---------------------------------------------------------------------
-const MOCK_STUDENTS = [
-  { _id: 's1', name: 'Acosta Rodríguez, Mateo',   controlNumber: '20241301', photoUrl: null },
-  { _id: 's2', name: 'Delgado Ríos, Fernanda',    controlNumber: '20241302', photoUrl: null },
-  { _id: 's3', name: 'Hernández Cruz, Luis',      controlNumber: '20241303', photoUrl: null },
-  { _id: 's4', name: 'Sánchez Mora, Paula',       controlNumber: '20241304', photoUrl: null },
-];
+import Toast from '@/src/components/Toast';
+import DashboardHeader from '@/src/components/DashboardHeader';
 
 // ---------------------------------------------------------------------
 // DIMENSIONES DE LA MATRIZ
@@ -129,45 +132,6 @@ const getAverageStyle = (avg, hasAnyInput) => {
   return { bg: '#FEE2E2', color: '#B91C1C' };
 };
 
-const computeFinalScore = (studentGrades, columns, mode) => {
-  let baseSum = 0;
-  let baseCount = 0;
-  let extraPoints = 0;
-  let hasAny = false;
-
-  columns.forEach((col) => {
-    const raw = studentGrades[col.id];
-    const text = String(raw ?? '').trim();
-    if (text === '') return;
-    hasAny = true;
-    const note = parseFloat(text.replace(',', '.'));
-    if (isNaN(note)) return;
-    if (col.type === 'extra') {
-      extraPoints += note;
-    } else if (mode === 'weighted') {
-      baseSum += note * (Number(col.percentage) || 0) / 100;
-    } else {
-      baseSum += note;
-      baseCount += 1;
-    }
-  });
-
-  let baseAvg = 0;
-  if (mode === 'simple') {
-    baseAvg = baseCount === 0 ? 0 : baseSum / baseCount;
-  } else {
-    baseAvg = baseSum;
-  }
-
-  const finalScore = hasAny ? Math.min(10, baseAvg + extraPoints) : 0;
-  return { baseAvg, extraPoints, finalScore, hasAnyInput: hasAny };
-};
-
-const sumStandardPercentages = (columns) =>
-  columns
-    .filter((c) => c.type === 'standard')
-    .reduce((acc, c) => acc + (Number(c.percentage) || 0), 0);
-
 // =====================================================================
 // COMPONENTE PRINCIPAL
 // =====================================================================
@@ -178,9 +142,9 @@ export default function TeacherGradeEntryScreen() {
 
   const groupId = params.groupId;
   const groupName = params.groupName || '1° OFIMÁTICA';
+  const subjectId = params.subjectId;
 
   const { data } = useTeacherDashboard();
-  const teacherName = data?.teacher?.last_name || data?.teacher?.fullName || 'Juárez';
   const currentDate = data?.currentDate || 'Lunes, 10 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -194,16 +158,18 @@ export default function TeacherGradeEntryScreen() {
   // -----------------------------------------------------------------
   // ESTADO
   // -----------------------------------------------------------------
-  const [students] = useState(MOCK_STUDENTS);
+  const [students, setStudents] = useState([]);
   const [columns, setColumns] = useState([]);
   const [gradingMode, setGradingMode] = useState('simple');
-  const [grades, setGrades] = useState(() => {
-    const init = {};
-    MOCK_STUDENTS.forEach((s) => { init[s._id] = {}; });
-    return init;
-  });
+  const [grades, setGrades] = useState({});
+  const [averages, setAverages] = useState({});
+  const [enrollmentMap, setEnrollmentMap] = useState({});
   // Toast flotante: feedback "Calificación guardada" al actualizar.
   const [toastVisible, setToastVisible] = useState(false);
+  const [gradesLoading, setGradesLoading] = useState(false);
+
+  // Estado de cierre del trimestre para este combo grupo+materia.
+  const [isClosed, setIsClosed] = useState(false);
 
   const [addModal, setAddModal] = useState({ visible: false, mode: 'add', column: null });
   const [configVisible, setConfigVisible] = useState(false);
@@ -212,11 +178,109 @@ export default function TeacherGradeEntryScreen() {
   // { studentIndex, columnId }
   const [keypadTarget, setKeypadTarget] = useState(null);
 
+  // Períodos de evaluación + selección actual.
+  const [periods, setPeriods] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [periodsLoading, setPeriodsLoading] = useState(false);
+  const [periodDropdownVisible, setPeriodDropdownVisible] = useState(false);
+
+  // ============================================================
+  // FETCH: períodos de evaluación
+  // ============================================================
+  useEffect(() => {
+    if (!groupId || !subjectId) {
+      setPeriodsLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    const fetchData = async () => {
+      setPeriodsLoading(true);
+      const periodsResult = await getGradingPeriods();
+      if (cancelled) return;
+      if (periodsResult.success && periodsResult.data?.periods) {
+        setPeriods(periodsResult.data.periods);
+        if (periodsResult.data.periods.length > 0) {
+          setSelectedPeriod(periodsResult.data.periods[0]);
+        }
+      }
+      setPeriodsLoading(false);
+    };
+    fetchData();
+    return () => { cancelled = true; };
+  }, [groupId, subjectId]);
+
+  // Fetch matriz de calificaciones cuando cambia el período seleccionado.
+  useEffect(() => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) return;
+
+    let cancelled = false;
+    const fetchGrades = async () => {
+      setGradesLoading(true);
+      const result = await getGrades({
+        groupId,
+        subjectId,
+        periodId: selectedPeriod._id,
+      });
+      if (cancelled) return;
+      if (result.success && result.data) {
+        const { students: s = [], evaluationTypes = [], grades: g = {}, averages: avg = {}, averagingRule } = result.data;
+
+        // Mapear students del backend.
+        setStudents(s.map((st) => ({ _id: st._id, name: st.fullName })));
+        setEnrollmentMap(Object.fromEntries(s.map((st) => [st._id, st.enrollment_id])));
+
+        // Mapear evaluationTypes a columns del frontend.
+        setColumns(
+          evaluationTypes
+            .sort((a, b) => a.order - b.order)
+            .map((et) => ({
+              id: et._id,
+              name: et.name,
+              abbr: et.abbreviation,
+              type: et.type === 'normal' ? 'standard' : 'extra',
+              percentage: et.percentage,
+              maxExtra: et.maxPoints,
+            }))
+        );
+
+        // Matriz de calificaciones y promedios del backend.
+        setGrades(g);
+        setAverages(avg);
+        if (averagingRule) setGradingMode(averagingRule);
+      }
+      setGradesLoading(false);
+    };
+    fetchGrades();
+    return () => { cancelled = true; };
+  }, [groupId, subjectId, selectedPeriod?._id]);
+
+  // Verificar si el trimestre está cerrado para este combo.
+  useEffect(() => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) return;
+
+    let cancelled = false;
+    const checkClosed = async () => {
+      const result = await getGradeValidation(selectedPeriod._id);
+      if (cancelled) return;
+      if (result.success && result.data?.groups) {
+        const combo = result.data.groups.find(
+          (g) => g._id === groupId && g.subject?._id === subjectId,
+        );
+        setIsClosed(combo?.status === 'closed');
+      }
+    };
+    checkClosed();
+    return () => { cancelled = true; };
+  }, [groupId, subjectId, selectedPeriod?._id]);
+
   // -----------------------------------------------------------------
   // HANDLERS
   // -----------------------------------------------------------------
-  const openCell = (studentIndex, columnId) =>
+  const openCell = (studentIndex, columnId) => {
+    if (isClosed) return;
     setKeypadTarget({ studentIndex, columnId });
+  };
 
   const closeKeypad = () => setKeypadTarget(null);
 
@@ -229,12 +293,32 @@ export default function TeacherGradeEntryScreen() {
     });
   };
 
-  const saveCell = (studentId, columnId, text) => {
+  const saveCell = async (studentId, columnId, text) => {
+    // Actualización optimista local.
     setGrades((prev) => ({
       ...prev,
       [studentId]: { ...(prev[studentId] || {}), [columnId]: text },
     }));
-    // Muestra el toast flotante como feedback.
+
+    // Guardar en el backend.
+    const enrollmentId = enrollmentMap[studentId];
+    if (enrollmentId && columnId) {
+      const numValue = parseFloat(String(text).replace(',', '.'));
+      if (!isNaN(numValue)) {
+        const result = await saveGrade({
+          enrollmentId,
+          evaluationTypeId: columnId,
+          value: numValue,
+          groupId,
+          subjectId,
+          periodId: selectedPeriod?._id,
+        });
+        if (result.success && result.data?.average !== undefined) {
+          setAverages((prev) => ({ ...prev, [studentId]: result.data.average }));
+        }
+      }
+    }
+
     setToastVisible(true);
   };
 
@@ -243,42 +327,131 @@ export default function TeacherGradeEntryScreen() {
     setAddModal({ visible: true, mode: 'edit', column });
   const closeAddModal = () => setAddModal((s) => ({ ...s, visible: false }));
 
-  const handleSaveColumn = ({ id, type, name, abbr, percentage, maxExtra }) => {
-    if (addModal.mode === 'edit' && id) {
-      setColumns((prev) =>
-        prev.map((c) =>
-          c.id === id ? { ...c, type, name, abbr, percentage, maxExtra } : c,
-        ),
+  // Re-fetch completo de la matriz de calificaciones.
+  const refetchGrades = async () => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) return;
+    const result = await getGrades({
+      groupId,
+      subjectId,
+      periodId: selectedPeriod._id,
+    });
+    if (result.success && result.data) {
+      const { students: s = [], evaluationTypes = [], grades: g = {}, averages: avg = {}, averagingRule } = result.data;
+      setStudents(s.map((st) => ({ _id: st._id, name: st.fullName })));
+      setEnrollmentMap(Object.fromEntries(s.map((st) => [st._id, st.enrollment_id])));
+      setColumns(
+        evaluationTypes
+          .sort((a, b) => a.order - b.order)
+          .map((et) => ({
+            id: et._id,
+            name: et.name,
+            abbr: et.abbreviation,
+            type: et.type === 'normal' ? 'standard' : 'extra',
+            percentage: et.percentage,
+            maxExtra: et.maxPoints,
+          }))
       );
-    } else {
-      const newId = `c${Date.now()}`;
-      setColumns((prev) => [
-        ...prev,
-        { id: newId, type, name, abbr, percentage, maxExtra },
-      ]);
+      setGrades(g);
+      setAverages(avg);
+      if (averagingRule) setGradingMode(averagingRule);
     }
-    closeAddModal();
+  };
+
+  const handleSaveColumn = async ({ id, type, name, abbr, percentage, maxExtra }) => {
+    if (addModal.mode === 'edit' && id) {
+      const result = await updateEvaluationType(id, {
+        name,
+        abbreviation: abbr,
+        percentage: type === 'standard' ? percentage : undefined,
+      });
+      if (result.success) {
+        await refetchGrades();
+        closeAddModal();
+      } else {
+        if (result.reason === 'conflict') {
+          Alert.alert('Abreviatura duplicada', result.message);
+        } else {
+          Alert.alert('Error', result.message || 'No se pudo actualizar la evaluación.');
+        }
+      }
+      return;
+    }
+
+    // Modo 'add': crear en el backend.
+    if (!groupId || !subjectId || !selectedPeriod?._id) {
+      Alert.alert('Error', 'Faltan datos del grupo o período para crear la evaluación.');
+      return;
+    }
+
+    const backendType = type === 'standard' ? 'normal' : 'extra';
+    const result = await createEvaluationType({
+      groupId,
+      subjectId,
+      periodId: selectedPeriod._id,
+      name,
+      abbreviation: abbr,
+      type: backendType,
+      percentage: type === 'standard' ? percentage : undefined,
+      maxPoints: type === 'extra' ? maxExtra : undefined,
+    });
+
+    if (result.success) {
+      await refetchGrades();
+      closeAddModal();
+    } else {
+      if (result.reason === 'conflict') {
+        Alert.alert('Abreviatura duplicada', result.message);
+      } else {
+        Alert.alert('Error', result.message || 'No se pudo crear la evaluación.');
+      }
+    }
   };
 
   const handleDeleteColumn = () => {
     const colId = addModal.column?.id;
     if (!colId) return;
-    setColumns((prev) => prev.filter((c) => c.id !== colId));
-    setGrades((prev) => {
-      const next = {};
-      Object.keys(prev).forEach((sid) => {
-        const { [colId]: _drop, ...rest } = prev[sid] || {};
-        next[sid] = rest;
+
+    Alert.alert(
+      'Eliminar Evaluación',
+      '¿Estás seguro? Se eliminará esta evaluación y todas las calificaciones asociadas de todos los alumnos.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await deleteEvaluationType(colId);
+            if (result.success) {
+              await refetchGrades();
+              closeAddModal();
+            } else {
+              Alert.alert('Error', result.message || 'No se pudo eliminar la evaluación.');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleSelectGradingMode = async (mode) => {
+    setGradingMode(mode);
+    if (groupId && subjectId && selectedPeriod?._id) {
+      await updateGradeConfig({
+        groupId,
+        subjectId,
+        periodId: selectedPeriod._id,
+        averagingRule: mode,
       });
-      return next;
-    });
-    closeAddModal();
+    }
   };
 
   // -----------------------------------------------------------------
   // DERIVADOS
   // -----------------------------------------------------------------
-  const sumPct = useMemo(() => sumStandardPercentages(columns), [columns]);
+  const sumPct = useMemo(
+    () => columns.filter((c) => c.type === 'standard').reduce((acc, c) => acc + (Number(c.percentage) || 0), 0),
+    [columns],
+  );
   const standardCount = columns.filter((c) => c.type === 'standard').length;
   const extraCount = columns.filter((c) => c.type === 'extra').length;
 
@@ -302,16 +475,16 @@ export default function TeacherGradeEntryScreen() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-2"
-          teacherName={teacherName}
+          teacher={data?.teacher}
           date={currentDate}
         />
 
-        {/* Botón "Volver". */}
+        {/* Botón "Volver" → group detail. */}
         <Pressable
           onPress={() => router.back()}
           className="flex-row items-center px-4 mt-4"
           accessibilityRole="button"
-          accessibilityLabel="Volver a mis grupos"
+          accessibilityLabel="Volver al detalle del grupo"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
           <Text className="text-sm font-semibold text-sky-600 ml-1">
@@ -326,12 +499,13 @@ export default function TeacherGradeEntryScreen() {
           </Text>
           <View className="mt-2 flex-row items-center justify-between">
             <Pressable
+              onPress={() => setPeriodDropdownVisible((v) => !v)}
               className="flex-row items-center bg-white border border-[#E2E8F0] rounded-full px-4 py-2"
               accessibilityRole="button"
               accessibilityLabel="Seleccionar periodo"
             >
               <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
-                1er Trimestre
+                {selectedPeriod?.name || (periodsLoading ? 'Cargando...' : 'Sin períodos')}
               </Text>
               <ChevronDown
                 size={16}
@@ -340,6 +514,39 @@ export default function TeacherGradeEntryScreen() {
                 style={{ marginLeft: 6 }}
               />
             </Pressable>
+
+            {/* Dropdown de períodos */}
+            {periodDropdownVisible && periods.length > 0 && (
+              <View
+                className="absolute top-full left-0 mt-1 bg-white rounded-xl border border-[#E2E8F0] shadow-sm z-50"
+                style={{ elevation: 3, minWidth: 200 }}
+              >
+                {periods.map((period) => (
+                  <Pressable
+                    key={period._id}
+                    onPress={() => {
+                      setSelectedPeriod(period);
+                      setPeriodDropdownVisible(false);
+                    }}
+                    className="px-4 py-2.5 border-b border-slate-100"
+                    style={{
+                      backgroundColor: selectedPeriod?._id === period._id ? '#F0F9FF' : '#FFFFFF',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: selectedPeriod?._id === period._id ? '700' : '500',
+                        color: selectedPeriod?._id === period._id ? '#0284C7' : '#0F172A',
+                      }}
+                    >
+                      {period.name}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
             <Text
               className="font-bold text-[#0F172A] ml-3"
               style={{ fontSize: 13 }}
@@ -350,7 +557,8 @@ export default function TeacherGradeEntryScreen() {
           </View>
         </View>
 
-        {/* C) Acciones: + Agregar Evaluación + gear de configuración. */}
+        {/* C) Acciones: + Agregar Evaluación + gear de configuración. Solo si no está cerrado. */}
+        {!isClosed && (
         <View className="px-4 mt-1 flex-row items-center" style={{ gap: 8 }}>
           <Pressable
             onPress={openAddColumn}
@@ -383,6 +591,7 @@ export default function TeacherGradeEntryScreen() {
             <SlidersHorizontal size={18} color="#0284C7" strokeWidth={2.25} />
           </Pressable>
         </View>
+        )}
 
         {/* Conteo de alumnos (en una nueva fila debajo de los botones). */}
         <View className="px-4 mt-1 flex-row items-center">
@@ -397,9 +606,13 @@ export default function TeacherGradeEntryScreen() {
             <Text className="text-xs text-slate-500">
               Modo:{' '}
               <Text className="font-bold text-slate-700">
-                {gradingMode === 'weighted' ? 'Ponderado' : 'Simple'}
+                {gradesLoading
+                  ? 'Cargando...'
+                  : gradingMode === 'weighted'
+                    ? 'Ponderado'
+                    : 'Simple'}
               </Text>
-              {gradingMode === 'weighted' && standardCount > 0 && (
+              {!gradesLoading && gradingMode === 'weighted' && standardCount > 0 && (
                 <Text> · Suma de porcentajes: {sumPct}% / 100%</Text>
               )}
             </Text>
@@ -417,6 +630,19 @@ export default function TeacherGradeEntryScreen() {
         )}
 
         {/* D) MATRIZ / EMPTY STATE. */}
+        {/* Banner de trimestre cerrado. */}
+        {isClosed && (
+          <View
+            className="mx-4 mt-2 px-4 py-3 rounded-xl flex-row items-center"
+            style={{ backgroundColor: '#FEF2F2', gap: 8 }}
+          >
+            <Lock size={16} color="#DC2626" strokeWidth={2.25} />
+            <Text style={{ fontSize: 13, fontWeight: '600', color: '#991B1B', flex: 1 }}>
+              Trimestre cerrado. Solo lectura. Desbloquea desde la lista de validación para editar.
+            </Text>
+          </View>
+        )}
+
         <View className="mx-4 mt-1 flex-1">
           <View
             className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
@@ -534,7 +760,7 @@ export default function TeacherGradeEntryScreen() {
                           return (
                             <Pressable
                               key={col.id}
-                              onPress={() => openEditColumn(col)}
+                              onPress={isClosed ? undefined : () => openEditColumn(col)}
                               accessibilityRole="button"
                               accessibilityLabel={`Editar columna ${col.abbr}`}
                               style={{
@@ -636,13 +862,10 @@ export default function TeacherGradeEntryScreen() {
 
                     {/* Filas. */}
                     {students.map((student, index) => {
-                      const { finalScore, hasAnyInput } = computeFinalScore(
-                        grades[student._id] || {},
-                        columns,
-                        gradingMode,
-                      );
-                      const avgStyle = getAverageStyle(finalScore, hasAnyInput);
-                      const avgDisplay = hasAnyInput ? finalScore.toFixed(1) : '—';
+                      const avg = averages[student._id];
+                      const hasAnyInput = avg !== undefined && avg !== null;
+                      const avgStyle = getAverageStyle(avg || 0, hasAnyInput);
+                      const avgDisplay = hasAnyInput ? Number(avg).toFixed(1) : '—';
                       return (
                         <View
                           key={student._id}
@@ -814,7 +1037,7 @@ export default function TeacherGradeEntryScreen() {
         <ConfigModal
           visible={configVisible}
           gradingMode={gradingMode}
-          onSelect={setGradingMode}
+          onSelect={handleSelectGradingMode}
           onClose={() => setConfigVisible(false)}
         />
 

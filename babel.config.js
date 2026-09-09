@@ -5,9 +5,10 @@
 // Babel es el motor que transforma JS moderno (JSX, TypeScript,
 // sintaxis moderna) en código compatible con React Native.
 //
-// IMPORTANTE: el ORDEN de los presets importa. El preset de Expo
-// debe ir ANTES del de NativeWind, porque el de NativeWind necesita
-// que JSX ya haya sido parseado por el de Expo para funcionar bien.
+// IMPORTANTE: el ORDEN de los presets/plugins importa. El preset de
+// Expo debe ir ANTES del de NativeWind, porque el de NativeWind
+// necesita que JSX ya haya sido parseado por el de Expo para funcionar
+// bien.
 // =====================================================================
 
 // babel-preset-expo: preset oficial de Expo, incluye:
@@ -15,6 +16,13 @@
 //   - @babel/preset-react (JSX)
 //   - Soporte para TypeScript
 //   - El "transformer" específico de RN (gestionado por Metro)
+//
+// babel-plugin-module-resolver: alias `@/` → raíz del proyecto.
+//   Permite imports absolutos tipo `import Foo from '@/src/components/Foo'`
+//   en lugar de `../../../src/components/Foo` (frágil cuando el
+//   archivo se mueve dentro del route group anidado). Convencional
+//   para apps RN/Expo con route groups profundos (este proyecto
+//   tiene rutas a 5-7 niveles de profundidad).
 module.exports = function (api) {
   // Cache: true acelera builds en desarrollo.
   api.cache(true);
@@ -32,9 +40,8 @@ module.exports = function (api) {
       // Sin esto, las clases de Tailwind NO funcionarían en RN.
       'nativewind/babel',
     ],
-    // Plugins: NativeWind v4 usa react-native-worklets (basado en
-    // reanimated) para poder transformar las clases en runtime sin
-    // perder rendimiento. El plugin DEBE ir el último en la lista.
+    // Plugins: ver orden en los comentarios inline abajo. El plugin de
+    // worklets DEBE ir el último (necesita que JSX ya esté parseado).
     //
     // NOTA sobre expo-router/babel:
     //   A partir de Expo SDK 50, expo-router funciona con
@@ -43,6 +50,30 @@ module.exports = function (api) {
     //   Expo ya trae internamente el transformador del filesystem
     //   que expo-router necesita. Solo se requería en proyectos
     //   legacy pre-SDK 50.
-    plugins: ['react-native-worklets/plugin'],
+    plugins: [
+      // Alias `@/` → raíz del proyecto. Habilita imports absolutos.
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '@': './',
+          },
+          extensions: [
+            '.ios.js',
+            '.android.js',
+            '.js',
+            '.jsx',
+            '.json',
+            '.ts',
+            '.tsx',
+          ],
+        },
+      ],
+      // NativeWind v4 usa react-native-worklets (basado en
+      // reanimated) para transformar las clases en runtime sin perder
+      // rendimiento. El plugin DEBE ir el último en la lista.
+      'react-native-worklets/plugin',
+    ],
   };
 };

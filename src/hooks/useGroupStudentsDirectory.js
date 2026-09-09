@@ -2,38 +2,38 @@
 // useGroupStudentsDirectory.js
 // ---------------------------------------------------------------------
 // Hook del directorio de alumnos del grupo (pantalla
-// "Directorio y Expediente de Alumnos"). Maneja el estado de la
-// lista, el término de búsqueda, el filtrado reactivo, el item
-// expandido del accordion y el criterio de ordenamiento.
-//
-// FRONTEND ONLY: opera 100% sobre estado local (useState). No hace
-// fetch ni llamadas HTTP. La lista inicial viene de mockStudents.
+// "Directorio y Expediente de Alumnos"). Maneja el fetch del endpoint
+// GET /group-students-summary, el estado de la lista, el término de
+// búsqueda, el filtrado reactivo, el item expandido del accordion y el
+// criterio de ordenamiento.
 //
 // Retorna:
-//   - students:          lista completa de alumnos del grupo.
+//   - students:          lista de alumnos mapeada al shape de
+//                        StudentAccordionRow.
+//   - stats:             { groupAverage, atRiskCount, attendancePercentage }
+//                        del endpoint (para el GroupDiagnosticDashboard).
+//   - groupInfo:         { label, macroCategory, totalStudents } del endpoint.
+//   - periodInfo:        { _id, name } del período seleccionado.
+//   - loading:           boolean — true mientras se hace fetch.
+//   - error:             string | null — mensaje de error si falla.
 //   - searchTerm:        término de búsqueda actual.
 //   - setSearchTerm:     setter de búsqueda.
-//   - filteredStudents:  lista filtrada + ordenada (vacía si no
-//                        hay matches).
-//   - expandedStudentId: id del alumno con el accordion abierto o
-//                        null si todos están cerrados.
-//   - toggleExpandStudent(id): abre el accordion si está cerrado,
-//                              cierra si está abierto.
+//   - filteredStudents:  lista filtrada + ordenada.
+//   - expandedStudentId: id del alumno con el accordion abierto.
+//   - toggleExpandStudent(id): abre/cierra el accordion.
 //   - sortBy:            id del criterio de ordenamiento activo.
 //   - setSortBy:         setter de sortBy.
+//   - refetch:           fn() — re-invoca el endpoint.
 //
 // Constantes exportadas:
-//   - SORT_OPTIONS:      array con los IDs de los 3 criterios
-//                        disponibles. El toolbar los mapea a labels
-//                        e iconos. Mantener el contrato aquí (el
-//                        hook) y la presentación en el toolbar.
+//   - SORT_OPTIONS:      criterios de ordenamiento disponibles.
 // =====================================================================
 
 // React.
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 
-// Datos MOCK.
-import MOCK_STUDENTS from '../constants/mockStudents';
+// Servicio del endpoint.
+import { getGroupStudentsSummary } from '../services/teacherService';
 
 // IDs de los criterios de ordenamiento. Single source of truth
 // (consumidos por el hook y por el DirectoryToolbar).
@@ -43,32 +43,98 @@ export const SORT_OPTIONS = [
   { id: 'averageAsc',  label: 'Promedio (menor a mayor)' },
 ];
 
-const useGroupStudentsDirectory = () => {
-  // Lista completa (futuro: reemplazar por fetch del backend).
-  const [students] = useState(MOCK_STUDENTS);
+// ---------------------------------------------------------------------
+// Mapeo: backend → shape de StudentAccordionRow
+// ---------------------------------------------------------------------
+// El backend retorna { fullName, average, attendancePercentage,
+// citationsCount, guardian, initials, controlNumber }.
+// El componente espera { name, controlNumber, listNumber, initials,
+// metrics: { average, attendance, citatorios }, tutor: { name, relationship } }.
+// ---------------------------------------------------------------------
+const mapStudentFromBackend = (s, index) => ({
+  _id: s._id,
+  name: s.fullName,
+  controlNumber: s.controlNumber,
+  listNumber: index + 1,
+  initials: s.initials,
+  photoUrl: null,
+  status: s.average < 7.0 ? 'at_risk' : 'regular',
+  metrics: {
+    average: s.average,
+    attendance: s.attendancePercentage,
+    citatorios: s.citationsCount,
+  },
+  tutor: s.guardian
+    ? { name: s.guardian.fullName, relationship: s.guardian.relationship, phone: s.guardian.phone }
+    : null,
+});
 
-  // Término de búsqueda (raw string del input).
+const useGroupStudentsDirectory = ({ groupId, subjectId, periodId } = {}) => {
+  // -------------------------------------------------------------------
+  // Estado del fetch
+  // -------------------------------------------------------------------
+  const [students, setStudents] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [groupInfo, setGroupInfo] = useState(null);
+  const [periodInfo, setPeriodInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Ref para evitar fetch duplicado en StrictMode.
+  const fetchIdRef = useRef(0);
+
+  // -------------------------------------------------------------------
+  // Fetch del endpoint
+  // -------------------------------------------------------------------
+  const fetchStudents = useCallback(async () => {
+    if (!groupId || !subjectId || !periodId) return;
+
+    const currentFetchId = ++fetchIdRef.current;
+    setLoading(true);
+    setError(null);
+
+    const result = await getGroupStudentsSummary(groupId, subjectId, periodId);
+
+    // Ignorar si ya hubo otro fetch más reciente.
+    if (currentFetchId !== fetchIdRef.current) return;
+
+    if (result.success && result.data) {
+      const mapped = (result.data.students || []).map(mapStudentFromBackend);
+      // Deduplicar por _id (el backend puede devolver duplicados).
+      const seen = new Set();
+      const unique = mapped.filter((s) => {
+        if (seen.has(s._id)) return false;
+        seen.add(s._id);
+        return true;
+      });
+      setStudents(unique);
+      setStats(result.data.stats || null);
+      setGroupInfo(result.data.group || null);
+      setPeriodInfo(result.data.period || null);
+    } else {
+      setError(result.message || 'No se pudieron cargar los alumnos.');
+      setStudents([]);
+      setStats(null);
+    }
+
+    setLoading(false);
+  }, [groupId, subjectId, periodId]);
+
+  // Ejecutar fetch cuando cambian los params.
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
+
+  // -------------------------------------------------------------------
+  // Búsqueda, filtrado y ordenamiento
+  // -------------------------------------------------------------------
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Id del alumno con el accordion abierto. null = todos cerrados.
   const [expandedStudentId, setExpandedStudentId] = useState(null);
-
-  // Criterio de ordenamiento activo. Default: 'listNumber' (orden
-  // original del mock, que viene por número de lista).
   const [sortBy, setSortBy] = useState('listNumber');
 
-  // Lista filtrada + ordenada. Recalculada cuando cambian
-  // students, searchTerm o sortBy.
-  //
-  //   1) Filtro: case-insensitive por nombre, N.L. o No. de Control.
-  //   2) Sort:   clonamos el array (no mutamos el original) y
-  //              aplicamos el criterio seleccionado. 'listNumber'
-  //              deja el orden natural (asumimos que el mock ya
-  //              viene ordenado por listNumber asc).
   const filteredStudents = useMemo(() => {
     const term = String(searchTerm || '').trim().toLowerCase();
 
-    // 1) Filtrado.
     let result = term
       ? students.filter((s) => {
           const name = String(s.name || '').toLowerCase();
@@ -82,7 +148,6 @@ const useGroupStudentsDirectory = () => {
         })
       : students;
 
-    // 2) Ordenamiento (clonar para no mutar el array original).
     result = [...result];
     if (sortBy === 'averageDesc') {
       result.sort(
@@ -95,19 +160,28 @@ const useGroupStudentsDirectory = () => {
           Number(a.metrics?.average || 0) - Number(b.metrics?.average || 0),
       );
     }
-    // 'listNumber' → orden original (no tocamos result).
 
     return result;
   }, [students, searchTerm, sortBy]);
 
-  // Toggle del accordion: si toco el que ya está abierto, lo cierra;
-  // si toco otro, lo abre (cerrando el anterior).
   const toggleExpandStudent = useCallback((id) => {
     setExpandedStudentId((current) => (current === id ? null : id));
   }, []);
 
+  // Reset search y expanded cuando cambian los params.
+  useEffect(() => {
+    setSearchTerm('');
+    setExpandedStudentId(null);
+    setSortBy('listNumber');
+  }, [groupId, subjectId, periodId]);
+
   return {
     students,
+    stats,
+    groupInfo,
+    periodInfo,
+    loading,
+    error,
     searchTerm,
     setSearchTerm,
     filteredStudents,
@@ -115,6 +189,7 @@ const useGroupStudentsDirectory = () => {
     toggleExpandStudent,
     sortBy,
     setSortBy,
+    refetch: fetchStudents,
   };
 };
 
