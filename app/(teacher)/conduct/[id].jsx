@@ -58,6 +58,7 @@ import {
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Helper para componer el nombre completo del maestro.
 import { getTeacherFullName } from '@/src/utils/teacherName';
@@ -191,6 +192,7 @@ export default function ConductDetailScreen() {
   // DASHBOARD DATA (escuela + maestro + fecha).
   // -------------------------------------------------------------------
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const school = useMemo(() => {
     if (!data?.school) return null;
     return {
@@ -269,6 +271,7 @@ export default function ConductDetailScreen() {
             schoolName={school.name}
             logoUri={school.logo_url}
             schoolYear={school.current_school_year}
+            user={user}
           />
         </View>
       )}

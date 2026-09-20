@@ -62,6 +62,7 @@ import {
 
 // Hook del dashboard docente.
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 // Chrome compartido.
 import DashboardHeader from '@/src/components/DashboardHeader';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
@@ -83,6 +84,7 @@ export default function TeacherAttendanceSummaryScreen() {
   // DASHBOARD DATA
   // ============================================================
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -166,6 +168,7 @@ export default function TeacherAttendanceSummaryScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

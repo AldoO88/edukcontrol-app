@@ -383,3 +383,82 @@ export const confirmCitation = async (studentId, citationId) => {
     };
   }
 };
+
+// ---------------------------------------------------------------------
+// requestReschedule(studentId, citationId, reason)
+// ---------------------------------------------------------------------
+// PATCH /api/guardians/me/students/:studentId/citations/:citationId/request-reschedule
+// Body: { reason: string (requerido, max 500 chars) }
+//
+// Marca el citatorio con rescheduleRequested = true y envía una
+// notificación push al creador del citatorio. Solo aplica a
+// citatorios en status 'pending' o 'confirmed'.
+//
+// Retorna el citatorio actualizado.
+//
+// Errores comunes:
+//   404 → citatorio o alumno no encontrado, o no pertenece al tutor.
+//   409 → citatorio en status no permitido (completed, cancelled, etc.).
+//   400 → motivo faltante o inválido.
+// ---------------------------------------------------------------------
+export const requestReschedule = async (studentId, citationId, reason) => {
+  if (!studentId || !citationId) {
+    return {
+      success: false,
+      message: 'Faltan datos para solicitar la reagendación.',
+    };
+  }
+  if (!reason || !reason.trim()) {
+    return {
+      success: false,
+      message: 'Por favor ingresa el motivo de la reagendación.',
+    };
+  }
+  try {
+    const response = await api.patch(
+      `/api/guardians/me/students/${studentId}/citations/${citationId}/request-reschedule`,
+      { reason: reason.trim() },
+    );
+    const body = response.data || {};
+    const payload = body.data ? body.data : body;
+    return { success: true, data: payload };
+  } catch (error) {
+    const status = error?.response?.status;
+    const serverMessage = error?.response?.data?.message;
+
+    if (status === 404) {
+      return {
+        success: false,
+        message: serverMessage || 'No se encontró el citatorio.',
+      };
+    }
+    if (status === 409) {
+      return {
+        success: false,
+        message: serverMessage || 'Este citatorio no se puede reagendar.',
+      };
+    }
+    if (status === 400) {
+      return {
+        success: false,
+        message: serverMessage || 'El motivo es inválido.',
+      };
+    }
+    if (status === 401) {
+      return {
+        success: false,
+        message: serverMessage || 'Tu sesión expiró. Inicia sesión de nuevo.',
+      };
+    }
+    if (!error?.response) {
+      return {
+        success: false,
+        message: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
+      };
+    }
+    return {
+      success: false,
+      message: serverMessage || 'No se pudo solicitar la reagendación. Inténtalo de nuevo.',
+    };
+  }
+};

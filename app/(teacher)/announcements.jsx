@@ -1,60 +1,64 @@
 // =====================================================================
 // app/(teacher)/announcements.jsx
 // ---------------------------------------------------------------------
-// Pantalla "Avisos y Comunicados" del MAESTRO (rol "teacher").
+// Pantalla "Avisos" del MAESTRO (rol "teacher").
 //
 // Feed de avisos reales con:
 //   - Tabs "Mis Publicaciones" (solo avisos del teacher) /
 //     "Generales" (avisos generales de la dirección).
-//   - Filtro de prioridad (toggle) — solo en tab "Mis Publicaciones".
+//   - Filtro de prioridad (toggle) en ambas tabs.
+//   - Date range chips (Hoy/Semana/15 días/Historial).
+//   - Búsqueda client-side por título, mensaje, remitente.
 //   - Scroll infinito (FlatList con onEndReached → loadMore).
-//   - Modal "Crear Nuevo Aviso" con targetType group/student.
+//   - FAB "Crear Nuevo Aviso" con targetType group/student.
 //   - Tap en una card → navega a detalle (/announcements/:id).
 //
 // DATA SOURCE:
 //   - Feed: useTeacherAnnouncements() → GET /api/announcements/me
-//     (tabs: mine | general, filtros: priority, paginación)
+//     (tabs: mine | general, filtros: priority, from, to, paginación)
 // =====================================================================
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   View,
   Text,
   Pressable,
   FlatList,
+  TextInput,
   ActivityIndicator,
 } from 'react-native';
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { clsx } from 'clsx';
 
 // Iconos Lucide.
 import {
-  GraduationCap,
-  Bell,
   Plus,
   Megaphone,
   User,
-  CheckCircle2,
-  ChevronLeft,
-  Filter,
   AlertTriangle,
+  Search,
+  X,
+  Filter,
 } from 'lucide-react-native';
 
 // Componentes compartidos.
+import DashboardHeader from '../../src/components/DashboardHeader';
 import SchoolInfoCard from '../../src/components/SchoolInfoCard';
 
 // Hooks.
 import { useAuth } from '../../src/hooks/useAuth';
 import { useTeacherDashboard } from '../../src/hooks/useTeacherDashboard';
 import { useTeacherAnnouncements } from '../../src/hooks/useTeacherAnnouncements';
+import { useAnnouncementFilters, DATE_RANGE_OPTIONS } from '../../src/hooks/useAnnouncementFilters';
+import { useAnnouncementGroups } from '../../src/hooks/useAnnouncementGroups';
 
 // Service.
-import { getMyGroups } from '../../src/services/teacherService';
+import { getMyGroups, getGroupStudents } from '../../src/services/teacherService';
 // Helpers.
 import { formatPriorityLabel } from '../../src/utils/announcementHelpers';
 import { formatRelativeDateTime } from '../../src/utils/dateHelpers';
+import { ROLE_LABELS } from '../../src/constants/roleLabels';
 
 // Modal de creación.
 import CreateAnnouncementModal from './_components/CreateAnnouncementModal';
@@ -79,7 +83,6 @@ const CARD_SHADOW = {
 // COMPONENTE PRINCIPAL
 // =====================================================================
 export default function TeacherAnnouncements() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   // Usuario actual (para filtrar "Mis Publicaciones" por sender).
@@ -91,30 +94,70 @@ export default function TeacherAnnouncements() {
     useTeacherAnnouncements();
 
   // -------------------------------------------------------------------
-  // GRUPOS ASIGNADOS (para el modal de creación)
+  // GRUPOS + MODAL (vía useAnnouncementGroups)
   // -------------------------------------------------------------------
-  const [assignedGroups, setAssignedGroups] = useState([]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const fetchGroups = async () => {
-      const result = await getMyGroups();
-      if (!cancelled && result.success) {
-        const raw = result.data?.groups || [];
-        setAssignedGroups(
-          raw.map((g) => ({
-            id: g._id,
-            label: g.label || `${g.grade}°${g.section}`,
-            grade: g.grade,
-            section: g.section,
-            students: g.students || [],
-          })),
-        );
-      }
-    };
-    fetchGroups();
-    return () => { cancelled = true; };
+  const fetchTeacherGroups = useCallback(async () => {
+    const result = await getMyGroups();
+    if (result.success) {
+      return { success: true, data: result.data?.groups || [] };
+    }
+    return { success: false, data: [] };
   }, []);
+
+  const mapTeacherGroup = useCallback((g) => ({
+    id: g._id,
+    label: g.label || `${g.grade}°${g.section}`,
+    grade: g.grade,
+    section: g.section,
+    type: g.type || 'regular',
+    students: g.students || [],
+    tallerGrade: g.type === 'taller' ? g.grade : null,
+  }), []);
+
+  const fetchTeacherStudents = useCallback(async (groupId) => {
+    const result = await getGroupStudents(groupId);
+    if (result.success) {
+      return result.data?.students || [];
+    }
+    return [];
+  }, []);
+
+  const {
+    showModal: isCreateModalVisible,
+    groups: assignedGroups,
+    handleOpenCreate,
+    handleFetchStudents,
+    handlePublished,
+    handleClose: handleModalClose,
+  } = useAnnouncementGroups({
+    fetchGroupsFn: fetchTeacherGroups,
+    mapGroupFn: mapTeacherGroup,
+    fetchStudentsFn: fetchTeacherStudents,
+  });
+
+  // -------------------------------------------------------------------
+  // FILTROS (vía useAnnouncementFilters)
+  // -------------------------------------------------------------------
+  const {
+    activeSegment,
+    selectedPriority,
+    dateRangeId,
+    searchText,
+    setDateRangeId,
+    setSearchText,
+    handleTabChange,
+    togglePriorityFilter,
+    clearSearch,
+    activeRange,
+    filteredItems,
+    hasSearch,
+  } = useAnnouncementFilters({
+    setFilters,
+    segmentTabs: SEGMENT_TABS,
+    tabMapping: { [SEGMENT_TABS[0]]: 'mine', [SEGMENT_TABS[1]]: 'general' },
+    defaultDateRange: 'all',
+    items,
+  });
 
   // -------------------------------------------------------------------
   // SCHOOL INFO (normalizada para SchoolInfoCard)
@@ -129,63 +172,6 @@ export default function TeacherAnnouncements() {
   }, [data?.school, data?.currentSchoolYear]);
 
   const currentDate = data?.currentDate || '';
-
-  // -------------------------------------------------------------------
-  // ESTADO DE FILTROS / TABS
-  // -------------------------------------------------------------------
-  const [activeSegment, setActiveSegment] = useState(SEGMENT_TABS[0]);
-  const [selectedPriority, setSelectedPriority] = useState(null);
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-
-  // -------------------------------------------------------------------
-  // CAMBIO DE TAB
-  // -------------------------------------------------------------------
-  // Al cambiar de tab, notificamos al hook para que cambie el
-  // targetType del fetch. "Mis Publicaciones" → sin targetType
-  // (el front filtra por sender). "Generales" → targetType: "general".
-  const isInitialTabMount = React.useRef(true);
-  const handleTabChange = useCallback((tab) => {
-    setActiveSegment(tab);
-    // Reset prioridad al cambiar de tab.
-    setSelectedPriority(null);
-    const newTab = tab === SEGMENT_TABS[0] ? 'mine' : 'general';
-    setFilters({ tab: newTab, priority: null });
-  }, [setFilters]);
-
-  // -------------------------------------------------------------------
-  // TOGGLE FILTROS (solo para tab "Mis Publicaciones")
-  // -------------------------------------------------------------------
-  const isInitialMount = React.useRef(true);
-  React.useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    setFilters({ priority: selectedPriority });
-  }, [selectedPriority, setFilters]);
-
-  const togglePriorityFilter = useCallback((priority) => {
-    setSelectedPriority((prev) => (prev === priority ? null : priority));
-  }, []);
-
-  const clearFilters = useCallback(() => {
-    setSelectedPriority(null);
-  }, []);
-
-  // -------------------------------------------------------------------
-  // ITEMS FILTRADOS POR TAB
-  // -------------------------------------------------------------------
-  // "Mis Publicaciones": solo avisos donde el sender es el teacher actual.
-  // "Generales": ya vienen filtrados por targetType: "general" desde la API.
-  const filteredItems = useMemo(() => {
-    if (activeSegment === SEGMENT_TABS[1]) {
-      // Tab "Generales": ya vienen filtrados del backend.
-      return items;
-    }
-    // Tab "Mis Publicaciones": filtrar por sender._id === user.id.
-    if (!user?.id) return items;
-    return items.filter((item) => item.sender?._id === user.id);
-  }, [items, activeSegment, user?.id]);
 
   // -------------------------------------------------------------------
   // RENDER: ITEM DEL FEED
@@ -211,6 +197,13 @@ export default function TeacherAnnouncements() {
         : { bg: '#EFF6FF', color: '#2563EB', label: firstGroup ? `${firstGroup.grade}°${firstGroup.section}` : 'Grupo' };
 
     const TagIcon = isStudentTarget ? User : Megaphone;
+
+    // Sender info.
+    const senderName = item.sender
+      ? `${item.sender.last_name || ''} ${item.sender.name || ''}`.trim()
+      : '';
+    const senderRole = item.sender?.role;
+    const roleLabel = senderRole ? ROLE_LABELS[senderRole] || senderRole : null;
 
     return (
       <Pressable
@@ -254,7 +247,7 @@ export default function TeacherAnnouncements() {
             {item.message}
           </Text>
 
-          {/* Footer: prioridad badge + info de audiencia. */}
+          {/* Footer: prioridad badge + sender con rol. */}
           <View className="h-px bg-[#F1F5F9] my-3" />
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
@@ -273,16 +266,14 @@ export default function TeacherAnnouncements() {
                 </Text>
               </View>
             </View>
-            {item.totalRecipients != null && (
+            {senderName ? (
               <View className="flex-row items-center">
-                <CheckCircle2 size={14} color="#16A34A" strokeWidth={2.25} />
-                <Text className="text-[12px] font-semibold text-[#334155] ml-1.5">
-                  {item.readCount != null
-                    ? `${item.readCount}/${item.totalRecipients} Lecturas`
-                    : `${item.totalRecipients} destinatarios`}
+                <Text className="text-[12px] text-[#64748B]" numberOfLines={1}>
+                  {senderName}
+                  {roleLabel ? ` · ${roleLabel}` : ''}
                 </Text>
               </View>
-            )}
+            ) : null}
           </View>
         </View>
       </Pressable>
@@ -343,6 +334,19 @@ export default function TeacherAnnouncements() {
         </View>
       );
     }
+    if (hasSearch) {
+      return (
+        <View className="py-12 items-center px-6">
+          <Search size={40} color="#CBD5E1" strokeWidth={1.5} />
+          <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+            No hay avisos con estos filtros
+          </Text>
+          <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+            Intenta con otros términos de búsqueda.
+          </Text>
+        </View>
+      );
+    }
     if (activeSegment === SEGMENT_TABS[1]) {
       return (
         <View className="py-12 items-center px-6">
@@ -363,37 +367,15 @@ export default function TeacherAnnouncements() {
           No has publicado avisos
         </Text>
         <Text className="text-[13px] text-[#64748B] mt-1 text-center">
-          Crea tu primer aviso usando el botón de arriba.
+          Crea tu primer aviso usando el botón de abajo.
         </Text>
       </View>
     );
-  }, [isLoading, error, refetch, activeSegment]);
+  }, [isLoading, error, refetch, activeSegment, hasSearch]);
 
   return (
     <View className="flex-1 bg-[#F8FAFC]">
-      {/* ============================================================
-          HEADER FIJO
-          ============================================================ */}
-      <View
-        className="bg-white flex-row items-center justify-between px-4 pb-3 border-b border-[#E2E8F0]"
-        style={{ paddingTop: insets.top + 12 }}
-      >
-        <View className="flex-row items-center">
-          <GraduationCap size={24} color="#0284C7" strokeWidth={2.25} />
-          <Text className="text-[20px] font-bold text-[#0284C7] ml-2 tracking-tight">
-            EdukControl
-          </Text>
-        </View>
-        <Pressable
-          className="relative"
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel="Notificaciones"
-        >
-          <Bell size={24} color="#64748B" strokeWidth={2} />
-          <View className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#EF4444] border-2 border-[#F8FAFC]" />
-        </Pressable>
-      </View>
+      <DashboardHeader />
 
       {/* ============================================================
           CONTENIDO SCROLLEABLE
@@ -408,7 +390,7 @@ export default function TeacherAnnouncements() {
         ListEmptyComponent={renderEmpty}
         showsVerticalScrollIndicator={false}
         contentContainerClassName="px-4"
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         refreshing={isLoading}
         onRefresh={refetch}
         ListHeaderComponent={
@@ -417,44 +399,33 @@ export default function TeacherAnnouncements() {
             <SchoolInfoCard
               school={school}
               isLoading={!school}
-              className="mt-4"
+              className="mx-4 mt-2"
+              user={user}
               teacher={data?.teacher}
               date={currentDate}
             />
 
-            {/* Botón "Volver". */}
-            <Pressable
-              onPress={() => router.back()}
-              className="flex-row items-center mt-4"
-              accessibilityRole="button"
-              accessibilityLabel="Volver al dashboard"
-            >
-              <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-              <Text className="text-sm font-semibold text-sky-600 ml-1">
-                Volver
-              </Text>
-            </Pressable>
-
-            {/* Sección "Avisos y Comunicados" + botón nuevo. */}
+            {/* Sección "Avisos" + conteo. */}
             <View className="mt-5">
-              <Text className="text-[22px] font-bold text-[#0F172A]">
-                Avisos y Comunicados
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center">
+                  <Text className="text-[22px] font-bold text-[#0F172A]">
+                    Avisos
+                  </Text>
+                  {hasSearch && (
+                    <View className="ml-2 bg-sky-100 rounded-full px-2 py-0.5">
+                      <Text className="text-[10px] font-bold text-sky-700">Filtrado</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+              <Text className="text-sm text-slate-500 mt-1">
+                {pagination.total} aviso{pagination.total !== 1 ? 's' : ''}
               </Text>
-              <Pressable
-                onPress={() => setIsCreateModalVisible(true)}
-                className="self-start mt-3 flex-row items-center bg-[#0284C7] rounded-full px-4 py-2.5"
-                accessibilityRole="button"
-                accessibilityLabel="Crear nuevo aviso"
-              >
-                <Plus size={16} color="#ffffff" strokeWidth={2.75} />
-                <Text className="text-white font-bold text-[14px] ml-1.5">
-                  Nuevo Aviso
-                </Text>
-              </Pressable>
             </View>
 
             {/* ==========================================================
-                TAB SEGMENTED CONTROL
+                TAB SEGMENTED CONTROL (underline style)
                 ========================================================== */}
             <View className="mt-4 border-b border-[#E2E8F0] flex-row">
               {SEGMENT_TABS.map((tab) => {
@@ -486,68 +457,132 @@ export default function TeacherAnnouncements() {
             </View>
 
             {/* ==========================================================
-                BARRA DE FILTROS (solo tab "Mis Publicaciones")
+                FILTROS: prioridad + date range + búsqueda
                 ========================================================== */}
-            {activeSegment === SEGMENT_TABS[0] && (
-              <View className="mt-3">
-                {/* Filtro de prioridad: pills inline. */}
-                <View className="flex-row items-center">
-                  <Filter size={14} color="#64748B" strokeWidth={2} style={{ marginRight: 6 }} />
-                  <Text style={{ fontSize: 12, fontWeight: '600', color: '#64748B', marginRight: 8 }}>
-                    Prioridad:
-                  </Text>
-                  {['informative', 'urgent'].map((p) => {
-                    const isActive = selectedPriority === p;
-                    const isUrgentFilter = p === 'urgent';
-                    return (
-                      <Pressable
-                        key={p}
-                        onPress={() => togglePriorityFilter(p)}
-                        className="mr-2"
+            <View className="mt-3">
+              {/* Fila 1: Prioridad pills. */}
+              <View className="flex-row items-center mb-2">
+                <Filter size={14} color="#64748B" strokeWidth={2} style={{ marginRight: 6 }} />
+                <Text style={{ fontSize: 12, fontWeight: '600', color: '#64748B', marginRight: 8 }}>
+                  Prioridad:
+                </Text>
+                {['informative', 'urgent'].map((p) => {
+                  const isActive = selectedPriority === p;
+                  const isUrgentFilter = p === 'urgent';
+                  return (
+                    <Pressable
+                      key={p}
+                      onPress={() => togglePriorityFilter(p)}
+                      className="mr-2"
+                      style={{
+                        backgroundColor: isActive
+                          ? isUrgentFilter ? '#FEF2F2' : '#EFF6FF'
+                          : '#F1F5F9',
+                        borderRadius: 8,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                      }}
+                    >
+                      <Text
                         style={{
-                          backgroundColor: isActive
-                            ? isUrgentFilter ? '#FEF2F2' : '#EFF6FF'
-                            : '#F1F5F9',
-                          borderRadius: 8,
-                          paddingHorizontal: 10,
-                          paddingVertical: 5,
+                          fontSize: 11,
+                          fontWeight: isActive ? '700' : '500',
+                          color: isActive
+                            ? isUrgentFilter ? '#DC2626' : '#2563EB'
+                            : '#64748B',
                         }}
                       >
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontWeight: isActive ? '700' : '500',
-                            color: isActive
-                              ? isUrgentFilter ? '#DC2626' : '#2563EB'
-                              : '#64748B',
-                          }}
-                        >
-                          {p === 'informative' ? 'Informativo' : 'Urgente'}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                  {selectedPriority && (
-                    <Pressable onPress={clearFilters} style={{ marginLeft: 'auto' }}>
-                      <Text style={{ fontSize: 11, fontWeight: '600', color: '#0284C7' }}>
-                        Limpiar
+                        {p === 'informative' ? 'Informativo' : 'Urgente'}
                       </Text>
                     </Pressable>
-                  )}
-                </View>
+                  );
+                })}
+                {selectedPriority && (
+                  <Pressable onPress={() => setSelectedPriority(null)} style={{ marginLeft: 'auto' }}>
+                    <Text style={{ fontSize: 11, fontWeight: '600', color: '#0284C7' }}>
+                      Limpiar
+                    </Text>
+                  </Pressable>
+                )}
               </View>
-            )}
+
+              {/* Fila 2: Date range chips. */}
+              <View className="flex-row items-center gap-1.5 mb-2">
+                {DATE_RANGE_OPTIONS.map((opt) => (
+                  <Pressable
+                    key={opt.id}
+                    onPress={() => setDateRangeId(opt.id)}
+                    className={`px-3 py-1.5 rounded-full ${dateRangeId === opt.id ? 'bg-sky-500' : 'bg-slate-100'}`}
+                  >
+                    <Text className={`text-xs font-semibold ${dateRangeId === opt.id ? 'text-white' : 'text-slate-600'}`}>
+                      {opt.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+
+              {/* Fila 3: Búsqueda. */}
+              <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3 py-2 mb-1">
+                <Search size={16} color="#94A3B8" />
+                <TextInput
+                  value={searchText}
+                  onChangeText={setSearchText}
+                  placeholder="Buscar por título, mensaje o remitente..."
+                  placeholderTextColor="#94A3B8"
+                  className="flex-1 text-sm text-slate-900 ml-2"
+                  returnKeyType="search"
+                />
+                {searchText.length > 0 && (
+                  <Pressable onPress={() => setSearchText('')} hitSlop={8}>
+                    <X size={16} color="#94A3B8" />
+                  </Pressable>
+                )}
+              </View>
+
+              {/* Indicador de búsqueda activa */}
+              {hasSearch && (
+                <View className="flex-row items-center justify-between mt-1 mb-1">
+                  <Text className="text-[11px] text-slate-400">
+                    Mostrando {filteredItems.length} de {items.length} avisos
+                  </Text>
+                  <Pressable onPress={() => setSearchText('')}>
+                    <Text className="text-[11px] font-semibold text-sky-600">Limpiar</Text>
+                  </Pressable>
+                </View>
+              )}
+            </View>
           </>
         }
       />
+
+      {/* ============================================================
+          FAB "CREAR NUEVO AVISO"
+          ============================================================ */}
+      <Pressable
+        onPress={handleOpenCreate}
+        className="absolute bottom-6 right-6 bg-[#0284C7] w-14 h-14 rounded-full items-center justify-center"
+        style={{
+          shadowColor: '#0284C7',
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 4 },
+          elevation: 6,
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="Crear nuevo aviso"
+      >
+        <Plus size={24} color="#ffffff" strokeWidth={2.5} />
+      </Pressable>
 
       {/* ============================================================
           MODAL "CREAR NUEVO AVISO"
           ============================================================ */}
       <CreateAnnouncementModal
         visible={isCreateModalVisible}
-        onClose={() => setIsCreateModalVisible(false)}
+        onClose={handleModalClose}
         groups={assignedGroups}
+        onPublished={handlePublished}
+        fetchStudentsForGroup={handleFetchStudents}
       />
     </View>
   );

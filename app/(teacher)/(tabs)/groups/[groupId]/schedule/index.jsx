@@ -36,6 +36,7 @@ import {
 
 // Hook del dashboard docente.
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Chrome compartido.
 import DashboardHeader from '@/src/components/DashboardHeader';
@@ -301,6 +302,7 @@ export default function GroupScheduleScreen() {
   // DASHBOARD DATA
   // ============================================================
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || '';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -356,6 +358,7 @@ export default function GroupScheduleScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

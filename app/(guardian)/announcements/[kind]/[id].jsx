@@ -71,7 +71,7 @@
 // =====================================================================
 
 // React + hooks.
-import React, { useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
 // Primitivas RN: View, Text, ScrollView, Pressable, Image, ActivityIndicator, Alert.
 import {
@@ -140,6 +140,9 @@ import {
 // Hook que carga el item del backend y expone la acción `confirm`.
 import { useAnnouncementDetail } from '../../../../src/hooks/useAnnouncementDetail';
 
+// Modal para solicitar reagendación desde el tutor.
+import RequestRescheduleModal from '@/app/(guardian)/_components/RequestRescheduleModal';
+
 // Helpers de fechas. Sentence helpers se usan para componer la
 // frase del citatorio ("Cita con el Profesor X el martes 28 de
 // octubre a las 10:30 AM").
@@ -159,6 +162,9 @@ import {
   citatorioStudentName,
   citatorioStatusInfo,
 } from '../../../../src/utils/announcementHelpers';
+
+// Constantes.
+import { ROLE_LABELS, ROLE_IN_SENTENCE } from '../../../../src/constants/roleLabels';
 
 // clsx.
 import { clsx } from 'clsx';
@@ -216,46 +222,6 @@ const CITATION_TYPE_CONFIG = {
 };
 
 // ---------------------------------------------------------------------
-// ROLE_LABELS
-// ---------------------------------------------------------------------
-// Traducción de los roles del backend (inglés) a etiquetas en
-// español. La traducción es best-effort: si el rol no está en el
-// mapa, mostramos el valor crudo.
-// ---------------------------------------------------------------------
-const ROLE_LABELS = {
-  admin: 'Administrador',
-  principal: 'Director(a)',
-  registrar: 'Secretaría',
-  teacher: 'Docente',
-  prefect: 'Prefecto(a)',
-  social_worker: 'Trabajador(a) social',
-  super_admin: 'Super administrador',
-};
-
-// ---------------------------------------------------------------------
-// ROLE_IN_SENTENCE
-// ---------------------------------------------------------------------
-// Versión "en oración" del rol, usada para componer la frase del
-// citatorio. Ejemplos:
-//
-//   "Cita con el Profesor Carlos Ramírez el martes 28 de octubre a las 10:30 AM"
-//   "Cita con el Director Carlos Ramírez ..."
-//
-// El artículo es siempre "el" (masculino genérico, convencional en
-// es-MX para roles profesionales). El sustantivo va en singular
-// capitalizado como si fuera un título antes del nombre propio.
-// ---------------------------------------------------------------------
-const ROLE_IN_SENTENCE = {
-  admin: 'el Administrador',
-  principal: 'el Director',
-  registrar: 'el Registrador',
-  teacher: 'el Profesor',
-  prefect: 'el Prefecto',
-  social_worker: 'el Trabajador Social',
-  super_admin: 'el Super Administrador',
-};
-
-// ---------------------------------------------------------------------
 // getInitials(name)
 // ---------------------------------------------------------------------
 // Helper: 1-2 chars para fallback de avatar. Si name es vacío, "?".
@@ -273,7 +239,7 @@ const getInitials = (name) => {
 // Combina first_name + last_name. Devuelve '' si la persona es null.
 const getFullName = (person) => {
   if (!person) return '';
-  return [person.first_name, person.last_name]
+  return [person.first_name, person.last_name, person.name]
     .filter(Boolean)
     .join(' ')
     .trim();
@@ -332,9 +298,11 @@ export default function DetalleAvisoScreen() {
     data: item,
     isLoading,
     isConfirming,
+    isRequestingReschedule,
     error,
     refetch,
     confirm,
+    requestReschedule: requestRescheduleAction,
   } = useAnnouncementDetail(id, kind);
 
   console.log("Item detail:", item);
@@ -490,6 +458,23 @@ export default function DetalleAvisoScreen() {
   }, [confirm]);
 
   // -----------------------------------------------------------------
+  // HANDLER: Solicitar reagendación
+  // -----------------------------------------------------------------
+  const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
+
+  const handleRequestReschedule = useCallback(async (reason) => {
+    const result = await requestRescheduleAction(reason);
+    if (!result?.success) {
+      Alert.alert(
+        'No se pudo enviar la solicitud',
+        result?.message || 'Inténtalo de nuevo.',
+        [{ text: 'Aceptar' }],
+      );
+    }
+    return result;
+  }, [requestRescheduleAction]);
+
+  // -----------------------------------------------------------------
   // RENDER
   // -----------------------------------------------------------------
   return (
@@ -620,11 +605,14 @@ export default function DetalleAvisoScreen() {
               guardianName={guardianName}
               guardianRelationship={guardianRelationship}
               isConfirming={isConfirming}
+              isRequestingReschedule={isRequestingReschedule}
               onConfirm={handleConfirm}
+              onRequestReschedule={() => setIsRescheduleModalOpen(true)}
             />
           ) : (
             <AnnouncementDetail
               item={item}
+              filteredItem={filteredItem}
               visualConfig={visualConfig}
               senderName={senderName}
               roleLabel={roleLabel}
@@ -632,6 +620,14 @@ export default function DetalleAvisoScreen() {
           )
         )}
       </ScrollView>
+
+      {/* MODAL SOLICITAR REAGENDACIÓN */}
+      <RequestRescheduleModal
+        visible={isRescheduleModalOpen}
+        onClose={() => setIsRescheduleModalOpen(false)}
+        onSubmit={handleRequestReschedule}
+        isLoading={isRequestingReschedule}
+      />
     </View>
   );
 }
@@ -653,7 +649,7 @@ export default function DetalleAvisoScreen() {
 //   - Footer: nombre del sender/creator + role (lo mostramos arriba
 //     como card "De:" para que tenga el peso visual del remitente).
 // =====================================================================
-function AnnouncementDetail({ item, visualConfig, senderName, roleLabel }) {
+function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, roleLabel }) {
   // Fechas de la card de meta. createdAt siempre viene; expiresAt
   // puede ser null (avisos sin expiración).
   const createdAt = item.createdAt ? new Date(item.createdAt) : null;
@@ -898,7 +894,9 @@ function CitationDetail({
   guardianName,
   guardianRelationship,
   isConfirming,
+  isRequestingReschedule,
   onConfirm,
+  onRequestReschedule,
 }) {
   // Alumno del citatorio. controlNumber viene en el detail.
   const student = item.student;
@@ -937,10 +935,11 @@ function CitationDetail({
   // ¿El botón "Confirmar asistencia" aplica?
   // -----------------------------------------------------------------
   // Solo se muestra el botón cuando el citatorio está pendiente de
-  // confirmar. Los demás estados (confirmed / completed / no_show)
-  // muestran el badge derivado en `nonPendingBadge` (más abajo).
+  // confirmar Y no hay solicitud de reagendación pendiente.
+  // Si el tutor ya solicitó reagendación, el botón se deshabilita
+  // para evitar acciones contradictorias.
   // -----------------------------------------------------------------
-  const canConfirm = item.status === 'pending';
+  const canConfirm = item.status === 'pending' && !item.rescheduleRequested;
 
   // -----------------------------------------------------------------
   // BADGE DE STATUS (no-pending)
@@ -1237,6 +1236,50 @@ function CitationDetail({
 
 
       {/* ============================================================
+          BANNER: Solicitud de reagendación pendiente
+          ============================================================
+          Cuando el tutor ya solicitó reagendación, mostramos un
+          banner amarillo informando que su solicitud está pendiente
+          de respuesta del docente/prefecto.
+          ============================================================ */}
+      {item.rescheduleRequested ? (
+        <View
+          className="mx-0 mt-4 rounded-2xl p-4 border"
+          style={{
+            backgroundColor: '#FEF3C7',
+            borderColor: '#F59E0B',
+            borderWidth: 1,
+          }}
+        >
+          <View className="flex-row items-center mb-2">
+            <RefreshCw size={14} color="#92400E" strokeWidth={2.25} />
+            <Text
+              className="ml-1.5"
+              style={{
+                fontSize: 12,
+                fontWeight: '700',
+                color: '#92400E',
+                textTransform: 'uppercase',
+                letterSpacing: 0.3,
+              }}
+            >
+              Solicitud de Reagendación Enviada
+            </Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 13,
+              fontWeight: '500',
+              color: '#78350F',
+              lineHeight: 18,
+            }}
+          >
+            Tu solicitud fue enviada al docente. Espera su respuesta para conocer la nueva fecha de la cita.
+          </Text>
+        </View>
+      ) : null}
+
+      {/* ============================================================
           ACCIÓN: Confirmar asistencia / Status badge
           ============================================================
           Spec: "Si es citation y status === 'pending' → botón
@@ -1302,6 +1345,50 @@ function CitationDetail({
           </View>
         ) : null}
       </View>
+
+      {/* ============================================================
+          BOTÓN: Solicitar Reagendación
+          ============================================================
+          Se muestra cuando el tutor no puede asistir a la fecha
+          actual. Solo aplica para status 'pending' o 'confirmed'.
+          Si el tutor ya solicitó reagendación (rescheduleRequested),
+          el botón se deshabilita y muestra texto informativo.
+          ============================================================ */}
+      {['pending', 'confirmed'].includes(item.status) && item.status !== 'completed' && (
+        <View className="mt-3">
+          <Pressable
+            onPress={onRequestReschedule}
+            disabled={isRequestingReschedule || item.rescheduleRequested}
+            className={clsx(
+              'flex-row items-center justify-center px-4 py-3 rounded-xl border',
+              item.rescheduleRequested
+                ? 'bg-amber-50 border-amber-200 opacity-60'
+                : isRequestingReschedule
+                  ? 'bg-amber-50 border-amber-200'
+                  : 'bg-white border-amber-300 active:bg-amber-50',
+            )}
+            accessibilityRole="button"
+            accessibilityLabel="Solicitar reagendación del citatorio"
+            accessibilityState={{ disabled: isRequestingReschedule || item.rescheduleRequested }}
+          >
+            {isRequestingReschedule ? (
+              <ActivityIndicator size="small" color="#D97706" />
+            ) : (
+              <RefreshCw size={16} color="#D97706" strokeWidth={2} />
+            )}
+            <Text className={clsx(
+              'text-sm font-semibold ml-2',
+              item.rescheduleRequested ? 'text-amber-600' : 'text-amber-700',
+            )}>
+              {isRequestingReschedule
+                ? 'Enviando...'
+                : item.rescheduleRequested
+                  ? 'Solicitud de reagendación enviada'
+                  : 'Solicitar Reagendación'}
+            </Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }

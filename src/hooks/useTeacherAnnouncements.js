@@ -6,7 +6,7 @@
 // Encapsula:
 //   - Fetch inicial al montar y refetch al volver a foco.
 //   - Filtros: tab ('mine' | 'general'), priority ("informative" |
-//     "urgent" | null = ambos).
+//     "urgent" | null = ambos), from (ISO date), to (ISO date).
 //   - Paginación: loadMore() para scroll infinito (concatena items).
 //   - Loading state, error state, refetch manual.
 //
@@ -65,7 +65,7 @@ export const useTeacherAnnouncements = () => {
   // -----------------------------------------------------------------
   // filtersRef: espejo de los filtros actuales. Leemos desde aquí
   //   dentro de fetchData/loadMore sin meter filtros en deps.
-  const filtersRef = useRef({ tab: 'mine', priority: null });
+  const filtersRef = useRef({ tab: 'mine', priority: null, from: null, to: null });
 
   // itemsRef: espejo del array de items. Lo usamos para saber si
   //   es la primera carga (evitar spinner en refetches).
@@ -106,7 +106,9 @@ export const useTeacherAnnouncements = () => {
       const filters = filtersRef.current;
       const result = await getTeacherAnnouncements({
         tab: filters.tab || undefined,
-        priority: filters.tab === 'mine' ? (filters.priority || undefined) : undefined,
+        priority: filters.priority || undefined,
+        from: filters.from || undefined,
+        to: filters.to || undefined,
         page: 1,
         limit: PAGE_SIZE,
       });
@@ -150,7 +152,9 @@ export const useTeacherAnnouncements = () => {
       const filters = filtersRef.current;
       const result = await getTeacherAnnouncements({
         tab: filters.tab || undefined,
-        priority: filters.tab === 'mine' ? (filters.priority || undefined) : undefined,
+        priority: filters.priority || undefined,
+        from: filters.from || undefined,
+        to: filters.to || undefined,
         page: nextPage,
         limit: PAGE_SIZE,
       });

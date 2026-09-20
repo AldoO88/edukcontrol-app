@@ -22,6 +22,65 @@ import api from './api';
 const DASHBOARD_ENDPOINT = '/api/guardians/me/dashboard';
 
 // ---------------------------------------------------------------------
+// getConductDetail(logId)
+// ---------------------------------------------------------------------
+// GET /api/conduct-logs/:logId
+//
+// Retorna el detalle completo de un reporte de conducta.
+// Reutiliza el endpoint compartido con teacher/prefect/social-worker.
+//
+// Response shape:
+//   {
+//     _id, school,
+//     student_id: { _id, controlNumber, first_name, last_name },
+//     school_year_id: { _id, name, startDate, endDate, isActive },
+//     eventType: "demerit" | "merit",
+//     severity: "minor" | "moderate" | "severe" | null,
+//     points_impact: number,
+//     description: string,
+//     details: string | null,
+//     incident_date: ISO date,
+//     reported_by: { _id, name, email, role },
+//     status: "active" | "cancelled",
+//     createdAt, updatedAt
+//   }
+//
+// Devuelve { success, data, message? } o { success: false, message }.
+export const getConductDetail = async (logId) => {
+  try {
+    const response = await api.get(`/api/conduct-logs/${logId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    const statusCode = error?.response?.status;
+    const serverMessage = error?.response?.data?.message;
+
+    if (statusCode === 401) {
+      return {
+        success: false,
+        message: serverMessage || 'Tu sesión expiró. Inicia sesión de nuevo.',
+        reason: 'unauthorized',
+      };
+    }
+    if (statusCode === 404) {
+      return {
+        success: false,
+        message: 'No se encontró el reporte de conducta.',
+      };
+    }
+    if (!error?.response) {
+      return {
+        success: false,
+        message: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
+      };
+    }
+    return {
+      success: false,
+      message: 'No se pudo cargar el reporte. Inténtalo de nuevo.',
+    };
+  }
+};
+
+// ---------------------------------------------------------------------
 // getGuardianDashboard()
 // ---------------------------------------------------------------------
 // GET /api/guardians/me/dashboard

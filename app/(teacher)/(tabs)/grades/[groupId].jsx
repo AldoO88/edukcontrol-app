@@ -53,6 +53,7 @@ import {
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Chrome compartido.
 import DashboardHeader from '@/src/components/DashboardHeader';
@@ -106,6 +107,7 @@ export default function GradeReviewScreen() {
   // DASHBOARD DATA
   // ============================================================
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -309,15 +311,10 @@ export default function GradeReviewScreen() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-2"
+          user={user}
           teacher={data?.teacher}
           date={currentDate}
         />
-        <View className="flex-1 items-center justify-center py-12">
-          <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-slate-400 text-sm mt-3">
-            Cargando calificaciones...
-          </Text>
-        </View>
       </View>
     );
   }
@@ -333,6 +330,7 @@ export default function GradeReviewScreen() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-2"
+          user={user}
           teacher={data?.teacher}
           date={currentDate}
         />
@@ -380,6 +378,7 @@ export default function GradeReviewScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

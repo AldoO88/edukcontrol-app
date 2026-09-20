@@ -5,9 +5,7 @@
 // (teacher)). Pinta:
 //   - Isotipo sky-500 (cuadrado con birrete blanco) + wordmark
 //     "EdukControl" en sky-500.
-//   - Campana de notificaciones con dot rojo (placeholder de
-//     "hay notificaciones nuevas" — cuando exista el endpoint
-//     de unread count, este dot se condiciona a unread > 0).
+//   - <NotificationBell /> — campanita con badge de no leídas + dropdown.
 //   - paddingTop dinámico según useSafeAreaInsets para que no
 //     choque con el status bar / Dynamic Island en iOS.
 //
@@ -21,14 +19,17 @@
 // React.
 import React from 'react';
 
-// Primitivas RN: View, Text, Pressable.
-import { View, Text, Pressable } from 'react-native';
+// Primitivas RN: View, Text.
+import { View, Text } from 'react-native';
 
 // Safe area: paddingTop dinámico.
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Iconos Lucide.
-import { GraduationCap, Bell } from 'lucide-react-native';
+import { GraduationCap } from 'lucide-react-native';
+
+// Campanita con dropdown.
+import NotificationBell from './NotificationBell';
 
 export default function DashboardHeader() {
   const insets = useSafeAreaInsets();
@@ -61,18 +62,8 @@ export default function DashboardHeader() {
         </Text>
       </View>
 
-      {/* Campana de notificaciones + dot rojo. */}
-      <Pressable
-        className="relative"
-        hitSlop={8}
-        accessibilityLabel="Notificaciones"
-        // onPress queda libre para que el padre lo inyecte vía
-        // Pressable clone o se añada un handler interno cuando
-        // exista el endpoint de notificaciones.
-      >
-        <Bell size={24} color="#64748b" strokeWidth={2} />
-        <View className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white" />
-      </Pressable>
+      {/* Campanita con dropdown (auto-contenida: maneja su propio state). */}
+      <NotificationBell />
     </View>
   );
 }

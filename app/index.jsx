@@ -90,6 +90,8 @@ export default function LoginScreen() {
     const roleRedirectMap = {
       teacher: '/(teacher)/dashboard',
       prefect: '/(prefect)/dashboard',
+      social_worker: '/(social-worker)/dashboard',
+      principal: '/(director)/dashboard',
       tutor: '/(guardian)/dashboard',
     };
     const href = roleRedirectMap[user.role] || '/(guardian)/dashboard';

@@ -44,6 +44,7 @@ import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
 // Hook del dashboard del teacher.
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Servicio para obtener grupos con horario.
 import { getGroupsForTeacher } from '@/src/services/teacherService';
@@ -71,6 +72,7 @@ const CARD_SHADOW = {
 export default function TeacherGroupsScreen() {
   const router = useRouter();
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
 
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -150,6 +152,7 @@ export default function TeacherGroupsScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

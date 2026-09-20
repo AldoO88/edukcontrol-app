@@ -64,6 +64,7 @@ import {
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Chrome compartido (mismo patrón que el resto de pantallas del
 // grupo (teacher): brand + school card arriba).
@@ -126,6 +127,7 @@ export default function TakeAttendanceTodayScreen() {
   // DASHBOARD DATA (mismo endpoint que el resto del (teacher))
   // ============================================================
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -225,6 +227,7 @@ export default function TakeAttendanceTodayScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

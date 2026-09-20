@@ -66,9 +66,11 @@ import {
 
 // Servicio del endpoint.
 import { getStudentFile, getGradingPeriods, getEvaluationTypes } from '@/src/services/teacherService';
+import { getStudentById } from '@/src/services/prefectService';
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Chrome compartido.
 import DashboardHeader from '@/src/components/DashboardHeader';
@@ -79,7 +81,7 @@ import { getInitials } from '@/src/utils/textHelpers';
 // Sub-componentes independientes.
 import EvaluationTab from '@/app/(teacher)/_components/EvaluationTab';
 import AttendanceTab from '@/app/(teacher)/_components/AttendanceTab';
-import InclusionModal from '@/app/(teacher)/_components/InclusionModal';
+import TrabajoSocialModal from '@/src/components/TrabajoSocialModal';
 
 // ---------------------------------------------------------------------
 // PERIODS + TABS: configuración de los selectores.
@@ -192,6 +194,7 @@ export default function StudentFileScreen() {
   // DASHBOARD DATA (escuela + maestro + fecha)
   // ============================================================
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -208,6 +211,24 @@ export default function StudentFileScreen() {
   const [selectedPeriod, setSelectedPeriod] = useState('ALL');
   const [activeTab, setActiveTab] = useState('evaluacion');
   const [isInclusionModalOpen, setIsInclusionModalOpen] = useState(false);
+  const [healthInclusion, setHealthInclusion] = useState(null);
+
+  // ============================================================
+  // FETCH: health_inclusion del alumno (endpoint separado)
+  // ============================================================
+  useEffect(() => {
+    let cancelled = false;
+    const fetchHealth = async () => {
+      try {
+        const result = await getStudentById(studentId);
+        if (!cancelled && result.success) {
+          setHealthInclusion(result.data?.health_inclusion || null);
+        }
+      } catch (_) {}
+    };
+    if (studentId) fetchHealth();
+    return () => { cancelled = true; };
+  }, [studentId]);
 
   // ============================================================
   // MÉTRICAS CUMULATIVAS (Overall Summary)
@@ -227,9 +248,9 @@ export default function StudentFileScreen() {
   // CONTEO DE ALERTAS (para el badge amber en el trigger button).
   // ============================================================
   const alertCount = useMemo(() => {
-    if (!fileData?.pedagogical?.alerts) return 0;
-    return fileData.pedagogical.alerts.length;
-  }, [fileData]);
+    if (!healthInclusion?.alerts) return 0;
+    return healthInclusion.alerts.length;
+  }, [healthInclusion]);
 
   // ============================================================
   // LOADING STATE
@@ -285,6 +306,7 @@ export default function StudentFileScreen() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-2"
+          user={user}
           teacher={data?.teacher}
           date={currentDate}
         />
@@ -398,19 +420,19 @@ export default function StudentFileScreen() {
         </View>
 
         {/* ============================================================
-            INCLUSION TRIGGER BUTTON
+            TRIGGER: Trabajo Social
             ============================================================
-            Abre el Modal de Ficha de Inclusión y Salud. Muestra un
+            Abre el Modal de Trabajo Social. Muestra un
             badge amber con el conteo de alertas si hay.
             ============================================================ */}
         <Pressable
           onPress={() => setIsInclusionModalOpen(true)}
           accessibilityRole="button"
-          accessibilityLabel="Ver ficha de inclusión y salud"
-          className="bg-white rounded-2xl mx-4 mt-3 px-4 py-4 border border-amber-200 flex-row items-center"
+          accessibilityLabel="Ver trabajo social"
+          className="bg-white rounded-2xl mx-4 mt-3 px-4 py-4 border border-emerald-200 flex-row items-center"
           style={{
             borderLeftWidth: 4,
-            borderLeftColor: '#D97706',
+            borderLeftColor: '#059669',
             shadowColor: '#0F172A',
             shadowOpacity: 0.04,
             shadowRadius: 6,
@@ -418,25 +440,25 @@ export default function StudentFileScreen() {
             elevation: 1,
           }}
         >
-          {/* Icono amber. */}
+          {/* Icono emerald. */}
           <View
             className="items-center justify-center"
             style={{
               width: 40,
               height: 40,
               borderRadius: 10,
-              backgroundColor: '#FEF3C7',
+              backgroundColor: '#D1FAE5',
             }}
           >
-            <Eye size={20} color="#D97706" strokeWidth={2.25} />
+            <Eye size={20} color="#059669" strokeWidth={2.25} />
           </View>
 
-          {/* Título. */}
+          {/* Titulo. */}
           <Text
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
-            Ficha de Inclusión y Salud
+            Trabajo Social
           </Text>
 
           {/* Badge amber de alertas (solo si > 0). */}
@@ -652,16 +674,16 @@ export default function StudentFileScreen() {
       </ScrollView>
 
       {/* ============================================================
-          MODAL: Ficha de Inclusión y Salud
+          MODAL: Trabajo Social
           ============================================================
           Controlado por `isInclusionModalOpen`. Se monta al final del
-          árbol (fuera del ScrollView) para que el stacking de RN lo
+          arbol (fuera del ScrollView) para que el stacking de RN lo
           pinte por encima del contenido.
           ============================================================ */}
-      <InclusionModal
+      <TrabajoSocialModal
         isVisible={isInclusionModalOpen}
         onClose={() => setIsInclusionModalOpen(false)}
-        pedagogical={fileData?.pedagogical}
+        healthInclusion={healthInclusion}
       />
     </View>
   );

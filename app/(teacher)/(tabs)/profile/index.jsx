@@ -124,7 +124,7 @@ export default function TeacherProfileScreen() {
   const teacherFullName = getTeacherFullName(data?.teacher);
   const teacherTitle = getTeacherTitle(data?.teacher?.sex);
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
-  const roleLabel = user?.role === 'teacher' ? 'Docente' : user?.role || 'Docente';
+  const roleLabel = user?.role === 'teacher' ? (user?.sex === 'female' ? 'Profa.' : 'Prof.') : user?.role || 'Docente';
   const school = useMemo(() => {
     if (!data?.school) return null;
     return {
@@ -147,12 +147,13 @@ export default function TeacherProfileScreen() {
           ============================================================ */}
       <DashboardHeader />
       <SchoolInfoCard
-        school={school}
-        isLoading={!school}
-        className="mx-4 mt-2"
-        teacher={data?.teacher}
-        date={currentDate}
-      />
+          school={school}
+          isLoading={!school}
+          className="mx-4 mt-2"
+          user={user}
+          teacher={data?.teacher}
+          date={currentDate}
+        />
 
       <ScrollView
         className="flex-1"

@@ -259,7 +259,6 @@ export default function AttendanceScreen() {
             <>
               <View className="flex-1 h-16 bg-slate-100 rounded-xl" />
               <View className="flex-1 h-16 bg-slate-100 rounded-xl" />
-              <View className="flex-1 h-16 bg-slate-100 rounded-xl" />
             </>
           ) : (
             <>
@@ -272,11 +271,6 @@ export default function AttendanceScreen() {
                 value={summary?.totalAbsences ?? 0}
                 label="Faltas"
                 color="rose"
-              />
-              <AttendanceStatCard
-                value={summary?.totalLates ?? 0}
-                label="Retardos"
-                color="amber"
               />
             </>
           )}

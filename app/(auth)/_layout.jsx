@@ -56,6 +56,15 @@ export default function AuthLayout() {
 
       {/* set-password.jsx → URL "/activation/set-password". */}
       <Stack.Screen name="activation/set-password" />
+
+      {/* forgot-password/index.jsx → URL "/forgot-password". */}
+      <Stack.Screen name="forgot-password" />
+
+      {/* forgot-password/verify.jsx → URL "/forgot-password/verify". */}
+      <Stack.Screen name="forgot-password/verify" />
+
+      {/* forgot-password/reset.jsx → URL "/forgot-password/reset". */}
+      <Stack.Screen name="forgot-password/reset" />
     </Stack>
   );
 }

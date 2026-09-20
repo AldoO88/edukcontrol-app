@@ -90,6 +90,9 @@ import { formatFullDateTime } from '../../../src/utils/dateHelpers';
 // clsx.
 import { clsx } from 'clsx';
 
+// Constantes.
+import { ROLE_LABELS } from '../../../src/constants/roleLabels';
+
 // ---------------------------------------------------------------------
 // PRIORITY_CONFIG — estilos de accent por prioridad (paleta EdukControl)
 // ---------------------------------------------------------------------
@@ -126,19 +129,6 @@ function formatDateShort(iso) {
     month: 'short',
   });
 }
-
-// ---------------------------------------------------------------------
-// ROLE_LABELS — traducción de roles a español
-// ---------------------------------------------------------------------
-const ROLE_LABELS = {
-  admin: 'Administrador',
-  principal: 'Director(a)',
-  registrar: 'Secretaría',
-  teacher: 'Docente',
-  prefect: 'Prefecto(a)',
-  social_worker: 'Trabajador(a) social',
-  super_admin: 'Super administrador',
-};
 
 // ---------------------------------------------------------------------
 // getFullName(person) — combina first_name + last_name + name
@@ -386,6 +376,7 @@ export default function TeacherAnnouncementDetail() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-4"
+          user={user}
           teacher={dashboardData?.teacher}
           date={currentDate}
         />

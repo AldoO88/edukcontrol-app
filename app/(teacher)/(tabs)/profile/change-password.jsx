@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,6 +22,7 @@ import { ChevronLeft, Lock, Eye, EyeOff } from 'lucide-react-native';
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Chrome compartido.
 import DashboardHeader from '@/src/components/DashboardHeader';
@@ -44,6 +47,7 @@ export default function ChangePasswordScreen() {
 
   // Datos del dashboard para el SchoolInfoCard compuesto.
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
 
   // Normalizar school de camelCase (logoUrl) a snake_case (logo_url)
   // para que SchoolInfoCard reciba el shape que espera.
@@ -66,15 +70,20 @@ export default function ChangePasswordScreen() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <View className="flex-1 bg-slate-50">
-      {/* ============================================================
-          CHROME COMPARTIDO (brand + school card)
-          ============================================================ */}
-      <DashboardHeader />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View className="flex-1 bg-slate-50">
+        {/* ============================================================
+            CHROME COMPARTIDO (brand + school card)
+            ============================================================ */}
+        <DashboardHeader />
       <SchoolInfoCard
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={data?.currentDate}
       />
@@ -256,6 +265,7 @@ export default function ChangePasswordScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }

@@ -17,6 +17,13 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+*.pem
+
+# EAS / Expo secrets
+secrets/
+*.keystore
+.store.config
+.store_credentials
 
 # Metro
 .metro-health-check*

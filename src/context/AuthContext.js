@@ -211,9 +211,11 @@ export const AuthProvider = ({ children }) => {
   // por un problema de red.
   // -----------------------------------------------------------------
   const logout = useCallback(async () => {
+    // role se lee del state.user en este momento (todavía no se limpió).
+    const roleAtLogout = user?.role || null;
     try {
       // 1. Desregistrar FCM token del backend.
-      await unregisterFcmToken();
+      await unregisterFcmToken(roleAtLogout);
 
       // 2. Eliminar AMBAS claves de almacenamiento en una sola
       // operación atómica (multiRemove) para mayor eficiencia.
@@ -238,7 +240,7 @@ export const AuthProvider = ({ children }) => {
       // inconsistente — pero al menos no se queda logueado.
       console.error('[AuthContext] Error en logout:', error);
     }
-  }, []);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // -----------------------------------------------------------------
   // useMemo: memoizamos el objeto "value" que se entrega a los

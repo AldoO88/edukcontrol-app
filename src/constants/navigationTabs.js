@@ -23,14 +23,17 @@
 // Iconos Lucide de los tabs.
 import {
   Home,           // Tab: Inicio (ambos roles).
-  Megaphone,      // Tab: Avisos (guardian).
+  Megaphone,      // Tab: Avisos (guardian, prefect).
   UserCheck,      // Tab: Conducta (guardian).
   GraduationCap,  // Tab: Calificaciones (guardian y teacher).
   ClipboardCheck, // Tab: Asistencia (guardian).
-  Users,          // Tab: Mis Grupos (teacher).
+  Users,          // Tab: Mis Grupos (teacher), Grupos (prefect).
   User,           // Tab: Perfil (teacher y prefect).
-  DoorOpen,       // Tab: Gate (prefect — control de puerta).
   FileText,       // Tab: Reports (prefect — reportes/incidencias).
+  Mail,           // Tab: Citatorios (prefect).
+  Briefcase,      // Tab: Maestros (prefect).
+  FolderOpen,     // Tab: Expediente (trabajador social).
+  BarChart3,      // Tab: Métricas (director).
 } from 'lucide-react-native';
 
 // ---------------------------------------------------------------------
@@ -44,6 +47,7 @@ export const GUARDIAN_TABS = [
   { id: 'conduct',       label: 'Conducta',       icon: UserCheck,       route: '/(guardian)/conduct',       match: 'conduct' },
   { id: 'grades',        label: 'Calificaciones', icon: GraduationCap,   route: '/(guardian)/grades',        match: 'grades' },
   { id: 'attendance',    label: 'Asistencia',     icon: ClipboardCheck,  route: '/(guardian)/attendance',    match: 'attendance' },
+  { id: 'profile',       label: 'Perfil',         icon: User,            route: '/(guardian)/profile',       match: 'profile' },
 ];
 
 // ---------------------------------------------------------------------
@@ -73,15 +77,59 @@ export const TEACHER_TABS = [
 // ---------------------------------------------------------------------
 // PREFECT_TABS
 // ---------------------------------------------------------------------
-// 4 tabs del prefecto (Home, Gate, Reports, Profile).
-//   - Home     → dashboard del prefecto (resumen diario + incidencias).
-//   - Gate     → control de puerta (registro de salidas/entradas).
-//   - Reports  → reportes e incidencias (levantar/conultar reportes).
-//   - Profile  → perfil del prefecto.
+// 5 tabs del prefecto (Inicio, Grupos, Alumnos, Maestros, Perfil).
+//   - Inicio      → dashboard del prefecto (resumen diario + quick actions).
+//   - Grupos      → lista de grupos → detalle (alumnos, asistencia, horario).
+//   - Alumnos     → búsqueda de alumnos → ficha del alumno.
+//   - Maestros    → lista de maestros → horario del maestro.
+//   - Perfil      → perfil del prefecto + cerrar sesión.
 // ---------------------------------------------------------------------
 export const PREFECT_TABS = [
-  { id: 'home',    label: 'Home',    icon: Home,       route: '/(prefect)/(tabs)/dashboard', match: 'dashboard' },
-  { id: 'gate',    label: 'Gate',    icon: DoorOpen,   route: '/(prefect)/(tabs)/gate',      match: 'gate' },
-  { id: 'reports', label: 'Reports', icon: FileText,   route: '/(prefect)/(tabs)/reports',   match: 'reports' },
-  { id: 'profile', label: 'Profile', icon: User,       route: '/(prefect)/(tabs)/profile',   match: 'profile' },
+  { id: 'home',     label: 'Inicio',   icon: Home,       route: '/(prefect)/(tabs)/dashboard', match: 'dashboard' },
+  { id: 'groups',   label: 'Grupos',   icon: Users,      route: '/(prefect)/(tabs)/groups',   match: 'groups' },
+  { id: 'students', label: 'Alumnos',  icon: GraduationCap, route: '/(prefect)/(tabs)/students', match: 'students' },
+  { id: 'teachers', label: 'Maestros', icon: Briefcase,  route: '/(prefect)/(tabs)/teachers', match: 'teachers' },
+  { id: 'profile',  label: 'Perfil',   icon: User,       route: '/(prefect)/(tabs)/profile',  match: 'profile' },
+];
+
+// ---------------------------------------------------------------------
+// SOCIAL_WORKER_TABS
+// ---------------------------------------------------------------------
+// 6 tabs del trabajador social (Inicio, Grupos, Alumnos, Maestros,
+// Expediente, Perfil).
+//   - Inicio      → dashboard del trabajador social.
+//   - Grupos      → lista de grupos → detalle (alumnos, asistencia).
+//   - Alumnos     → búsqueda de alumnos → ficha del alumno.
+//   - Maestros    → lista de maestros → horario del maestro.
+//   - Expediente  → lista de alumnos con salud/inclusión/acuerdos.
+//   - Perfil      → perfil del trabajador social + cerrar sesión.
+// ---------------------------------------------------------------------
+export const SOCIAL_WORKER_TABS = [
+  { id: 'home',      label: 'Inicio',     icon: Home,          route: '/(social-worker)/(tabs)/dashboard',   match: 'dashboard' },
+  { id: 'groups',    label: 'Grupos',     icon: Users,         route: '/(social-worker)/(tabs)/groups',      match: 'groups' },
+  { id: 'students',  label: 'Alumnos',    icon: GraduationCap, route: '/(social-worker)/(tabs)/students',    match: 'students' },
+  { id: 'teachers',  label: 'Maestros',   icon: Briefcase,     route: '/(social-worker)/(tabs)/teachers',    match: 'teachers' },
+  { id: 'expediente', label: 'Expediente', icon: FolderOpen,    route: '/(social-worker)/(tabs)/expediente',  match: 'expediente' },
+  { id: 'profile',   label: 'Perfil',     icon: User,          route: '/(social-worker)/(tabs)/profile',     match: 'profile' },
+];
+
+// ---------------------------------------------------------------------
+// DIRECTOR_TABS
+// ---------------------------------------------------------------------
+// 7 tabs del director (Inicio, Grupos, Alumnos, Maestros, Avisos,
+// Reportes, Perfil).
+//   - Inicio      → dashboard del director (métricas globales).
+//   - Grupos      → lista de grupos → detalle.
+//   - Alumnos     → búsqueda de alumnos → ficha + expediente.
+//   - Maestros    → lista de maestros → horario.
+//   - Avisos      → CRUD completo de avisos.
+//   - Reportes    → reportes de conducta (ver todos + cancelar).
+//   - Perfil      → perfil del director + cerrar sesión.
+// ---------------------------------------------------------------------
+export const DIRECTOR_TABS = [
+  { id: 'home',      label: 'Inicio',     icon: Home,          route: '/(director)/(tabs)/dashboard',       match: 'dashboard' },
+  { id: 'groups',    label: 'Grupos',     icon: Users,         route: '/(director)/(tabs)/groups',          match: 'groups' },
+  { id: 'students',  label: 'Alumnos',    icon: GraduationCap, route: '/(director)/(tabs)/students',        match: 'students' },
+  { id: 'teachers',  label: 'Maestros',   icon: Briefcase,     route: '/(director)/(tabs)/teachers',        match: 'teachers' },
+  { id: 'profile',   label: 'Perfil',     icon: User,          route: '/(director)/(tabs)/profile',         match: 'profile' },
 ];

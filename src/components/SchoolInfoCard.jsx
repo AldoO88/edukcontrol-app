@@ -57,6 +57,7 @@ import {
   getTeacherFullName,
   getTeacherTitle,
 } from '@/src/utils/teacherName';
+import { getRoleLabel } from '@/src/constants/roleLabels';
 
 const SchoolInfoCard = ({
   school,
@@ -64,8 +65,17 @@ const SchoolInfoCard = ({
   className = '',
   style,
   teacher,
+  user,
   date,
+  roleLabel,
 }) => {
+  // Role label: si se pasa `user`, se computa automáticamente con
+  // getRoleLabel (respeta género para teacher/prefect). Si no, se
+  // usa el prop `roleLabel` o el default 'Docente'.
+  const resolvedRoleLabel = user
+    ? getRoleLabel(user.role, user.sex)
+    : roleLabel || 'Docente';
+
   // Derivados del maestro (modo compuesto).
   // - teacherName: "Aldo Omar González Juárez"
   // - teacherTitle: "Prof." | "Profa." | "Prof." (default)
@@ -218,7 +228,7 @@ const SchoolInfoCard = ({
                 {teacherTitle} {teacherName}
               </Text>
 
-              {/* Pill de rol "Docente" debajo del nombre. */}
+              {/* Pill de rol debajo del nombre. */}
               <View
                 style={{
                   alignSelf: 'flex-start',
@@ -230,7 +240,7 @@ const SchoolInfoCard = ({
                 }}
               >
                 <Text style={{ color: '#0284C7', fontSize: 11, fontWeight: '700' }}>
-                  Docente
+                  {resolvedRoleLabel}
                 </Text>
               </View>
             </View>

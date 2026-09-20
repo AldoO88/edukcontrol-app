@@ -12,7 +12,7 @@
 //   - groupSubjects: array — materias del grupo del alumno [{_id, name}].
 // =====================================================================
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -27,7 +27,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 
-import { updateCitation, getMyGroups } from '../../../src/services/teacherService';
+// Servicio por defecto (teacher). Se puede inyectar via props para otros roles.
+import { updateCitation as defaultUpdateCitation, getMyGroups as defaultGetMyGroups } from '../../../src/services/teacherService';
 
 // Tipos de citatorio (mismos que GenerateCitationModal).
 const CITATION_TYPES = ['academic', 'behavioral', 'administrative'];
@@ -48,6 +49,9 @@ const EditCitationModal = ({
   onClose,
   onUpdated,
   citation,
+  updateCitationFn,
+  fetchGroupsFn,
+  allowedTypes = ['academic', 'behavioral', 'administrative'],
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -68,7 +72,8 @@ const EditCitationModal = ({
 
     let cancelled = false;
     const fetchGroups = async () => {
-      const result = await getMyGroups();
+      const fetchFn = fetchGroupsFn || defaultGetMyGroups;
+      const result = await fetchFn();
       if (cancelled) return;
       if (result.success) {
         const groups = result.data?.groups || [];
@@ -83,7 +88,7 @@ const EditCitationModal = ({
     };
     fetchGroups();
     return () => { cancelled = true; };
-  }, [isVisible, citation?.groupName, citation?.groupId]);
+  }, [isVisible, citation?.groupName, citation?.groupId, fetchGroupsFn]);
 
   // Reset al abrir con los valores actuales del citatorio.
   useEffect(() => {
@@ -124,6 +129,12 @@ const EditCitationModal = ({
     }
   }, [selectedType, groupSubjects]);
 
+  // Tipos disponibles filtrados por rol.
+  const availableTypes = useMemo(
+    () => CITATION_TYPES.filter((t) => allowedTypes.includes(t)),
+    [allowedTypes],
+  );
+
   // -----------------------------------------------------------------
   // HANDLE SUBMIT
   // -----------------------------------------------------------------
@@ -148,7 +159,7 @@ const EditCitationModal = ({
       payload.subject = null;
     }
 
-    const result = await updateCitation(citation.id, payload);
+    const result = await (updateCitationFn || defaultUpdateCitation)(citation.id, payload);
 
     if (result.success) {
       if (onUpdated) onUpdated();
@@ -219,7 +230,7 @@ const EditCitationModal = ({
                 Tipo
               </Text>
               <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-                {CITATION_TYPES.map((typeId) => {
+                {availableTypes.map((typeId) => {
                   const isActive = selectedType === typeId;
                   const label = CITATION_TYPE_LABELS[typeId] || typeId;
                   return (

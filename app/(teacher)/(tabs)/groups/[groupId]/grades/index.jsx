@@ -74,6 +74,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Servicios de calificaciones del docente.
 import {
@@ -145,6 +146,7 @@ export default function TeacherGradeEntryScreen() {
   const subjectId = params.subjectId;
 
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Lunes, 10 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -475,6 +477,7 @@ export default function TeacherGradeEntryScreen() {
           school={school}
           isLoading={!school}
           className="mx-4 mt-2"
+          user={user}
           teacher={data?.teacher}
           date={currentDate}
         />

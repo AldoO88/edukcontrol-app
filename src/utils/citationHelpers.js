@@ -281,6 +281,7 @@ export const normalizeCitation = (item) => {
     reason: item.reason || '',
     status: item.status || 'pending',
     creatorName,
+    creatorId: item.creator?._id || '',
     createdAt: item.createdAt || '',
     history: item.history || [],
     rescheduleRequested: item.rescheduleRequested || false,

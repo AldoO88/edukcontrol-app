@@ -68,6 +68,7 @@ import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
 // Hook del dashboard docente (escuela + maestro).
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 
 // Servicio para obtener grupos reales del maestro.
 import { getGroupsForTeacher } from '@/src/services/teacherService';
@@ -128,6 +129,7 @@ export default function GroupDetailScreen() {
   // Dashboard data (escuela + maestro + fecha). Mismo endpoint que el
   // resto del grupo (teacher), patrón consistente.
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const currentDate = data?.currentDate || 'Viernes, 14 de agosto';
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -245,6 +247,7 @@ export default function GroupDetailScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

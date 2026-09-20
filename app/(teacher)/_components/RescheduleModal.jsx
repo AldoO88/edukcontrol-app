@@ -30,7 +30,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Calendar } from 'react-native-calendars';
 import { X, ChevronUp, ChevronDown } from 'lucide-react-native';
 
-import { rescheduleCitation } from '../../../src/services/teacherService';
+// Servicio por defecto (teacher). Se puede inyectar via props para otros roles.
+import { rescheduleCitation as defaultRescheduleCitation } from '../../../src/services/teacherService';
 
 // Locaciones predefinidas (mismo listado que GenerateCitationModal).
 const LOCATIONS = ['Trabajo Social', 'Prefectura', 'Dirección'];
@@ -161,6 +162,7 @@ const RescheduleModal = ({
   currentDate = '',
   currentTime = '',
   currentLocation = '',
+  rescheduleCitationFn,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -205,7 +207,7 @@ const RescheduleModal = ({
       payload.location = location.trim();
     }
 
-    const result = await rescheduleCitation(citationId, payload);
+    const result = await (rescheduleCitationFn || defaultRescheduleCitation)(citationId, payload);
 
     if (result.success) {
       if (onRescheduled) onRescheduled();

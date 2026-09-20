@@ -29,6 +29,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+// Navegación.
+import { useRouter } from 'expo-router';
+
 // Componentes del chrome compartido del route group (app).
 import DashboardHeader from '../../src/components/DashboardHeader';
 import SchoolInfoCard from '../../src/components/SchoolInfoCard';
@@ -112,6 +115,9 @@ export default function ConductScreen() {
   // Hook del dashboard para obtener los datos de la escuela
   // Y los alumnos del tutor.
   const { data, isLoading } = useGuardianDashboard();
+
+  // Router para navegar al detalle del reporte.
+  const router = useRouter();
 
   // -----------------------------------------------------------------
   // ESTADO LOCAL
@@ -404,8 +410,7 @@ export default function ConductScreen() {
                 key={report.id}
                 report={report}
                 onPress={() => {
-                  // TODO: cuando exista el endpoint de detalle,
-                  // navegar a /conduct/<id> aquí.
+                  router.push(`/(guardian)/conduct/${report.id}`);
                 }}
               />
             ))

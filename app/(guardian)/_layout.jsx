@@ -83,8 +83,11 @@ export default function GuardianLayout() {
       <Stack.Screen name="announcements" options={{ headerShown: false }} />
       <Stack.Screen name="announcements/[kind]/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="conduct" options={{ headerShown: false }} />
+      <Stack.Screen name="conduct/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="grades" options={{ headerShown: false }} />
       <Stack.Screen name="attendance" options={{ headerShown: false }} />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
+      <Stack.Screen name="profile/change-password" options={{ headerShown: false }} />
     </Stack>
   );
 }

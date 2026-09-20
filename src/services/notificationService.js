@@ -65,37 +65,104 @@ if (Notifications) {
   });
 }
 
-// ID canónico del canal de Android. Lo definimos como constante para
-// reutilizarlo en distintas llamadas y evitar errores de tipeo. En
-// Android 8+ todas las notificaciones deben pertenecer a un canal.
-const ANDROID_CHANNEL_ID = 'edukcontrol_default';
+// ---------------------------------------------------------------------
+// IDs canónicos de los canales de Android.
+// ---------------------------------------------------------------------
+// En Android 8+ todas las notificaciones deben pertenecer a un canal
+// (NotificationChannel). Creamos 3 canales separados para que el
+// usuario pueda silenciarlos individualmente desde Settings → Apps →
+// EdukControl → Notifications (ej: silenciar avisos sin perder
+// citatorios críticos).
+//
+// Estos IDs DEBEN coincidir con los que el backend manda en
+// `channelId` dentro del payload de Expo Push. Si el backend manda un
+// channelId que no existe localmente, Android lo ignora y usa el
+// canal por defecto del sistema — por eso ambos lados deben estar en
+// sync.
+//
+// El backend define los mismos IDs en
+// services/notification.service.js → CHANNELS constants.
+// ---------------------------------------------------------------------
+const ANDROID_CHANNELS = {
+  attendance: 'eduk_attendance_channel',
+  citations: 'eduk_citations_channel',
+  announcements: 'eduk_announcements_channel',
+};
+
+// Canal legacy para compatibilidad con push que lleguen sin
+// channelId (debería ser raro, pero por si acaso).
+const ANDROID_CHANNEL_DEFAULT = 'edukcontrol_default';
 
 // ---------------------------------------------------------------------
 // createAndroidChannel
 // ---------------------------------------------------------------------
-// Crea (o actualiza) el canal de notificaciones por defecto de Android.
-// Es OBLIGATORIO llamar a esto ANTES de requestPermissionsAsync en
-// Android 13+, si no el prompt de permisos no aparece y nunca
-// obtendremos un push token. En iOS esta función es un no-op.
+// Crea los 3 canales de notificaciones de Android. Es OBLIGATORIO
+// llamar a esto ANTES de requestPermissionsAsync en Android 13+, si
+// no el prompt de permisos no aparece y nunca obtendremos un push
+// token. En iOS esta función es un no-op.
+//
+// Se llama cada vez que se monta usePushNotifications (idempotente:
+// setNotificationChannelAsync es un upsert).
+// ---------------------------------------------------------------------
 export const createAndroidChannel = async () => {
-  // Si el módulo no cargó (Expo Go/Android SDK 53+), no hay nada
-  // que hacer: salimos en silencio.
   if (!Notifications) return;
-
-  // Verificamos Platform.OS para no ejecutar código específico de
-  // Android en iOS, lo que provocaría warnings o errores.
   if (Platform.OS !== 'android') return;
 
-  // setNotificationChannelAsync recibe el ID del canal y un objeto
-  // con la configuración visual/sonora. Usamos "MAX" de importancia
-  // para que las notificaciones críticas (asistencia, alertas) se
-  // muestren como heads-up. El color lightColor coincide con el
-  // primary del sistema de diseño (slate-900 ≈ #0f172a).
-  await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
-    name: 'EdukControl - Avisos Escolares',
-    description: 'Canal oficial para alertas académicas, asistencia y mensajes.',
-    importance: Notifications.AndroidImportance.MAX,
-    vibrationPattern: [0, 250, 250, 250],
+  // Canal de asistencia: MAX importance (heads-up + sonido). Las
+  // ausencias y retardos son importantes para los padres.
+  await Notifications.setNotificationChannelAsync(
+    ANDROID_CHANNELS.attendance,
+    {
+      name: 'Asistencia',
+      description: 'Notificaciones de entrada, salida y ausencias de tus hijos.',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#0f172a',
+      sound: 'default',
+      enableVibrate: true,
+      showBadge: true,
+    },
+  );
+
+  // Canal de citatorios: MAX importance. Los citatorios son críticos
+  // y requieren atención inmediata.
+  await Notifications.setNotificationChannelAsync(
+    ANDROID_CHANNELS.citations,
+    {
+      name: 'Citatorios',
+      description: 'Citatorios, reagendaciones y cancelaciones.',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#0f172a',
+      sound: 'default',
+      enableVibrate: true,
+      showBadge: true,
+    },
+  );
+
+  // Canal de avisos: DEFAULT importance (sonido + vibración pero
+  // sin popup heads-up). Los avisos son informativos, no urgentes.
+  await Notifications.setNotificationChannelAsync(
+    ANDROID_CHANNELS.announcements,
+    {
+      name: 'Avisos',
+      description: 'Avisos generales, de grupo o específicos para un alumno.',
+      importance: Notifications.AndroidImportance.DEFAULT,
+      vibrationPattern: [0, 200],
+      lightColor: '#0f172a',
+      sound: 'default',
+      enableVibrate: true,
+      showBadge: true,
+    },
+  );
+
+  // Canal legacy/default para push que lleguen sin channelId
+  // (compatibilidad con pushes antiguos o integraciones de terceros).
+  await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_DEFAULT, {
+    name: 'EdukControl - General',
+    description: 'Canal por defecto para notificaciones sin canal específico.',
+    importance: Notifications.AndroidImportance.DEFAULT,
+    vibrationPattern: [0, 200],
     lightColor: '#0f172a',
     sound: 'default',
     enableVibrate: true,
@@ -295,6 +362,7 @@ export const cancelAllScheduledNotifications = async () => {
   await Notifications.cancelAllScheduledNotificationsAsync();
 };
 
-// Exportamos también el ID del canal por si otras pantallas lo
-// necesitan referenciar (por ejemplo, para mostrar configuración).
-export { ANDROID_CHANNEL_ID };
+// Exportamos también los IDs de los canales por si otras pantallas
+// los necesitan referenciar (por ejemplo, para mostrar configuración
+// o para enviar notificaciones locales).
+export { ANDROID_CHANNELS, ANDROID_CHANNEL_DEFAULT };

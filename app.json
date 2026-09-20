@@ -10,10 +10,12 @@
     "scheme": "edukcontrol",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.edukcontrol.app"
+      "bundleIdentifier": "com.edukcontrol.app",
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.edukcontrol.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#0f172a",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -32,7 +34,15 @@
           "color": "#0f172a"
         }
       ],
-      "expo-router"
-    ]
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "27e16aa0-ec18-48e4-92c0-4f6cb91361d9"
+      }
+    },
+    "owner": "aldoo88"
   }
 }

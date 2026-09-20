@@ -50,6 +50,7 @@ import {
   getAnnouncementById,
   getCitationById,
   confirmCitation,
+  requestReschedule,
 } from '../services/announcementsService';
 
 // Kind válidos. Centralizado para reutilizar en el switch de
@@ -212,6 +213,43 @@ export const useAnnouncementDetail = (id = null, kind = null) => {
   }, [data, fetchData]);
 
   // -----------------------------------------------------------------
+  // requestRescheduleAction: acción que solicita reagendar un citatorio.
+  // -----------------------------------------------------------------
+  // Solo aplica a citatorios en status 'pending' o 'confirmed'.
+  // Setea rescheduleRequested = true y envía notificación al creador.
+  // Tras el éxito, refetchea el detalle para mostrar el banner.
+  // -----------------------------------------------------------------
+  const [isRequestingReschedule, setIsRequestingReschedule] = useState(false);
+
+  const requestRescheduleAction = useCallback(async (reason) => {
+    const currentData = data;
+    if (!currentData || currentData.kind !== 'citation') {
+      return { success: false, message: 'Solo se pueden reagendar citatorios.' };
+    }
+    if (!['pending', 'confirmed'].includes(currentData.status)) {
+      return { success: false, message: 'Este citatorio no se puede reagendar.' };
+    }
+    const studentId = currentData.student?._id;
+    if (!studentId) {
+      return { success: false, message: 'No se encontró el alumno asociado al citatorio.' };
+    }
+
+    setIsRequestingReschedule(true);
+    try {
+      const result = await requestReschedule(studentId, currentData._id, reason);
+      if (result.success) {
+        fetchData();
+      }
+      return result;
+    } catch (err) {
+      console.error('[useAnnouncementDetail] unexpected reschedule request error:', err);
+      return { success: false, message: 'Error inesperado al solicitar la reagendación.' };
+    } finally {
+      setIsRequestingReschedule(false);
+    }
+  }, [data, fetchData]);
+
+  // -----------------------------------------------------------------
   // EFECTO: cuando cambia el id o el kind, reseteamos y refetchamos.
   // -----------------------------------------------------------------
   useEffect(() => {
@@ -244,8 +282,10 @@ export const useAnnouncementDetail = (id = null, kind = null) => {
     data,
     isLoading,
     isConfirming,
+    isRequestingReschedule,
     error,
     refetch: fetchData,
     confirm,
+    requestReschedule: requestRescheduleAction,
   };
 };

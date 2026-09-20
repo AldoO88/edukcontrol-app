@@ -9,20 +9,24 @@
 //   2) Si `student` es null (desde Citations):
 //      Muestra selector de Grupo → Alumno → Form.
 //
-// El botón "Emitir Citatorio" envía POST al backend vía createTeacherCitation.
+// El botón "Emitir Citatorio" envía POST al backend vía createCitationFn.
 // Muestra errores del backend (400, 403, 404, 409) y loading spinner.
 //
 // Props:
-//   - isVisible:   boolean — controla la visibilidad del Modal.
-//   - onClose:     fn() — callback al cerrar.
-//   - student:     Student | null — alumno pre-seleccionado (opcional).
-//   - groupName:   string — nombre del grupo (fallback para card).
-//   - subjectId:   string | null — ID de la materia pre-seleccionada (opcional).
-//   - onCreated:   fn() — callback después de crear exitosamente (opcional).
+//   - isVisible:        boolean — controla la visibilidad del Modal.
+//   - onClose:          fn() — callback al cerrar.
+//   - student:          Student | null — alumno pre-seleccionado (opcional).
+//   - groupName:        string — nombre del grupo (fallback para card).
+//   - subjectId:        string | null — ID de la materia pre-seleccionada (opcional).
+//   - onCreated:        fn() — callback después de crear exitosamente (opcional).
+//   - fetchGroupsFn:    fn() => Promise<{success, data}> — carga de grupos (default: getMyGroups).
+//   - createCitationFn: fn(payload) => Promise<{success, data}> — creación (default: createTeacherCitation).
+//   - fetchStudentsForGroup: fn(groupId) => Promise<students[]> — carga lazy de alumnos (opcional).
+//   - allowedTypes:     string[] — tipos de citatorio permitidos (default: ['academic', 'behavioral', 'administrative']).
 // =====================================================================
 
 // React + hooks.
-import React, { useState, useEffect, useReducer, useRef } from 'react';
+import React, { useState, useEffect, useReducer, useRef, useMemo } from 'react';
 
 // Primitivas RN.
 import {
@@ -247,6 +251,10 @@ const GenerateCitationModal = ({
   groupName,
   subjectId,
   onCreated,
+  fetchGroupsFn,
+  createCitationFn,
+  fetchStudentsForGroup,
+  allowedTypes = ['academic', 'behavioral', 'administrative'],
 }) => {
   // ============================================================
   // SAFE AREA
@@ -267,6 +275,7 @@ const GenerateCitationModal = ({
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
 
   // ============================================================
   // STATE: form del citatorio
@@ -282,6 +291,21 @@ const GenerateCitationModal = ({
   const [reason, setReason] = useState('');
 
   // ============================================================
+  // TIPOS PERMITIDOS (filtrados por rol)
+  // ============================================================
+  const availableTypes = useMemo(
+    () => CITATION_TYPES.filter(t => allowedTypes.includes(t)),
+    [allowedTypes]
+  );
+
+  // Auto-seleccionar si solo hay un tipo permitido.
+  useEffect(() => {
+    if (availableTypes.length === 1 && selectedType !== availableTypes[0]) {
+      setSelectedType(availableTypes[0]);
+    }
+  }, [availableTypes, selectedType]);
+
+  // ============================================================
   // FETCH: cargar grupos al abrir (solo modo selección)
   // ============================================================
   useEffect(() => {
@@ -290,19 +314,11 @@ const GenerateCitationModal = ({
     let cancelled = false;
     const fetchGroups = async () => {
       setIsLoadingGroups(true);
-      const result = await getMyGroups();
+      const fetchFn = fetchGroupsFn || getMyGroups;
+      const result = await fetchFn();
       if (cancelled) return;
       if (result.success) {
-        const groupsData = result.data?.groups || [];
-        // Debug: ver estructura de cada grupo del API
-        groupsData.forEach((g) => {
-          console.log('[GenerateCitationModal] group:', g.label, {
-            type: g.type,
-            totalStudents: g.totalStudents,
-            studentsLength: g.students?.length,
-            students: g.students?.slice(0, 2),
-          });
-        });
+        const groupsData = result.data?.groups || result.data || [];
         setGroups(groupsData);
       }
       setIsLoadingGroups(false);
@@ -367,7 +383,8 @@ const GenerateCitationModal = ({
       subjectId: selectedSubject?._id || null,
     });
 
-    const result = await createTeacherCitation(payload);
+    const createFn = createCitationFn || createTeacherCitation;
+    const result = await createFn(payload);
 
     if (result.success) {
       if (onCreated) onCreated();
@@ -401,7 +418,19 @@ const GenerateCitationModal = ({
   // ============================================================
   // HANDLER: seleccionar grupo
   // ============================================================
-  const handleSelectGroup = (group) => {
+  const handleSelectGroup = async (group) => {
+    // Carga lazy de alumnos si el grupo no los tiene y hay fetchStudentsForGroup.
+    if (fetchStudentsForGroup && (!group.students || group.students.length === 0)) {
+      setIsLoadingStudents(true);
+      try {
+        const loaded = await fetchStudentsForGroup(group._id);
+        group.students = loaded;
+      } catch (err) {
+        console.error('[GenerateCitationModal] error loading students:', err);
+      } finally {
+        setIsLoadingStudents(false);
+      }
+    }
     setSelectedGroup(group);
     setSelectedStudent(null);
     setSelectedSubject(null);
@@ -663,7 +692,14 @@ const GenerateCitationModal = ({
                     {`Paso 2: Seleccionar Alumno — ${selectedGroup.label}`}
                   </SectionLabel>
 
-                  {selectedGroup.students?.length === 0 ? (
+                  {isLoadingStudents ? (
+                    <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
+                      <ActivityIndicator size="small" color="#0284C7" />
+                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                        Cargando alumnos...
+                      </Text>
+                    </View>
+                  ) : selectedGroup.students?.length === 0 ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <User size={24} color="#94A3B8" strokeWidth={2} />
                       <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
@@ -672,61 +708,67 @@ const GenerateCitationModal = ({
                     </View>
                   ) : (
                     <View style={{ gap: 6 }}>
-                      {(selectedGroup.students || []).map((stu) => {
-                        // Detectar si el grupo seleccionado es taller
-                        const isTaller = selectedGroup.type === 'taller'
-                          || /taller|ofim[aá]tica|formaci[oó]n\s*para\s*el\s*trabajo/i.test(selectedGroup.label || '');
-                        return (
-                        <Pressable
-                          key={stu._id}
-                          onPress={() => handleSelectStudent(stu)}
-                          className="flex-row items-center rounded-xl p-3"
-                          style={{
-                            backgroundColor: '#F8FAFC',
-                            borderWidth: 1,
-                            borderColor: '#E2E8F0',
-                          }}
-                          accessibilityRole="button"
-                          accessibilityLabel={`Seleccionar alumno ${stu.fullName}`}
-                        >
-                          {/* Avatar placeholder */}
-                          <View
-                            className="items-center justify-center rounded-full"
+                      {(selectedGroup.students || [])
+                        .slice()
+                        .sort((a, b) => {
+                          const la = (a.last_name || '').toLowerCase();
+                          const lb = (b.last_name || '').toLowerCase();
+                          if (la !== lb) return la.localeCompare(lb);
+                          return (a.first_name || '').toLowerCase().localeCompare((b.first_name || '').toLowerCase());
+                        })
+                        .map((stu, index) => {
+                          const initials = `${(stu.last_name || '?')[0]}${(stu.first_name || '?')[0]}`.toUpperCase();
+                          const isTaller = selectedGroup.type === 'taller'
+                            || /taller|ofim[aá]tica|formaci[oó]n\s*para\s*el\s*trabajo/i.test(selectedGroup.label || '');
+                          return (
+                          <Pressable
+                            key={stu._id}
+                            onPress={() => handleSelectStudent(stu)}
+                            className="flex-row items-center rounded-xl p-3"
                             style={{
-                              width: 36,
-                              height: 36,
-                              backgroundColor: '#E0F2FE',
+                              backgroundColor: '#F8FAFC',
+                              borderWidth: 1,
+                              borderColor: '#E2E8F0',
                             }}
+                            accessibilityRole="button"
+                            accessibilityLabel={`Seleccionar alumno ${stu.fullName}`}
                           >
-                            <Text
-                              className="text-sky-700"
-                              style={{ fontSize: 13, fontWeight: '700' }}
+                            <View
+                              className="items-center justify-center rounded-full"
+                              style={{
+                                width: 36,
+                                height: 36,
+                                backgroundColor: '#E0F2FE',
+                              }}
                             >
-                              {`${(stu.first_name || '?')[0]}${(stu.last_name || '?')[0]}`}
-                            </Text>
-                          </View>
-                          <View className="ml-3 flex-1">
-                            <Text
-                              className="text-slate-900"
-                              style={{ fontSize: 14, fontWeight: '600' }}
-                              numberOfLines={1}
-                            >
-                              {stu.fullName || `${stu.last_name || ''} ${stu.first_name || ''}`}
-                            </Text>
-                            {/* Subtítulo: sección del alumno solo se muestra en talleres */}
-                            {isTaller && stu.originGroup && (
                               <Text
-                                className="text-slate-400"
-                                style={{ fontSize: 11 }}
+                                className="text-sky-700"
+                                style={{ fontSize: 13, fontWeight: '700' }}
                               >
-                                {stu.originGroup}
+                                {initials}
                               </Text>
-                            )}
-                          </View>
-                          <ChevronRight size={16} color="#94A3B8" strokeWidth={2} />
-                        </Pressable>
-                        );
-                      })}
+                            </View>
+                            <View className="ml-3 flex-1">
+                              <Text
+                                className="text-slate-900"
+                                style={{ fontSize: 14, fontWeight: '600' }}
+                                numberOfLines={1}
+                              >
+                                {`${index + 1}. ${stu.last_name || ''} ${stu.first_name || ''}`}
+                              </Text>
+                              {isTaller && stu.originGroup && (
+                                <Text
+                                  className="text-slate-400"
+                                  style={{ fontSize: 11 }}
+                                >
+                                  {stu.originGroup}
+                                </Text>
+                              )}
+                            </View>
+                            <ChevronRight size={16} color="#94A3B8" strokeWidth={2} />
+                          </Pressable>
+                          );
+                        })}
                     </View>
                   )}
                 </>
@@ -911,7 +953,7 @@ const GenerateCitationModal = ({
                     Motivo
                   </SectionLabel>
                   <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-                    {CITATION_TYPES.map((typeId) => {
+                    {availableTypes.map((typeId) => {
                       const isActive = selectedType === typeId;
                       const label = CITATION_TYPE_LABELS[typeId] || typeId;
                       return (

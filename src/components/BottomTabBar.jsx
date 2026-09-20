@@ -70,20 +70,24 @@ const BottomTabBar = ({ tabs = GUARDIAN_TABS }) => {
             accessibilityRole="button"
             accessibilityState={{ selected: isActive }}
             accessibilityLabel={tab.label}
-            className="flex-1 items-center justify-center py-2"
+            className="flex-1 items-center justify-center"
+            style={{ paddingVertical: 8 }}
           >
-            {/* Icono: strokeWidth 2.5 + sky-500 cuando activo,
-                2 + slate-400 cuando inactivo. Refuerza la
-                jerarquía visual. */}
-            <Icon
-              size={24}
-              color={isActive ? '#0ea5e9' : '#94a3b8'}
-              strokeWidth={isActive ? 2.5 : 2}
-            />
-            <Text className={clsx(
-              'text-xs mt-1',
-              isActive ? 'text-sky-600 font-semibold' : 'text-slate-400',
-            )}>
+            <View className="items-center justify-center" style={{ height: 26 }}>
+              <Icon
+                size={22}
+                color={isActive ? '#0ea5e9' : '#94a3b8'}
+                strokeWidth={isActive ? 2.5 : 2}
+              />
+            </View>
+            <Text
+              numberOfLines={1}
+              style={{ fontSize: 10 }}
+              className={clsx(
+                'mt-0.5',
+                isActive ? 'text-sky-600 font-semibold' : 'text-slate-400',
+              )}
+            >
               {tab.label}
             </Text>
           </Pressable>

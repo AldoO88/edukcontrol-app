@@ -220,10 +220,11 @@ export default function LoginForm() {
           LINK: ¿OLVIDASTE TU CONTRASEÑA?
           ----------------------------------------------------
           Centrado bajo el botón. Color sky-600 para mantener
-          la familia de azules del form. En esta fase es
-          puramente visual (no hay flow de recuperación todavía).
+          la familia de azules del form. Navega al flujo de
+          recuperación de contraseña (/forgot-password).
           ---------------------------------------------------- */}
       <Pressable
+        onPress={() => router.push('/forgot-password')}
         hitSlop={8}
         className="mt-4 py-2"
         accessibilityRole="link"

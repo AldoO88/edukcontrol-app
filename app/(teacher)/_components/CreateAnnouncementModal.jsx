@@ -1,35 +1,26 @@
 // =====================================================================
 // app/(teacher)/_components/CreateAnnouncementModal.jsx
 // ---------------------------------------------------------------------
-// Modal bottom-sheet "Crear Nuevo Aviso" del MAESTRO.
-//
-// Slide-up modal que reúne el formulario de creación de un aviso
-// dirigido a tutores o alumnos individuales.
+// Modal bottom-sheet "Crear Nuevo Aviso" — reutilizable por teacher y
+// prefecto. Soporta targetType "general", "group" y "student".
 //
 // FLUJOS:
-//   1. Modo normal (student === null): targetType selector con
-//      "A Grupo" / "A Alumno". En "A Grupo", chips multi-select.
-//      En "A Alumno", chips de grupos → vista de alumnos.
+//   1. Modo normal (student === null): targetType selector dinámico
+//      según prop targetTypes. Chips multi-select para group/student.
 //   2. Modo directo (student !== null): alumno pre-seleccionado,
 //      targetType forzado a "student", sin selector de destinatarios.
 //
-// DATA SOURCE: los grupos vienen pre-cargados con students[] desde
-// GET /api/teacher-subjects/me/groups (vía getMyGroups del service).
-//
-// CONTRATO (POST /api/announcements):
-//   {
-//     title, message, priority: "informative"|"urgent",
-//     targetType: "group"|"student",
-//     targetGroups?: string[],
-//     targetStudents?: string[],
-//   }
+// DATA SOURCE: los grupos vienen pre-cargados con students[] (teacher)
+// o vacíos (prefecto, carga lazy vía fetchStudentsForGroup).
 //
 // Props:
-//   - visible:   boolean — controla la visibilidad del Modal.
-//   - onClose:    fn() — callback al cerrar.
-//   - groups:     array — grupos asignados al maestro (con students[]).
-//   - student:    Student | null — alumno pre-seleccionado (modo directo).
-//   - onPublished: fn() — callback después de publicar exitosamente.
+//   - visible:              boolean — controla la visibilidad del Modal.
+//   - onClose:              fn() — callback al cerrar.
+//   - groups:               array — grupos (con students[] o vacío).
+//   - student:              Student | null — alumno pre-seleccionado.
+//   - onPublished:          fn() — callback después de publicar.
+//   - targetTypes:          string[] — tipos disponibles (default: ['group','student']).
+//   - fetchStudentsForGroup: fn(groupId) => Promise<students[]> — carga lazy.
 // =====================================================================
 
 // React hooks.
@@ -66,25 +57,37 @@ import { createTeacherAnnouncement } from '../../../src/services/teacherService'
 // CONSTANTES
 // ---------------------------------------------------------------------
 const TARGET_TYPES = {
+  GENERAL: 'general',
   GROUP: 'group',
   STUDENT: 'student',
 };
-
-const TARGET_TYPE_OPTIONS = [
-  { value: TARGET_TYPES.GROUP, label: 'A Grupo' },
-  { value: TARGET_TYPES.STUDENT, label: 'A Alumno' },
-];
 
 const PRIORITY_OPTIONS = [
   { value: 'informative', label: 'Informativo' },
   { value: 'urgent', label: 'Urgente' },
 ];
 
+const GRADE_FILTERS = [
+  { id: '1', label: '1°' },
+  { id: '2', label: '2°' },
+  { id: '3', label: '3°' },
+];
+
+// Grid constants para simetría.
+const NUM_COLUMNS = 4;
+const CELL_GAP = 16;
+
 // Colores para avatares de fallback (por índice de alumno).
 const AVATAR_COLORS = [
   '#0284C7', '#7C3AED', '#D97706', '#059669',
   '#DC2626', '#2563EB', '#9333EA', '#CA8A04',
 ];
+
+// Nombre legible del taller a partir de la sección (ej: "OFIMÁTICA" → "Ofimática").
+const getTallerDisplayName = (section) => {
+  if (!section) return '';
+  return section.charAt(0) + section.slice(1).toLowerCase();
+};
 
 // =====================================================================
 // COMPONENTE PRINCIPAL
@@ -95,6 +98,8 @@ export default function CreateAnnouncementModal({
   groups = [],
   student = null,
   onPublished = null,
+  targetTypes = ['group', 'student'],
+  fetchStudentsForGroup = null,
 }) {
   const insets = useSafeAreaInsets();
 
@@ -104,10 +109,21 @@ export default function CreateAnnouncementModal({
   const isDirectMode = !!student;
 
   // -------------------------------------------------------------------
+  // TARGET TYPE OPTIONS — derivado de la prop targetTypes
+  // -------------------------------------------------------------------
+  const targetTypeOptions = useMemo(() => {
+    const opts = [];
+    if (targetTypes.includes('general')) opts.push({ value: TARGET_TYPES.GENERAL, label: 'General' });
+    if (targetTypes.includes('group'))   opts.push({ value: TARGET_TYPES.GROUP, label: 'A Grupo' });
+    if (targetTypes.includes('student')) opts.push({ value: TARGET_TYPES.STUDENT, label: 'A Alumno' });
+    return opts;
+  }, [targetTypes]);
+
+  // -------------------------------------------------------------------
   // ESTADO LOCAL DEL FORMULARIO
   // -------------------------------------------------------------------
   const [targetType, setTargetType] = useState(
-    isDirectMode ? TARGET_TYPES.STUDENT : TARGET_TYPES.GROUP,
+    isDirectMode ? TARGET_TYPES.STUDENT : (targetTypes[0] || TARGET_TYPES.GROUP),
   );
   const [groupIds, setGroupIds] = useState([]);
   const [studentIds, setStudentIds] = useState(
@@ -119,6 +135,7 @@ export default function CreateAnnouncementModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTitleFocused, setIsTitleFocused] = useState(false);
   const [isMessageFocused, setIsMessageFocused] = useState(false);
+  const [selectedGrade, setSelectedGrade] = useState(null);
 
   // -------------------------------------------------------------------
   // ESTADO DE VISTA: formulario vs lista de alumnos
@@ -132,6 +149,38 @@ export default function CreateAnnouncementModal({
     () => groups.find((g) => g.id === studentModalGroupId) || null,
     [groups, studentModalGroupId],
   );
+
+  // -------------------------------------------------------------------
+  // GRUPOS FILTRADOS POR GRADO / TALLER
+  // -------------------------------------------------------------------
+  const filteredGroups = useMemo(() => {
+    if (selectedGrade === null) return [];
+    const gradeNum = Number(selectedGrade);
+    const regularGroups = groups.filter((g) => g.grade === gradeNum && g.type !== 'taller');
+    const tallerGroups = groups.filter((g) => g.type === 'taller' && g.grade === gradeNum);
+    return [...regularGroups, ...tallerGroups];
+  }, [groups, selectedGrade]);
+
+  // -------------------------------------------------------------------
+  // GRUPOS SEPARADOS: regulares por grado + talleres (sobre filteredGroups)
+  // -------------------------------------------------------------------
+  const { regularByGrade, tallerGroups } = useMemo(() => {
+    const regular = {};
+    const taller = [];
+    filteredGroups.forEach((g) => {
+      if (g.type === 'taller') {
+        taller.push(g);
+      } else {
+        const grade = g.grade || 0;
+        if (!regular[grade]) regular[grade] = [];
+        regular[grade].push(g);
+      }
+    });
+    return {
+      regularByGrade: Object.entries(regular).sort(([a], [b]) => Number(a) - Number(b)),
+      tallerGroups: taller,
+    };
+  }, [filteredGroups]);
 
   // -------------------------------------------------------------------
   // TOGGLE DE GRUPO (multi-select)
@@ -160,25 +209,24 @@ export default function CreateAnnouncementModal({
   // -------------------------------------------------------------------
   const resetForm = useCallback(() => {
     if (isDirectMode && student) {
-      // En modo directo: mantener targetType y studentIds
       setTargetType(TARGET_TYPES.STUDENT);
       setStudentIds([student._id || student.id]);
     } else {
-      setTargetType(TARGET_TYPES.GROUP);
+      setTargetType(targetTypes[0] || TARGET_TYPES.GROUP);
       setGroupIds([]);
       setStudentIds([]);
     }
+    setSelectedGrade(null);
     setPriority('informative');
     setTitle('');
     setMessage('');
     setIsSubmitting(false);
     setStudentModalGroupId(null);
-  }, [isDirectMode, student]);
+  }, [isDirectMode, student, targetTypes]);
 
   useEffect(() => {
     if (visible) {
       if (isDirectMode && student) {
-        // En modo directo: inicializar con el alumno pre-seleccionado
         setTargetType(TARGET_TYPES.STUDENT);
         setStudentIds([student._id || student.id]);
       } else {
@@ -192,9 +240,9 @@ export default function CreateAnnouncementModal({
   // VALIDACIÓN
   // -------------------------------------------------------------------
   const hasRecipients =
-    targetType === TARGET_TYPES.GROUP
-      ? groupIds.length > 0
-      : studentIds.length > 0;
+    targetType === TARGET_TYPES.GENERAL ? true :
+    targetType === TARGET_TYPES.GROUP ? groupIds.length > 0 :
+    studentIds.length > 0;
 
   const isFormValid =
     hasRecipients &&
@@ -216,11 +264,12 @@ export default function CreateAnnouncementModal({
       Alert.alert('Campo requerido', 'Ingresa el mensaje del aviso.', [{ text: 'Entendido' }]);
       return;
     }
-    if (targetType === TARGET_TYPES.GROUP && groupIds.length === 0) {
+    if (targetType === TARGET_TYPES.GENERAL) {
+      // Sin destinatarios — aviso para toda la escuela
+    } else if (targetType === TARGET_TYPES.GROUP && groupIds.length === 0) {
       Alert.alert('Campo requerido', 'Selecciona al menos un grupo destino.', [{ text: 'Entendido' }]);
       return;
-    }
-    if (targetType === TARGET_TYPES.STUDENT && studentIds.length === 0) {
+    } else if (targetType === TARGET_TYPES.STUDENT && studentIds.length === 0) {
       Alert.alert('Campo requerido', 'Selecciona al menos un alumno destino.', [{ text: 'Entendido' }]);
       return;
     }
@@ -234,7 +283,9 @@ export default function CreateAnnouncementModal({
         targetType,
         ...(targetType === TARGET_TYPES.GROUP
           ? { targetGroups: groupIds }
-          : { targetStudents: studentIds }),
+          : targetType === TARGET_TYPES.STUDENT
+            ? { targetStudents: studentIds }
+            : {}),
       };
       const result = await createTeacherAnnouncement(payload);
 
@@ -378,7 +429,7 @@ export default function CreateAnnouncementModal({
             className="flex-row"
             style={{ backgroundColor: '#F1F5F9', borderRadius: 12, padding: 4 }}
           >
-            {TARGET_TYPE_OPTIONS.map((option) => {
+            {targetTypeOptions.map((option) => {
               const isActive = targetType === option.value;
               return (
                 <Pressable
@@ -388,6 +439,7 @@ export default function CreateAnnouncementModal({
                     setGroupIds([]);
                     setStudentIds([]);
                     setStudentModalGroupId(null);
+                    setSelectedGrade(null);
                   }}
                   className="flex-1 items-center justify-center py-2.5"
                   style={{
@@ -453,10 +505,24 @@ export default function CreateAnnouncementModal({
             className="uppercase mt-5 mb-2"
             style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
           >
-            {targetType === TARGET_TYPES.GROUP ? 'Grupos destino' : 'Seleccionar alumnos'}
+            {targetType === TARGET_TYPES.GENERAL
+              ? 'Destinatarios'
+              : targetType === TARGET_TYPES.GROUP ? 'Grupos destino' : 'Seleccionar alumnos'}
           </Text>
           {renderRecipientSection()}
         </>
+      )}
+
+      {/* Botón limpiar selección */}
+      {!isDirectMode && targetType !== TARGET_TYPES.GENERAL && (groupIds.length > 0 || studentIds.length > 0) && (
+        <Pressable
+          onPress={() => { setGroupIds([]); setStudentIds([]); }}
+          style={{ alignSelf: 'flex-end', marginTop: 8 }}
+        >
+          <Text style={{ fontSize: 12, fontWeight: '600', color: '#0284C7' }}>
+            Limpiar selección
+          </Text>
+        </Pressable>
       )}
 
       {/* C) PRIORIDAD */}
@@ -536,9 +602,11 @@ export default function CreateAnnouncementModal({
       >
         {isDirectMode
           ? 'Mensaje para el alumno / tutor'
-          : targetType === TARGET_TYPES.GROUP
-            ? 'Mensaje para los tutores'
-            : 'Mensaje para el alumno / tutor'}
+          : targetType === TARGET_TYPES.GENERAL
+            ? 'Mensaje para toda la escuela'
+            : targetType === TARGET_TYPES.GROUP
+              ? 'Mensaje para los tutores'
+              : 'Mensaje para el alumno / tutor'}
       </Text>
       <TextInput
         value={message}
@@ -587,8 +655,8 @@ export default function CreateAnnouncementModal({
         </Text>
       </Pressable>
 
-      {/* Guardar como borrador — solo en modo normal */}
-      {!isDirectMode && (
+      {/* Guardar como borrador — solo en modo normal y si el caller lo permite */}
+      {!isDirectMode && targetTypes.includes('group') && (
         <Pressable
           onPress={handleSaveDraft}
           className="items-center py-3"
@@ -610,15 +678,29 @@ export default function CreateAnnouncementModal({
   const renderStudentPickerContent = () => {
     if (!studentModalGroup) return null;
 
-    const students = studentModalGroup.students || [];
+    const students = (studentModalGroup.students || [])
+      .slice()
+      .sort((a, b) => {
+        const la = (a.last_name || '').toLowerCase();
+        const lb = (b.last_name || '').toLowerCase();
+        if (la !== lb) return la.localeCompare(lb);
+        return (a.first_name || '').toLowerCase().localeCompare((b.first_name || '').toLowerCase());
+      });
 
     return (
       <View>
         {/* Header de la vista de alumnos. */}
         <View className="items-center px-5 pb-3 border-b border-[#E2E8F0]">
           <Text style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>
-            {studentModalGroup.label}
+            {studentModalGroup.type === 'taller'
+              ? getTallerDisplayName(studentModalGroup.section)
+              : studentModalGroup.label}
           </Text>
+          {studentModalGroup.tallerGrade != null && (
+            <Text style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+              {studentModalGroup.tallerGrade}° Grado
+            </Text>
+          )}
           <Text style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
             {students.length} alumno{students.length !== 1 ? 's' : ''}
             {studentIds.length > 0 && (
@@ -641,8 +723,9 @@ export default function CreateAnnouncementModal({
             keyExtractor={(s) => s._id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 8 }}
-            renderItem={({ item: student }) => {
+            renderItem={({ item: student, index }) => {
               const isSelected = studentIds.includes(student._id);
+              const initials = `${(student.last_name || '?')[0]}${(student.first_name || '?')[0]}`.toUpperCase();
               return (
                 <Pressable
                   onPress={() => toggleStudent(student._id)}
@@ -651,10 +734,21 @@ export default function CreateAnnouncementModal({
                   accessibilityState={{ selected: isSelected }}
                   accessibilityLabel={`Alumno ${student.fullName || student.name}`}
                 >
-                  {/* Avatar: foto o iniciales. */}
-                  {renderAvatar(student, 42)}
+                  <View
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 21,
+                      backgroundColor: '#E0F2FE',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Text style={{ color: '#0369A1', fontSize: 15, fontWeight: '700' }}>
+                      {initials}
+                    </Text>
+                  </View>
 
-                  {/* Nombre. */}
                   <Text
                     style={{
                       flex: 1,
@@ -665,10 +759,9 @@ export default function CreateAnnouncementModal({
                     }}
                     numberOfLines={1}
                   >
-                    {student.fullName || student.name}
+                    {`${index + 1}. ${student.last_name || ''} ${student.first_name || ''}`}
                   </Text>
 
-                  {/* Check de selección. */}
                   <View
                     style={{
                       width: 24,
@@ -698,92 +791,266 @@ export default function CreateAnnouncementModal({
   };
 
   // -------------------------------------------------------------------
+  // CELDA DE GRUPO (reutilizable para grid)
+  // -------------------------------------------------------------------
+  const renderGroupCell = (group, selectedIds, toggleFn, options = {}) => {
+    const isSelected = selectedIds.includes(group.id);
+    const { onPress, badge, selectedColor } = options;
+
+    // Fondo gris para todos sin seleccionar; color diferente al seleccionar
+    const cellBg = isSelected ? (selectedColor || '#0EA5E9') : '#F1F5F9';
+    const textColor = isSelected ? '#ffffff' : '#334155';
+
+    return (
+      <Pressable
+        key={group.id}
+        onPress={onPress || (() => toggleFn(group.id))}
+        className="rounded-[10px] py-3 items-center"
+        style={{
+          width: `${100 / NUM_COLUMNS}%`,
+          paddingHorizontal: CELL_GAP / 2,
+          marginBottom: CELL_GAP,
+          backgroundColor: cellBg,
+        }}
+        accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
+        accessibilityLabel={`Grupo ${group.label}`}
+      >
+        {isSelected && (
+          <Check size={14} color="#ffffff" strokeWidth={2.75} style={{ marginBottom: 2 }} />
+        )}
+        <Text style={{
+          color: textColor,
+          fontWeight: isSelected ? '600' : '500',
+          fontSize: 14,
+        }} numberOfLines={1}>
+          {group.label}
+        </Text>
+        {badge != null && badge > 0 && (
+          <Text style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
+            ({badge})
+          </Text>
+        )}
+      </Pressable>
+    );
+  };
+
+  // -------------------------------------------------------------------
+  // CELDA DE TALLER (independiente, 2 columnas)
+  // -------------------------------------------------------------------
+  const renderTallerCell = (group, selectedIds, toggleFn, options = {}) => {
+    const isSelected = selectedIds.includes(group.id);
+    const { onPress, badge } = options;
+    const displayName = getTallerDisplayName(group.section);
+
+    // Fondo gris sin seleccionar; naranja al seleccionar
+    const cellBg = isSelected ? '#EA580C' : '#F1F5F9';
+    const textColor = isSelected ? '#ffffff' : '#334155';
+
+    return (
+      <Pressable
+        key={group.id}
+        onPress={onPress || (() => toggleFn(group.id))}
+        className="rounded-[10px] py-3 items-center"
+        style={{
+          width: '50%',
+          paddingHorizontal: 10,
+          marginBottom: CELL_GAP,
+          backgroundColor: cellBg,
+        }}
+        accessibilityRole="button"
+        accessibilityState={{ selected: isSelected }}
+        accessibilityLabel={`Taller ${displayName}`}
+      >
+        {isSelected && (
+          <Check size={14} color="#ffffff" strokeWidth={2.75} style={{ marginBottom: 2 }} />
+        )}
+        <Text style={{
+          color: textColor,
+          fontWeight: isSelected ? '600' : '500',
+          fontSize: 12,
+        }} numberOfLines={1}>
+          {displayName}
+        </Text>
+        {group.tallerGrade != null && (
+          <Text style={{ fontSize: 10, color: isSelected ? '#ffffff' : '#94A3B8', marginTop: 1 }}>
+            {group.tallerGrade}° Grado
+          </Text>
+        )}
+        {badge != null && badge > 0 && (
+          <Text style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
+            ({badge})
+          </Text>
+        )}
+      </Pressable>
+    );
+  };
+
+  // -------------------------------------------------------------------
   // SECCIÓN DE DESTINATARIOS (solo se muestra en el formulario)
   // -------------------------------------------------------------------
   const renderRecipientSection = () => {
-    if (targetType === TARGET_TYPES.GROUP) {
+    if (targetType === TARGET_TYPES.GENERAL) {
       return (
-        <View className="flex-row flex-wrap gap-2">
-          {groups.map((group) => {
-            const isSelected = groupIds.includes(group.id);
-            return (
-              <Pressable
-                key={group.id}
-                onPress={() => toggleGroup(group.id)}
-                className="flex-row items-center"
-                style={{
-                  backgroundColor: isSelected ? '#275972' : '#F1F5F9',
-                  borderRadius: 12,
-                  paddingHorizontal: 14,
-                  paddingVertical: 10,
-                }}
-                accessibilityRole="button"
-                accessibilityState={{ selected: isSelected }}
-                accessibilityLabel={`Grupo ${group.label}`}
-              >
-                {isSelected && (
-                  <Check size={16} color="#ffffff" strokeWidth={2.75} style={{ marginRight: 6 }} />
-                )}
-                <Text
-                  style={{
-                    color: isSelected ? '#ffffff' : '#334155',
-                    fontWeight: isSelected ? '600' : '500',
-                    fontSize: 13,
-                  }}
-                >
-                  {group.label}
-                </Text>
-              </Pressable>
-            );
-          })}
+        <View style={{ backgroundColor: '#F0F9FF', borderRadius: 12, padding: 14, marginTop: 4 }}>
+          <Text style={{ fontSize: 13, color: '#0284C7', fontWeight: '600', lineHeight: 20 }}>
+            Este aviso se enviará a toda la escuela.
+          </Text>
         </View>
       );
     }
 
-    // Flujo "A Alumno": chips de grupos. Tap cambia a vista de alumnos.
-    return (
-      <View>
-        <View className="flex-row flex-wrap gap-2">
-          {groups.map((group) => {
-            const students = group.students || [];
-            const selectedCount = students.filter((s) => studentIds.includes(s._id)).length;
-            const hasSelected = selectedCount > 0;
-
-            return (
-              <Pressable
-                key={group.id}
-                onPress={() => setStudentModalGroupId(group.id)}
-                className="flex-row items-center"
-                style={{
-                  backgroundColor: hasSelected ? '#E6F9F5' : '#F1F5F9',
-                  borderRadius: 12,
-                  paddingHorizontal: 14,
-                  paddingVertical: 10,
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={`Grupo ${group.label}, ${students.length} alumnos`}
-              >
-                {hasSelected && (
-                  <Check size={16} color="#02C79E" strokeWidth={2.75} style={{ marginRight: 6 }} />
-                )}
-                <Text
+    if (targetType === TARGET_TYPES.GROUP) {
+      return (
+        <View>
+          {/* Filtro por grado */}
+          <View style={{ flexDirection: 'row', gap: 6, marginBottom: 8 }}>
+            {GRADE_FILTERS.map((f) => {
+              const isActive = selectedGrade === f.id;
+              return (
+                <Pressable
+                  key={f.id}
+                  onPress={() => setSelectedGrade(isActive ? null : f.id)}
                   style={{
-                    color: hasSelected ? '#02C79E' : '#334155',
-                    fontWeight: hasSelected ? '600' : '500',
-                    fontSize: 13,
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: 8,
+                    backgroundColor: isActive ? '#275972' : '#F1F5F9',
                   }}
                 >
-                  {group.label}
-                </Text>
-                {hasSelected && (
-                  <Text style={{ color: '#C76F02', fontSize: 12, marginLeft: 6, fontWeight: '500' }}>
-                    ({selectedCount})
+                  <Text style={{
+                    fontSize: 12,
+                    fontWeight: isActive ? '700' : '500',
+                    color: isActive ? '#ffffff' : '#64748B',
+                  }}>
+                    {f.label}
                   </Text>
-                )}
+                </Pressable>
+              );
+            })}
+          </View>
+
+          {/* Placeholder cuando no hay filtro seleccionado */}
+          {selectedGrade === null && (
+            <View style={{ paddingVertical: 16, alignItems: 'center' }}>
+              <Text style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
+                Selecciona un grado para ver los grupos
+              </Text>
+            </View>
+          )}
+
+          {/* Grid de grupos */}
+          {selectedGrade !== null && regularByGrade.map(([grade, gradeGroups]) => (
+            <View key={`grade-${grade}`}>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                {grade}° Grado
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {gradeGroups.map((group) => renderGroupCell(group, groupIds, toggleGroup))}
+              </View>
+            </View>
+          ))}
+          {selectedGrade !== null && tallerGroups.length > 0 && (
+            <View>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Tecnología
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {tallerGroups.map((group) => renderTallerCell(group, groupIds, toggleGroup))}
+              </View>
+            </View>
+          )}
+        </View>
+      );
+    }
+
+    // Flujo "A Alumno": grid de grupos. Tap abre vista de alumnos.
+    return (
+      <View>
+        {/* Filtro por grado */}
+        <View style={{ flexDirection: 'row', gap: 6, marginBottom: 8 }}>
+          {GRADE_FILTERS.map((f) => {
+            const isActive = selectedGrade === f.id;
+            return (
+              <Pressable
+                key={f.id}
+                onPress={() => setSelectedGrade(isActive ? null : f.id)}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 8,
+                  backgroundColor: isActive ? '#275972' : '#F1F5F9',
+                }}
+              >
+                <Text style={{
+                  fontSize: 12,
+                  fontWeight: isActive ? '700' : '500',
+                  color: isActive ? '#ffffff' : '#64748B',
+                }}>
+                  {f.label}
+                </Text>
               </Pressable>
             );
           })}
         </View>
+
+        {/* Placeholder cuando no hay filtro seleccionado */}
+        {selectedGrade === null && (
+          <View style={{ paddingVertical: 16, alignItems: 'center' }}>
+            <Text style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
+              Selecciona un grado para ver los grupos
+            </Text>
+          </View>
+        )}
+
+        {/* Grid de grupos */}
+        {selectedGrade !== null && regularByGrade.map(([grade, gradeGroups]) => (
+          <View key={`student-grade-${grade}`}>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              {grade}° Grado
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {gradeGroups.map((group) => {
+                const students = group.students || [];
+                const selectedCount = students.filter((s) => studentIds.includes(s._id)).length;
+                return renderGroupCell(group, [], () => {}, {
+                  onPress: async () => {
+                    if ((!group.students || group.students.length === 0) && fetchStudentsForGroup) {
+                      const loaded = await fetchStudentsForGroup(group.id);
+                      group.students = loaded;
+                    }
+                    setStudentModalGroupId(group.id);
+                  },
+                  badge: selectedCount > 0 ? selectedCount : null,
+                  selectedColor: selectedCount > 0 ? '#02C79E' : null,
+                });
+              })}
+            </View>
+          </View>
+        ))}
+        {selectedGrade !== null && tallerGroups.length > 0 && (
+          <View>
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 14, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              Tecnología
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {tallerGroups.map((group) => {
+                const students = group.students || [];
+                const selectedCount = students.filter((s) => studentIds.includes(s._id)).length;
+                return renderTallerCell(group, [], () => {}, {
+                  onPress: async () => {
+                    if ((!group.students || group.students.length === 0) && fetchStudentsForGroup) {
+                      const loaded = await fetchStudentsForGroup(group.id);
+                      group.students = loaded;
+                    }
+                    setStudentModalGroupId(group.id);
+                  },
+                  badge: selectedCount > 0 ? selectedCount : null,
+                });
+              })}
+            </View>
+          </View>
+        )}
 
         {/* Resumen global de selección. */}
         {studentIds.length > 0 && (

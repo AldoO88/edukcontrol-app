@@ -150,7 +150,7 @@ const mapHistoryData = (raw) => {
 // formatDateFallback(iso)
 // ---------------------------------------------------------------------
 // Fallback: si el backend NO manda date_formatted, formateamos
-// la fecha ISO a "DD MMM" ("4 ago", "31 jul").
+// la fecha ISO a "DD MMM, YYYY" ("4 ago 2026", "31 jul 2025").
 // ---------------------------------------------------------------------
 const formatDateFallback = (iso) => {
   if (!iso) return '—';
@@ -158,7 +158,8 @@ const formatDateFallback = (iso) => {
   if (Number.isNaN(d.getTime())) return '—';
   const day = d.getDate();
   const month = MONTH_LABELS[d.getMonth()];
-  return `${day} ${month}`;
+  const year = d.getFullYear();
+  return `${day} ${month}, ${year}`;
 };
 
 // =====================================================================

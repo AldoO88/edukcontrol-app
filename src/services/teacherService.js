@@ -467,6 +467,12 @@ export const getTeacherAnnouncements = async (options = {}) => {
   if (options.priority) {
     params.append('priority', options.priority);
   }
+  if (options.from) {
+    params.append('from', options.from);
+  }
+  if (options.to) {
+    params.append('to', options.to);
+  }
   if (typeof options.page === 'number' && options.page > 1) {
     params.append('page', String(options.page));
   }
@@ -2596,6 +2602,35 @@ export const getStudentConductDetail = async (logId) => {
     return {
       success: false,
       message: serverMessage || 'No se pudo cargar el detalle del reporte de conducta.',
+    };
+  }
+};
+
+// ---------------------------------------------------------------------
+// getConductConfig()
+// ---------------------------------------------------------------------
+// GET /api/conduct-config
+// Configuración de puntos de conducta de la escuela (baseline, floor,
+// weights, merit_points). La usa el modal de conducta del expediente
+// de tutoría para calcular el score y los rangos de color.
+// Devuelve { success, data } o { success: false, message }.
+// ---------------------------------------------------------------------
+export const getConductConfig = async () => {
+  try {
+    const response = await api.get('/api/conduct-config');
+    return { success: true, data: response.data };
+  } catch (error) {
+    const status = error?.response?.status;
+    const serverMessage = error?.response?.data?.message;
+    if (status === 401) {
+      return { success: false, message: serverMessage || 'Tu sesión expiró.' };
+    }
+    if (!error?.response) {
+      return { success: false, message: 'No se pudo conectar con el servidor.' };
+    }
+    return {
+      success: false,
+      message: serverMessage || 'No se pudo cargar la configuración de conducta.',
     };
   }
 };

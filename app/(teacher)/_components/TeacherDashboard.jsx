@@ -145,6 +145,9 @@ export default function TeacherDashboard() {
         school={school}
         isLoading={isLoading}
         className="mx-4 mt-2"
+        user={user}
+        teacher={data?.teacher}
+        date={currentDate}
       />
 
       <ScrollView

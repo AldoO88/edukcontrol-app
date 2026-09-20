@@ -50,6 +50,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Chrome compartido.
 import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
+import { useAuth } from '@/src/hooks/useAuth';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 import DashboardHeader from '@/src/components/DashboardHeader';
 
@@ -229,6 +230,7 @@ export default function TeacherMatrixScreen() {
 
   // Datos de la escuela (SchoolInfoCard).
   const { data } = useTeacherDashboard();
+  const { user } = useAuth();
   const school = useMemo(() => {
     if (!data?.school) return null;
     return {
@@ -458,6 +460,7 @@ export default function TeacherMatrixScreen() {
         school={school}
         isLoading={!school}
         className="mx-4 mt-2"
+        user={user}
         teacher={data?.teacher}
         date={currentDate}
       />

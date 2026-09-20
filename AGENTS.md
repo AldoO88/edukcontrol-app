@@ -241,3 +241,120 @@ Usar siempre `npx expo install` para mantener compatibilidad con SDK 57.
 - No asumir que existe un backend real: la URL base de `api.js` debe venir de una constante de entorno (`process.env.EXPO_PUBLIC_API_URL` o similar), no hardcoded.
 - No asumir que `src/screens/` existe — esa carpeta fue eliminada durante la migración a Expo Router. Las pantallas viven ahora en `app/`.
 - No asumir que `App.jsx` o `index.js` existen en la raíz — el entry point es `expo-router/entry` configurado en `package.json`.
+
+## Push Notifications (Expo Push API)
+
+Esta sección documenta todo el sistema de notificaciones push del mobile.
+
+### Arquitectura
+
+```
+Backend (Node/Express) → fetch() → Expo Push API → FCM (Android) / APNs (iOS) → celular
+   ↓
+Notification (MongoDB)  ← persistencia in-app (campanita)
+   ↓
+GET /api/me/notifications → bell dropdown
+```
+
+El backend **NO** envía a Firebase Admin SDK ni Google Service Account. Solo hace `fetch()` a `https://exp.host/--/api/v2/push/send`. Expo traduce a FCM/APNs internamente.
+
+### Token registration
+
+| Rol | Endpoint | Body |
+|-----|----------|------|
+| `tutor` | `POST /api/guardians/me/fcm-token` | `{ fcm_token: "ExponentPushToken[…]" }` |
+| staff (`teacher`, `admin`, etc.) | `POST /auth/fcm-token` | `{ fcm_token: "ExponentPushToken[…]" }` |
+
+El mobile rutéa por `user.role` en `src/services/pushNotificationService.js` (`getEndpointForRole`). El token se guarda en `Guardian.fcm_token` o `User.fcm_token` (campo legacy, ahora almacena Expo Push Token).
+
+### Canales de Android
+
+`src/services/notificationService.js#createAndroidChannel()` crea **3 canales separados**:
+
+| Channel ID | Importance | Uso |
+|------------|------------|-----|
+| `eduk_attendance_channel` | MAX | Asistencia (RFID/face tap, ausencias) |
+| `eduk_citations_channel` | MAX | Citatorios |
+| `eduk_announcements_channel` | DEFAULT | Avisos |
+
+El backend manda `channelId` en cada push (`services/notification.service.js` del backend). El mobile debe respetar el `channelId` que viene del push para que el OS enrute correctamente.
+
+**Importante:** En iOS no hay canales — el backend también manda el `channelId` pero iOS lo ignora. Todos los push suenan con el default.
+
+### Tipos de notificación (kind)
+
+El backend incluye `data.kind` en cada push. El mobile usa `src/utils/notificationData.js` para mapear kind → ruta de Expo Router.
+
+| `kind` | Quién lo manda | Quién lo recibe | Ruta (tutor) | Ruta (staff) |
+|--------|----------------|------------------|--------------|--------------|
+| `attendance` | attendance.service | tutor | `/(guardian)/attendance` | — |
+| `absence` | attendance.service | tutor | `/(guardian)/attendance` | — |
+| `citation` | citations.controller | tutor | `/(guardian)/announcements/citation/[id]` | `/(teacher)/citations/[id]` |
+| `citation_rescheduled` | citations.controller | tutor | `/(guardian)/announcements/citation/[id]` | `/(teacher)/citations/[id]` |
+| `citation_cancelled` | citations.controller | tutor | `/(guardian)/announcements` | `/(teacher)/citations/[id]` |
+| `citation_confirmed` | guardians.controller | staff (creator) | — | `/(teacher)/citations/[id]` |
+| `citation_reschedule_request` | guardians.controller | staff (creator) | — | `/(teacher)/citations/[id]` |
+| `announcement` | announcements.controller | tutor | `/(guardian)/announcements/announcement/[id]` | `/(teacher)/announcements/[id]` |
+
+`notificationDataToRoute(data, role)` retorna `{ pathname, params }` o `null` si el kind es desconocido.
+
+### Listeners (`usePushNotifications`)
+
+El hook instala 3 listeners de `expo-notifications`:
+
+1. **`addPushTokenListener`** — cuando el SO rota el Expo Push Token (reinstall, backup restore). Re-registra automáticamente.
+2. **`addNotificationReceivedListener`** — push recibida con app en foreground. Guarda `lastNotification` en state para UI custom (ej. toast in-app).
+3. **`addNotificationResponseReceivedListener`** — usuario tocó la push. Usa `notificationDataToRoute()` para navegar a la pantalla correcta.
+
+Cleanup: todos usan `.remove()` (NO `removeNotificationSubscription` que está deprecado en SDK 57).
+
+### Hook contract
+
+```js
+const { expoPushToken, status, error, lastNotification, lastNotificationResponse } = usePushNotifications(enabled);
+```
+
+| Estado | Significado |
+|--------|-------------|
+| `idle` | `enabled = false` |
+| `requesting` | Pidiendo permisos / creando canal |
+| `registering` | Token obtenido, registrándolo |
+| `registered` | OK, push activas |
+| `denied` | Usuario denegó permisos |
+| `unsupported` | Simulador o falta `extra.eas.projectId` |
+| `error` | Error inesperado (red, server, etc.) |
+
+### Limitaciones de Expo Go
+
+- **Android:** push remotos NO funcionan en Expo Go desde SDK 53+. Necesita dev build (`eas build --profile development`).
+- **iOS:** push SÍ funcionan en Expo Go (todavía, hasta nuevo aviso).
+- Notificaciones locales (programadas por la app) funcionan en ambos.
+
+### Campanita in-app (`NotificationBell`)
+
+Componente `src/components/NotificationBell.jsx` que muestra:
+- Ícono de campana en `DashboardHeader` (todos los roles)
+- Badge rojo con count de no leídas (polling cada 60s)
+- Dropdown panel con últimas 20 notificaciones
+- Tap en item: marca como leída + navega al deep link
+
+Backend soporta:
+- `GET /api/me/notifications?unread=true&limit=50`
+- `GET /api/me/notifications/unread-count`
+- `PATCH /api/me/notifications/:id/read`
+- `PATCH /api/me/notifications/read-all`
+
+Colección MongoDB: `Notification` (ver `models/Notification.model.js`).
+
+### Archivos clave
+
+| Archivo | Responsabilidad |
+|---------|-----------------|
+| `src/services/notificationService.js` | Handler global, `createAndroidChannel` (3 canales), `getExpoPushToken` |
+| `src/services/pushNotificationService.js` | HTTP hacia backend (registro/unregistro por rol) |
+| `src/services/notificationsService.js` | HTTP hacia backend (lista, mark as read) |
+| `src/hooks/usePushNotifications.js` | Setup + listeners (token rotation, foreground, tap) |
+| `src/hooks/useNotifications.js` | Polling de campanita (count + lista) |
+| `src/utils/notificationData.js` | `notificationDataToRoute(data, role)` — deep linking |
+| `src/components/NotificationBell.jsx` | UI campanita + dropdown |
+| `src/components/DashboardHeader.jsx` | Integra `<NotificationBell />` (todos los roles) |

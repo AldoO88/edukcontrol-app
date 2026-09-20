@@ -65,6 +65,9 @@ export default function PrefectLayout() {
   if (user?.role === 'tutor') {
     return <Redirect href="/(guardian)/dashboard" />;
   }
+  if (user?.role === 'principal') {
+    return <Redirect href="/(director)/dashboard" />;
+  }
 
   return (
     <Stack
@@ -73,8 +76,25 @@ export default function PrefectLayout() {
       }}
     >
       {/* Tabs root: contiene TODO el flujo del prefecto (Inicio,
-          Control de Puerta, Reportes, Perfil). */}
+          Grupos, Alumnos, Maestros, Perfil). */}
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+      {/* Feed screens — accesibles desde quick actions del dashboard,
+          NO viven en (tabs)/ porque no son visibles en la bottom tab bar. */}
+      <Stack.Screen name="announcements" options={{ headerShown: false }} />
+      <Stack.Screen name="citations" options={{ headerShown: false }} />
+      <Stack.Screen name="reports" options={{ headerShown: false }} />
+      <Stack.Screen name="exit-passes" options={{ headerShown: false }} />
+      <Stack.Screen name="attendance-summary" options={{ headerShown: false }} />
+
+      {/* Pantallas de detalle — header off. */}
+      <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="citations/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="reports/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="exit-passes/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="groups/[groupId]" options={{ headerShown: false }} />
+      <Stack.Screen name="students/[studentId]" options={{ headerShown: false }} />
+      <Stack.Screen name="teachers/[teacherId]" options={{ headerShown: false }} />
     </Stack>
   );
 }
