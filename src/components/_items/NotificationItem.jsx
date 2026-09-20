@@ -35,6 +35,8 @@ const KIND_CONFIG = {
   citation_confirmed: { Icon: CheckCircle, color: '#10B981', label: 'Citatorio' },
   citation_reschedule_request: { Icon: Calendar, color: '#F59E0B', label: 'Citatorio' },
   announcement: { Icon: Megaphone, color: '#6366F1', label: 'Aviso' },
+  conduct_report: { Icon: FileText, color: '#DC2626', label: 'Conducta' },
+  conduct_cancelled: { Icon: FileText, color: '#94A3B8', label: 'Conducta' },
 };
 
 const DEFAULT_KIND_CONFIG = { Icon: Bell, color: '#64748B', label: 'Notificación' };

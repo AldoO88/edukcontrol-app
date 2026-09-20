@@ -87,6 +87,7 @@ const ANDROID_CHANNELS = {
   attendance: 'eduk_attendance_channel',
   citations: 'eduk_citations_channel',
   announcements: 'eduk_announcements_channel',
+  conduct: 'eduk_conduct_channel',
 };
 
 // Canal legacy para compatibilidad con push que lleguen sin
@@ -96,10 +97,12 @@ const ANDROID_CHANNEL_DEFAULT = 'edukcontrol_default';
 // ---------------------------------------------------------------------
 // createAndroidChannel
 // ---------------------------------------------------------------------
-// Crea los 3 canales de notificaciones de Android. Es OBLIGATORIO
-// llamar a esto ANTES de requestPermissionsAsync en Android 13+, si
-// no el prompt de permisos no aparece y nunca obtendremos un push
-// token. En iOS esta función es un no-op.
+// Crea los 4 canales de notificaciones de Android (asistencia,
+// citatorios, avisos, conducta) + 1 canal legacy/default para push
+// sin channelId. Es OBLIGATORIO llamar a esto ANTES de
+// requestPermissionsAsync en Android 13+, si no el prompt de permisos
+// no aparece y nunca obtendremos un push token. En iOS esta función
+// es un no-op.
 //
 // Se llama cada vez que se monta usePushNotifications (idempotente:
 // setNotificationChannelAsync es un upsert).
@@ -147,6 +150,22 @@ export const createAndroidChannel = async () => {
     {
       name: 'Avisos',
       description: 'Avisos generales, de grupo o específicos para un alumno.',
+      importance: Notifications.AndroidImportance.DEFAULT,
+      vibrationPattern: [0, 200],
+      lightColor: '#0f172a',
+      sound: 'default',
+      enableVibrate: true,
+      showBadge: true,
+    },
+  );
+
+  // Canal de conducta: DEFAULT importance. Reportes de conducta del
+  // alumno — importantes pero no críticos (los citatorios ya son MAX).
+  await Notifications.setNotificationChannelAsync(
+    ANDROID_CHANNELS.conduct,
+    {
+      name: 'Conducta',
+      description: 'Reportes de conducta de tus hijos.',
       importance: Notifications.AndroidImportance.DEFAULT,
       vibrationPattern: [0, 200],
       lightColor: '#0f172a',

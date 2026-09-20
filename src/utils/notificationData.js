@@ -14,6 +14,8 @@
 //   - "citation_confirmed"      → tutor confirmó (va al staff creator)
 //   - "citation_reschedule_request" → tutor pide reagendar (al staff)
 //   - "announcement"            → aviso nuevo (general/grupo/alumno)
+//   - "conduct_report"          → reporte de conducta nuevo (al tutor)
+//   - "conduct_cancelled"        → reporte de conducta cancelado (al tutor)
 //
 // Cada kind mapea a una ruta según el rol del usuario (tutor vs staff).
 // Si el kind es desconocido o el usuario no está logueado, retorna null
@@ -82,6 +84,21 @@ const notificationDataToRoute = (notificationData, role) => {
           });
         }
         return buildRoute('/(guardian)/announcements');
+      }
+
+      case 'conduct_report': {
+        // Drill-down al detalle del reporte de conducta.
+        const logId = notificationData.conduct_log_id;
+        if (logId) {
+          return buildRoute('/(guardian)/conduct/[id]', { id: logId });
+        }
+        return buildRoute('/(guardian)/conduct');
+      }
+
+      case 'conduct_cancelled': {
+        // Reporte cancelado: el log sigue existiendo pero no se muestra
+        // en la lista activa. Mandamos al dashboard.
+        return buildRoute('/(guardian)/dashboard');
       }
 
       default:
