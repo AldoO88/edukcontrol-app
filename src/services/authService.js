@@ -1,31 +1,22 @@
 // =====================================================================
 // authService.js
 // ---------------------------------------------------------------------
-// Capa de servicio para endpoints de autenticación del backend.
-// Encapsula las llamadas HTTP relacionadas con login/logout/verificar
-// sesión y deja a AuthContext (en React) la responsabilidad de
-// persistir el token y actualizar el estado.
+// Capa HTTP para endpoints de autenticación. Encapsula login, verify,
+// refresh y changePassword; AuthContext gestiona persistencia y estado.
 // =====================================================================
 
-// Instancia de axios configurada (interceptor JWT incluido).
 import api from './api';
 
-// Helpers para decodificar el JWT y validar su expiración.
+// Helpers para decodificar el JWT (solo informativos: para validar
+// expiración el backend es la fuente de verdad).
 import { decodeJwtPayload, isJwtExpired } from '../utils/jwt';
 
 // Mapea un payload JWT decodificado a la forma "user" que consume
-// la app. El backend firma el token con { _id, email, name, role };
-// desde que unificamos los roles en inglés ('teacher' | 'parent'),
-// "role" ya viene canónico y NO requiere traducción en el front.
-// Si en el futuro el backend vuelve a cambiar el contrato, este
-// es el ÚNICO punto donde habría que intervenir.
+// la app. El backend firma con { _id, email, name, role } (más
+// schoolId); desde el unification a roles en inglés, "role" ya viene
+// canónico y no se traduce.
 const payloadToAppUser = (payload) => {
-  // Si el payload es inválido o está expirado, devolvemos null.
-  if (!payload || isJwtExpired(payload)) return null;
-
-  // Devolvemos la forma que la app espera. Usamos _id como id y
-  // mantenemos email/name originales. role pasa tal cual porque
-  // ya viene en el formato canónico de la app.
+  if (!payload) return null;
   return {
     id: payload._id,
     email: payload.email,
@@ -34,134 +25,93 @@ const payloadToAppUser = (payload) => {
   };
 };
 
-// login: hace POST /auth/login con phone+password. Devuelve
-// { success, user, message }. El caller (AuthContext) se encarga
-// de persistir el token.
-//
-// =====================================================================
-// CELULAR COMO IDENTIFICADOR
-// ---------------------------------------------------------------------
-// Anteriormente el login era email + password. Ahora es phone +
-// password, alineado con el flow de activación. El backend debe
-// esperar el campo "phone" en el body del POST /auth/login.
-// =====================================================================
-export const login = async (phone, password) => {
-  try {
-    // DEBUG: log de lo que llega a authService. Si aquí el phone
-    // ya viene vacío, el bug está en useLoginForm/useForm (no
-    // nos llega el valor). Si aquí viene bien, el bug está en
-    // axios o en la red.
-    console.log('[DEBUG authService] login() params:', {
-      phone,
-      phoneLen: phone?.length,
-      passwordLen: password?.length,
-    });
+const errorMessage = (error, fallback) => {
+  const status = error?.response?.status;
+  if (status === 404) return 'El número de celular no está registrado.';
+  if (status === 401) return error?.response?.data?.message || 'Celular o contraseña incorrectos.';
+  if (status === 400) return error?.response?.data?.message || 'Datos inválidos.';
+  if (error?.code === 'ECONNABORTED') return 'La petición tardó demasiado. Inténtalo de nuevo.';
+  if (!error?.response) return 'No se pudo conectar con el servidor. Verifica tu conexión.';
+  return error?.response?.data?.message || fallback;
+};
 
-    // Petición al endpoint real del backend.
-    // El backend responde { authToken: "eyJ..." }.
+// =====================================================================
+// login: POST /auth/login con phone+password+remember+client
+// Devuelve { success, user, authToken, refreshToken, message }.
+// AuthContext persiste ambos tokens (authToken siempre; refreshToken
+// solo si remember=true).
+// =====================================================================
+export const login = async (phone, password, remember) => {
+  try {
     const response = await api.post('/auth/login', {
-      // El celular se envía tal cual llega del form (10 dígitos).
-      // No aplicamos lowercase ni trim agresivo: el celular es
-      // numérico, no tiene casing ni espacios significativos, pero
-      // trim() elimina espacios accidentales al inicio/final.
       phone: String(phone || '').trim(),
       password,
+      remember: !!remember,
+      client: 'app',
     });
-
-    // Extraemos el token de la respuesta. Si no viene, es un error
-    // de contrato del backend.
-    const authToken = response.data?.authToken;
+    const { authToken, refreshToken } = response.data || {};
     if (!authToken) {
-      return {
-        success: false,
-        message: 'Respuesta inválida del servidor.',
-      };
+      return { success: false, message: 'Respuesta inválida del servidor.' };
     }
-
-    // Decodificamos el payload del JWT para extraer los datos del
-    // usuario (id, name, role, etc.). Como el token no fue firmado
-    // por nosotros, técnicamente no podemos confiar en él sin
-    // re-verificar contra el backend; pero para el flujo de login
-    // asumimos que si el backend nos dio un token válido, su
-    // contenido es fiable.
     const payload = decodeJwtPayload(authToken);
     const user = payloadToAppUser(payload);
-
-    // Si el payload no se pudo decodificar o el token está
-    // expirado, devolvemos un error claro.
     if (!user) {
-      return {
-        success: false,
-        message: 'Token inválido o expirado.',
-      };
+      return { success: false, message: 'Token inválido o expirado.' };
     }
-
-    // Devolvemos éxito con el user mapeado y el token. AuthContext
-    // persiste el token y actualiza el estado.
-    console.log('[authService] login exitoso:', user);
-    return { success: true, user, authToken };
+    return {
+      success: true,
+      user,
+      authToken,
+      refreshToken: remember ? refreshToken : null,
+    };
   } catch (error) {
-    // Mapear errores HTTP a mensajes amigables. El backend usa:
-    //   404 → "Phone is not registered."
-    //   401 → "Incorrect password." / "This account is deactivated..."
-    //   500 → error de servidor.
-    const status = error?.response?.status;
-    const serverMessage = error?.response?.data?.message;
-
-    if (status === 404) {
-      return { success: false, message: 'El número de celular no está registrado.' };
-    }
-    if (status === 401) {
-      // 401 puede ser "contraseña incorrecta" o "cuenta desactivada".
-      // Mostramos el mensaje del backend si existe, sino uno genérico.
-      return {
-        success: false,
-        message: serverMessage || 'Celular o contraseña incorrectos.',
-      };
-    }
-    if (status === 400) {
-      return { success: false, message: serverMessage || 'Datos inválidos.' };
-    }
-    if (error?.code === 'ECONNABORTED') {
-      return { success: false, message: 'La petición tardó demasiado. Inténtalo de nuevo.' };
-    }
-    // Errores de red (sin respuesta del servidor).
-    if (!error?.response) {
-      return {
-        success: false,
-        message: 'No se pudo conectar con el servidor. Verifica tu conexión.',
-      };
-    }
-    // Cualquier otro caso.
     return {
       success: false,
-      message: serverMessage || 'No fue posible iniciar sesión.',
+      message: errorMessage(error, 'No fue posible iniciar sesión.'),
     };
   }
 };
 
-// verify: hace GET /auth/verify para revalidar el token contra el
-// backend. Útil al restaurar la sesión para asegurarnos de que el
-// token guardado sigue siendo válido. Devuelve el user mapeado o null.
+// =====================================================================
+// refresh: POST /auth/refresh con el refresh actual. Devuelve el par
+// nuevo. Si falla (inválido/expirado/reusado), AuthContext decide
+// cerrar sesión.
+// =====================================================================
+export const refresh = async (refreshToken) => {
+  try {
+    const response = await api.post('/auth/refresh', { refreshToken });
+    const { authToken, refreshToken: newRefresh } = response.data || {};
+    if (!authToken || !newRefresh) {
+      return { success: false, message: 'Refresh inválido.' };
+    }
+    return { success: true, authToken, refreshToken: newRefresh };
+  } catch (error) {
+    return {
+      success: false,
+      message: errorMessage(error, 'Refresh falló.'),
+    };
+  }
+};
+
+// =====================================================================
+// verify: GET /auth/verify para revalidar. Devuelve el user mapeado
+// o null.
+//
+// Bug arreglado: antes hacía payloadToAppUser(response.data) pero el
+// backend devuelve { user: payload }, así que el check isJwtExpired
+// siempre daba true y la app te deslogueaba al arrancar (incluso con
+// token vigente). Ahora usamos response.data.user.
+// =====================================================================
 export const verify = async () => {
   try {
-    // El endpoint devuelve req.payload (el JWT decodificado) si el
-    // token es válido. Si no, devuelve 401.
     const response = await api.get('/auth/verify');
-    const user = payloadToAppUser(response.data);
+    const user = payloadToAppUser(response.data?.user);
     return user;
   } catch (error) {
-    // Si el token expiró o fue revocado, devolvemos null.
     return null;
   }
 };
 
-/**
- * Cambiar contraseña del usuario autenticado.
- * @param {string} currentPassword
- * @param {string} newPassword
- * @returns {{ success: boolean, message?: string, error?: string }}
- */
 export const changePassword = async (currentPassword, newPassword) => {
   try {
     await api.put('/auth/change-password', { currentPassword, newPassword });
@@ -170,14 +120,13 @@ export const changePassword = async (currentPassword, newPassword) => {
     if (error.response) {
       return { success: false, error: error.response.data?.message || 'Error al cambiar la contraseña.' };
     }
-    return { success: false, error: 'No se pudo conectar al servidor. Intenta de nuevo.' };
+    return { success: false, error: 'No se pudo conectar con el servidor. Intenta de nuevo.' };
   }
 };
 
-// Export default como objeto con todos los métodos. Esto facilita
-// la importación en AuthContext: "import authService from '...'".
 const authService = {
   login,
+  refresh,
   verify,
   changePassword,
 };

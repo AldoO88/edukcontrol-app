@@ -268,7 +268,7 @@ export default function DirectorStudentDetail() {
           {guardians.length > 0 ? (
             guardians.map((guardian, idx) => (
               <View key={guardian._id || idx} className={idx > 0 ? 'mt-3 pt-3 border-t border-slate-100' : ''}>
-                <InfoRow icon={Shield} label="Nombre" value={guardian.name} />
+                <InfoRow icon={Shield} label="Nombre" value={[guardian.name, guardian.lastname].filter(Boolean).join(' ') || '—'} />
                 {guardian.phone && <InfoRow icon={Phone} label="Teléfono" value={guardian.phone} />}
                 {guardian.relationship && <InfoRow icon={User} label="Parentesco" value={RELATIONSHIP_LABELS[guardian.relationship] || guardian.relationship} />}
               </View>

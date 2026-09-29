@@ -242,6 +242,15 @@ Usar siempre `npx expo install` para mantener compatibilidad con SDK 57.
 - No asumir que `src/screens/` existe — esa carpeta fue eliminada durante la migración a Expo Router. Las pantallas viven ahora en `app/`.
 - No asumir que `App.jsx` o `index.js` existen en la raíz — el entry point es `expo-router/entry` configurado en `package.json`.
 
+## Variables de entorno
+
+La app lee su URL del backend de `process.env.EXPO_PUBLIC_API_URL` (patrón de Expo SDK 53+). **Configurar**:
+
+1. Copiar `.env.example` a `.env` (gitignored) y editar `EXPO_PUBLIC_API_URL` al host del backend que se quiera apuntar.
+2. La resolución vive en `config.js` (`pickApiUrl`). Si no hay `.env` se usa el fallback LAN (`http://192.168.100.52:5050`) para no romper dev sin archivo.
+3. Para staging / producción, no tocar el código: definir la variable por build con `eas env create --environment production --name EXPO_PUBLIC_API_URL --value https://api.tu-dominio.com`, o crear `.env.production` en la raíz del proyecto (cargado por EAS al ejecutar `eas build --profile production`).
+4. En dev, Metro imprime `[config] API_URL = ...` al iniciar — útil para verificar que la env se inyectó correctamente.
+
 ## Push Notifications (Expo Push API)
 
 Esta sección documenta todo el sistema de notificaciones push del mobile.

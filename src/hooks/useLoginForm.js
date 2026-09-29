@@ -67,6 +67,13 @@ const validateLogin = (values) => {
 
 // El hook devuelve la misma forma que useForm más un submit
 // específico que delega en useAuth.
+//
+// `remember` (booleano) — controla la vida del refresh token:
+//   - true  → access (15 min) + refresh (30 d) en SecureStore → sesión
+//     persistente entre reinicios de la app hasta expirar o logout.
+//   - false → solo access persistido; refresh NO se guarda → la sesión
+//     termina a los 15 minutos o al reinstalar la app.
+// La web no tiene este hook (su login es always remember=true).
 export const useLoginForm = () => {
   // Extraemos login y isLoading del contexto de auth.
   const { login, isLoading: isAuthLoading } = useAuth();
@@ -78,46 +85,39 @@ export const useLoginForm = () => {
   );
 
   // handleSubmit: orquestación específica del login.
-  // Usa el form.handleSubmit de useForm, pero añade la llamada a
-  // useAuth().login y el manejo de errores/éxito.
-  const handleSubmit = useCallback(async () => {
-    // Ejecutamos el submit. useForm ya validará internamente.
-    // Si pasa la validación, llama a onValid(values).
-    return form.handleSubmit(async (values) => {
-      // DEBUG: log de lo que llega al callback onValid. Esto
-      // confirma si el bug está ANTES de aquí (el `values` llega
-      // vacío) o DESPUÉS (algo en authService/api lo pierde).
-      console.log('[DEBUG useLoginForm] onValid values:', {
-        phone: values.phone,
-        phoneLen: values.phone?.length,
-        passwordLen: values.password?.length,
-        hasPhone: !!values.phone,
-        hasPassword: !!values.password,
-      });
-      try {
-        // Llamamos al login del contexto con celular + password.
-        // El contexto llama a authService.login(phone, password).
-        const result = await login(values.phone.trim(), values.password);
-        // Si success === false, mostramos el mensaje del backend.
-        if (!result?.success) {
+  // Acepta `remember` desde el componente que lo llama (el checkbox
+  // "Recordar mi sesión" del LoginForm). El caller lo pasa en el
+  // momento del submit, así que no hay stale-closure.
+  const handleSubmit = useCallback(
+    async (remember) => {
+      const rememberFlag = !!remember;
+      // Ejecutamos el submit. useForm ya validará internamente.
+      return form.handleSubmit(async (values) => {
+        try {
+          // Llamamos al login del contexto con celular + password + remember.
+          const result = await login(values.phone.trim(), values.password, rememberFlag);
+          // Si success === false, mostramos el mensaje del backend.
+          if (!result?.success) {
+            Alert.alert(
+              'No se pudo iniciar sesión',
+              result?.message || 'Verifica tus credenciales e inténtalo de nuevo.',
+            );
+          }
+          // Retornamos el resultado para que el caller pueda actuar.
+          return result;
+        } catch (error) {
+          // Caso defensivo: error de red no manejado.
+          console.error('[useLoginForm] Error inesperado en login:', error);
           Alert.alert(
-            'No se pudo iniciar sesión',
-            result?.message || 'Verifica tus credenciales e inténtalo de nuevo.',
+            'Error',
+            'Ocurrió un problema inesperado. Inténtalo de nuevo.',
           );
+          return { success: false, message: 'unexpected_error' };
         }
-        // Retornamos el resultado para que el caller pueda actuar.
-        return result;
-      } catch (error) {
-        // Caso defensivo: error de red no manejado.
-        console.error('[useLoginForm] Error inesperado en login:', error);
-        Alert.alert(
-          'Error',
-          'Ocurrió un problema inesperado. Inténtalo de nuevo.',
-        );
-        return { success: false, message: 'unexpected_error' };
-      }
-    });
-  }, [form, login]);
+      });
+    },
+    [form, login],
+  );
 
   // isSubmitting: flag combinado (form + auth). Si el contexto
   // está cargando, también lo consideramos "submitting".

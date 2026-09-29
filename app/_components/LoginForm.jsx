@@ -71,10 +71,12 @@ export default function LoginForm() {
   // Router para el link de activación.
   const router = useRouter();
 
-  // Estado local del checkbox "Recordar mi sesión". Es puramente
-  // visual en esta fase (no se persiste todavía). Mantenerlo local
-  // evita ensuciar useLoginForm con un campo que no participa del
-  // submit.
+  // Estado local del checkbox "Recordar mi sesión". Se pasa al submit
+  // de useLoginForm en handleSubmit(rememberMe). Cuando está marcado,
+  // el backend emite un refresh token con TTL de 30 días que la app
+  // guarda en SecureStore y permite reabrir la sesión sin re-login.
+  // Sin marcar, solo persistimos el access token (15 min) — al
+  // expirar, la app vuelve al login.
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
@@ -205,7 +207,7 @@ export default function LoginForm() {
           ---------------------------------------------------- */}
       <Button
         title="Iniciar Sesión"
-        onPress={form.handleSubmit}
+        onPress={() => form.handleSubmit(rememberMe)}
         loading={form.isSubmitting}
         disabled={form.isSubmitting}
         variant="sky"
