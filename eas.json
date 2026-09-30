@@ -12,6 +12,7 @@
     },
     "development": {
       "extends": "base",
+      "environment": "development",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -20,11 +21,13 @@
     },
     "preview": {
       "extends": "base",
+      "environment": "production",
       "distribution": "internal",
       "channel": "preview"
     },
     "production": {
       "extends": "base",
+      "environment": "production",
       "channel": "production"
     }
   },

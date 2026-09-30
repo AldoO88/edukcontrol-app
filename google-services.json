@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1016188608113",
+    "project_id": "eduk-control",
+    "storage_bucket": "eduk-control.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016188608113:android:4c841a584b6a100340c5d0",
+        "android_client_info": {
+          "package_name": "com.edukcontrol.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFubDu73LkWD_RSQp_AqhOkKDfzXsi9Fk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
