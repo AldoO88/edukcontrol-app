@@ -83,6 +83,32 @@ export const requestActivationOtp = async (phone) => {
         message: 'Este número no está registrado en la institución. Verifica con tu coordinador.',
       };
     }
+    if (status === 451) {
+      // 451: el tutor no ha dado consentimiento para recibir WhatsApp
+      // desde EdukControl. Pide a la escuela habilitar las notificaciones
+      // de WhatsApp en tu perfil (PUT /auth/me/notification-preferences).
+      return {
+        success: false,
+        reason: 'consent_required',
+        message:
+          'Para recibir tu código de activación por WhatsApp necesitas ' +
+          'autorizar los mensajes. Pídele a tu escuela habilitar las ' +
+          'notificaciones de WhatsApp en tu cuenta.',
+      };
+    }
+    if (status === 503) {
+      // 503: template de Meta aún no aprobada o servicio de mensajería
+      // temporalmente caído. Suele ser transitorio; si persiste, avisar
+      // a la escuela.
+      return {
+        success: false,
+        reason: 'service_unavailable',
+        message:
+          'El servicio de código por WhatsApp no está disponible ' +
+          'temporalmente. Contacta a tu escuela para que te ayuden a ' +
+          'activar tu cuenta.',
+      };
+    }
     if (status === 429) {
       return {
         success: false,
@@ -95,9 +121,15 @@ export const requestActivationOtp = async (phone) => {
         message: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
       };
     }
+    // Fallback genérico: usar el message del backend si existe (en
+    // inglés), si no el genérico de antes. Status 500 u otros errores
+    // del servidor caen aquí.
     return {
       success: false,
-      message: 'No se pudo enviar el código. Inténtalo de nuevo.',
+      reason: status >= 500 ? 'server_error' : undefined,
+      message:
+        serverMessage ||
+        'No se pudo enviar el código. Inténtalo de nuevo.',
     };
   }
 };

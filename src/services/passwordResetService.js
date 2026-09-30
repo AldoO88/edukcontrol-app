@@ -81,6 +81,33 @@ export const requestReset = async (phone) => {
         message: 'Este número no está registrado en la institución.',
       };
     }
+    if (status === 451) {
+      // 451: la cuenta no tiene consentimiento para recibir WhatsApp.
+      // Para staff creado desde la web sin opted_in, hay que pedirle
+      // al admin que lo habilite (PUT /auth/me/notification-preferences
+      // o edición de staff). Para tutores, suele ser un descuido de
+      // captura en la pre-inscripción.
+      return {
+        success: false,
+        reason: 'consent_required',
+        message:
+          'Para recibir el código de recuperación por WhatsApp ' +
+          'necesitas autorizar los mensajes. Pídele a tu escuela o ' +
+          'administrador habilitar las notificaciones de WhatsApp en ' +
+          'tu cuenta.',
+      };
+    }
+    if (status === 503) {
+      // 503: template de Meta aún no aprobada o servicio de mensajería
+      // caído. Suele ser transitorio; si persiste, avisar a la escuela.
+      return {
+        success: false,
+        reason: 'service_unavailable',
+        message:
+          'El servicio de código por WhatsApp no está disponible ' +
+          'temporalmente. Intenta más tarde o contacta a tu escuela.',
+      };
+    }
     if (status === 429) {
       return {
         success: false,
@@ -93,9 +120,14 @@ export const requestReset = async (phone) => {
         message: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
       };
     }
+    // Fallback genérico: usar el message del backend si existe, si no
+    // el genérico de antes. Status 500 u otros errores del servidor caen aquí.
     return {
       success: false,
-      message: 'No se pudo enviar el código. Inténtalo de nuevo.',
+      reason: status >= 500 ? 'server_error' : undefined,
+      message:
+        serverMessage ||
+        'No se pudo enviar el código. Inténtalo de nuevo.',
     };
   }
 };
