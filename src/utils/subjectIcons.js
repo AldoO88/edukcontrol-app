@@ -30,7 +30,9 @@ import {
   FlaskConical,
   Microscope,
   Sigma,
-  PiSquare,
+  Pi,
+  Pencil,
+  Ruler,
 
   // Ciencias naturales / geografía
   Globe,
@@ -40,6 +42,9 @@ import {
   Trees,
   Mountain,
   Cloud,
+  Compass,
+  TestTube,
+  Telescope,
 
   // Historia / sociales
   Landmark,
@@ -68,9 +73,10 @@ import {
   Cpu,
   Wrench,
   Code,
-  Code2,
+  CodeXml,
   Terminal,
   Zap,
+  Database,
 
   // Tutoría / formación
   Users,
@@ -122,7 +128,9 @@ export const ICON_MAP = {
   FlaskConical,
   Microscope,
   Sigma,
-  PiSquare,
+  Pi,
+  Pencil,
+  Ruler,
 
   // Ciencias / geografía
   Globe,
@@ -132,6 +140,9 @@ export const ICON_MAP = {
   Trees,
   Mountain,
   Cloud,
+  Compass,
+  TestTube,
+  Telescope,
 
   // Historia / sociales
   Landmark,
@@ -160,9 +171,10 @@ export const ICON_MAP = {
   Cpu,
   Wrench,
   Code,
-  Code2,
+  CodeXml,
   Terminal,
   Zap,
+  Database,
 
   // Tutoría / formación
   Users,
