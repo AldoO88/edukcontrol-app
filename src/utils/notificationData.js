@@ -46,7 +46,8 @@ const notificationDataToRoute = (notificationData, role) => {
   if (role === 'tutor') {
     switch (kind) {
       case 'attendance':
-      case 'absence': {
+      case 'absence':
+      case 'missing_exit': {
         // Las pantallas de attendance/conduct del tutor son top-level
         // (no hay drill-down por attendance log individual desde push).
         // Navegamos a la pantalla de asistencia del alumno afectado.
