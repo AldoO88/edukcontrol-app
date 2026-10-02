@@ -96,6 +96,16 @@ export const requestActivationOtp = async (phone) => {
           'notificaciones de WhatsApp en tu cuenta.',
       };
     }
+    if (status === 403) {
+      // 403: la cuenta fue dada de baja por el admin (isActive=false).
+      // No es algo que el usuario pueda resolver desde la app.
+      return {
+        success: false,
+        reason: 'account_disabled',
+        message:
+          'Tu cuenta está desactivada. Contacta a tu escuela para que la reactiven.',
+      };
+    }
     if (status === 503) {
       // 503: template de Meta aún no aprobada o servicio de mensajería
       // temporalmente caído. Suele ser transitorio; si persiste, avisar
