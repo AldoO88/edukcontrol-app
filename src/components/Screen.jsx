@@ -76,12 +76,21 @@ const Screen = ({
 
   // Wrapper interno: el contenido (scrollable o no) va dentro del
   // KeyboardAvoidingView si keyboardAvoid es true.
+  //
+  // Android: behavior queda en undefined a propósito. Desde SDK 57
+  // (edge-to-edge obligatorio en Android 15) el modo adjustResize
+  // deja de funcionar, así que app.json fija
+  // softwareKeyboardLayoutMode: "pan" — la ventana nativa sube con
+  // el teclado. Si además KAV empujara con behavior 'height' sería
+  // un doble empuje (y el offset mágico de 20px desalineaba el
+  // layout). En iOS no aplica pan: KAV con 'padding' sigue siendo
+  // la forma correcta.
   const ContentWrapper = keyboardAvoid ? KeyboardAvoidingView : React.Fragment;
   const contentWrapperProps = keyboardAvoid
     ? {
-        behavior: Platform.OS === 'ios' ? 'padding' : 'height',
+        behavior: Platform.OS === 'ios' ? 'padding' : undefined,
         className: 'flex-1',
-        keyboardVerticalOffset: Platform.OS === 'ios' ? 0 : 20,
+        keyboardVerticalOffset: 0,
       }
     : null;
 
