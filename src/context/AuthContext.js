@@ -167,13 +167,15 @@ export const AuthProvider = ({ children }) => {
   }, [persistSession]);
 
   // setSession — usado por activación de cuenta y otros flows que ya
-  // tienen tokens del backend.
+  // tienen tokens del backend. Devuelve { success, user } igual que
+  // login() para que el caller pueda leer user.role (set-password
+  // lo usa para elegir el dashboard del rol).
   const setSession = useCallback(async (authToken, userData, refreshToken) => {
     if (!authToken || !userData) {
       return { success: false, message: 'Token o usuario inválidos.' };
     }
     await persistSession(authToken, userData, refreshToken || null);
-    return { success: true };
+    return { success: true, user: userData };
   }, [persistSession]);
 
   // Cierra sesión: desregistra FCM, limpia tokens y estado.

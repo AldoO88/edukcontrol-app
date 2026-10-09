@@ -232,7 +232,7 @@ export const completeActivation = async ({ phone, otpCode, newPassword }) => {
       newPassword,
     });
 
-    const { authToken, user, message } = response.data || {};
+    const { authToken, user, message, refreshToken } = response.data || {};
     if (!authToken || !user) {
       return { success: false, message: 'Respuesta inválida del servidor.' };
     }
@@ -249,6 +249,10 @@ export const completeActivation = async ({ phone, otpCode, newPassword }) => {
       success: true,
       user: normalizedUser,
       authToken,
+      // El backend emite refresh en /auth/activate-account (contrato:
+      // { message, user, authToken, refreshToken }). Sin guardar este
+      // token la sesión se cae al expirar el access TTL.
+      refreshToken,
       message: message || 'Cuenta activada correctamente.',
     };
   } catch (error) {

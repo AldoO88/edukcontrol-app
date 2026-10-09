@@ -114,19 +114,28 @@ export default function SetPasswordScreen() {
       // IMPORTANTE: el user devuelto por el backend viene con
       // _id (MongoDB convention), pero activationService ya lo
       // normalizó a "id" antes de devolverlo. Eso es lo que espera
-      // el resto de la app.
-      const sessionResult = await setSession(result.authToken, result.user);
+      // el resto de la app. Pasamos además el refreshToken que el
+      // backend emitió (sin él la sesión se cae al expirar el
+      // access token).
+      const sessionResult = await setSession(
+        result.authToken,
+        result.user,
+        result.refreshToken,
+      );
 
       if (!sessionResult.success) {
         // Si falla la persistencia local (ej. AsyncStorage lleno),
-        // igualmente navegamos al dashboard: el user ya está creado
-        // en el backend, y si el user re-entra a la app, el flujo
-        // de restore-from-storage lo recuperará.
+        // la cuenta YA quedó creada en el backend: le decimos al
+        // usuario que puede iniciar sesión normal. Importante:
+        // retornamos aquí — sin este return el código caería en
+        // sessionResult.user.role (undefined) y mostraría el
+        // alert genérico de "problema inesperado".
         Alert.alert(
           'Activación completada',
           'Cuenta creada. Si la app se cierra, vuelve a iniciar sesión.',
         );
         setIsLoading(false);
+        return;
       }
 
       // 3. router.replace (NO push): la pantalla de set-password NO
@@ -136,9 +145,11 @@ export default function SetPasswordScreen() {
       // Con route groups por rol ya NO hay dispatcher: cada rol tiene
       // su propio grupo ((guardian) o (teacher)). setSession() ya
       // seteó el user global con su role, así que navegamos
-      // explícitamente al dashboard del grupo correcto.
+      // explícitamente al dashboard del grupo correcto. Leemos el
+      // role de result.user (garantizado) — sessionResult.user
+      // antes no existía y revienta con TypeError.
       const dashboardHref =
-        sessionResult.user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard';
+        result.user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard';
       router.replace(dashboardHref);
     } catch (error) {
       console.error('[Activation set-password] Error inesperado:', error);
