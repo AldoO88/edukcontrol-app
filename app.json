@@ -9,11 +9,11 @@
     "scheme": "edukcontrol",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.edukcontrol.app",
+      "bundleIdentifier": "net.edukcontrol.app",
       "buildNumber": "1"
     },
     "android": {
-      "package": "com.edukcontrol.app",
+      "package": "net.edukcontrol.app",
       "versionCode": 1,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {

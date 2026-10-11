@@ -16,6 +16,31 @@
       "api_key": [
         {
           "current_key": "AIzaSyBFubDu73LkWD_RSQp_AqhOkKDfzXsi9Fk"
+        },
+        {
+          "current_key": "AIzaSyBxDoRulkElHy__8f_q9as2gkZWzvWU_LI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016188608113:android:3d9b506729d1d6d540c5d0",
+        "android_client_info": {
+          "package_name": "net.edukcontrol.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFubDu73LkWD_RSQp_AqhOkKDfzXsi9Fk"
+        },
+        {
+          "current_key": "AIzaSyBxDoRulkElHy__8f_q9as2gkZWzvWU_LI"
         }
       ],
       "services": {
