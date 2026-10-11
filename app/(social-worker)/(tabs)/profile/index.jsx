@@ -160,7 +160,7 @@ export default function SocialWorkerProfileScreen() {
             className="text-center px-4 mt-1"
             style={{ fontSize: 13, fontWeight: '500', color: '#64748B' }}
           >
-            {roleLabel}
+            {dashboardData?.school?.name || 'Escuela'}
           </Text>
 
           <View

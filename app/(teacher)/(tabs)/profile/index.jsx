@@ -218,7 +218,7 @@ export default function TeacherProfileScreen() {
             className="text-center px-4 mt-1"
             style={{ fontSize: 13, fontWeight: '500', color: '#64748B' }}
           >
-            {roleLabel} • {data?.school?.name || 'Escuela'}
+           {data?.school?.name || 'Escuela'}
           </Text>
 
           {/* ID + Email card. */}
