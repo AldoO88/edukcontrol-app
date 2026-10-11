@@ -2,7 +2,10 @@
 // useSocialWorkerDashboard.js
 // ---------------------------------------------------------------------
 // Hook que orquesta la carga de datos del dashboard del trabajador social.
-// Misma estructura que usePrefectDashboard.
+// Estructura base de usePrefectDashboard + isRefreshing/refresh() para que
+// el RefreshControl nativo SOLO se active con el pull-to-refresh real
+// (nunca con el refetch programático al ganar foco — en iOS su spinner
+// gris quedaba pegado entre la SchoolInfoCard y las acciones rápidas).
 // =====================================================================
 
 import { useState, useRef, useCallback } from 'react';
@@ -23,9 +26,13 @@ export const useSocialWorkerDashboard = () => {
     if (inFlightRef.current) return;
     inFlightRef.current = true;
 
-    if (dataRef.current) {
-      setIsRefreshing(true);
-    } else {
+    // Refresh SILENCIOSO cuando ya hay datos (refetch al ganar foco).
+    // NO se toca isRefreshing aquí: activar el RefreshControl nativo de
+    // forma programática en iOS dejaba su spinner gris pegado para
+    // siempre entre la SchoolInfoCard y las acciones rápidas. Con datos
+    // viejos en pantalla el refresco ocurre en background sin spinner.
+    // Solo el pull-to-refresh real (refresh()) activa el RefreshControl.
+    if (!dataRef.current) {
       setIsLoading(true);
     }
     setError(null);
@@ -47,11 +54,24 @@ export const useSocialWorkerDashboard = () => {
     }
   }, []);
 
+  // refresh: SOLO para el gesto real de pull-to-refresh (onRefresh del
+  // RefreshControl). Activa el spinner nativo, corre el mismo refetch y
+  // lo apaga en finally — incluso si refetch hace early-return por
+  // inFlightRef, este finally igual limpia el spinner.
+  const refresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch]);
+
   useFocusEffect(
     useCallback(() => {
       refetch();
     }, [refetch]),
   );
 
-  return { data, isLoading, isRefreshing, error, refetch };
+  return { data, isLoading, isRefreshing, error, refetch, refresh };
 };

@@ -35,7 +35,7 @@ import { useSocialWorkerDashboard } from '@/src/hooks/useSocialWorkerDashboard';
 
 export default function SocialWorkerDashboard() {
   const router = useRouter();
-  const { data, isLoading, isRefreshing, error, refetch } = useSocialWorkerDashboard();
+  const { data, isLoading, isRefreshing, error, refetch, refresh } = useSocialWorkerDashboard();
 
   const school = useMemo(() => {
     if (!data?.school) return null;
@@ -152,7 +152,7 @@ export default function SocialWorkerDashboard() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={refetch} colors={['#0284C7']} />
+          <RefreshControl refreshing={isRefreshing} onRefresh={refresh} colors={['#0284C7']} />
         }
       >
         {/* SALUDO + BADGE */}
