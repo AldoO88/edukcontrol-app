@@ -40,6 +40,7 @@ import {
   Search,
   X,
   Filter,
+  ChevronLeft,
 } from 'lucide-react-native';
 
 // Componentes compartidos.
@@ -404,6 +405,22 @@ export default function TeacherAnnouncements() {
               teacher={data?.teacher}
               date={currentDate}
             />
+
+            {/* BACK BUTTON (mismo estilo que CitationsListScreen).
+                Sin px-4 porque el FlatList ya tiene contentContainer
+                px-4: así el botón queda alineado con el título. */}
+            <Pressable
+              onPress={() => router.back()}
+              accessibilityRole="button"
+              accessibilityLabel="Volver al dashboard"
+              hitSlop={12}
+              className="flex-row items-center mt-4"
+            >
+              <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
+              <Text className="text-sm font-semibold text-sky-600 ml-1">
+                Volver
+              </Text>
+            </Pressable>
 
             {/* Sección "Avisos" + conteo. */}
             <View className="mt-5">

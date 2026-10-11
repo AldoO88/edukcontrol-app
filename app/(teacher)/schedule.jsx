@@ -11,7 +11,8 @@
 //   ├────────────────────────────────────────┤
 //   │ SchoolInfoCard compuesta                │
 //   ├────────────────────────────────────────┤
-//   │ < Volver  •  Mi Horario Semanal        │
+//   │ < Volver                              │
+//   │ Mi Horario Semanal                    │
 //   ├────────────────────────────────────────┤
 //   │ Stats row: 3 cards (Horas/Grupos/Libres│
 //   ├────────────────────────────────────────┤
@@ -444,22 +445,25 @@ export default function ScheduleScreen() {
         date={currentDate}
       />
 
-      {/* HEADER: back + título */}
-      <View className="flex-row items-center px-4 mt-4">
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Volver al dashboard"
-          className="items-center justify-center -ml-2"
-          style={{ padding: 8 }}
-          hitSlop={8}
-        >
-          <ChevronLeft size={22} color="#0F172A" strokeWidth={2.25} />
-        </Pressable>
-        <Text
-          className="flex-1 ml-1 text-slate-900"
-          style={{ fontSize: 17, fontWeight: '700' }}
-        >
+      {/* BACK BUTTON (mismo estilo que CitationsListScreen/announcements).
+          px-4 va aquí porque esta pantalla es un View plano (sin
+          contentContainer con padding como el FlatList de avisos). */}
+      <Pressable
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Volver al dashboard"
+        hitSlop={12}
+        className="flex-row items-center px-4 mt-4"
+      >
+        <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
+        <Text className="text-sm font-semibold text-sky-600 ml-1">
+          Volver
+        </Text>
+      </Pressable>
+
+      {/* HEADER: título */}
+      <View className="px-4 mt-4 mb-1">
+        <Text className="text-[22px] font-bold text-[#0F172A]">
           Mi Horario Semanal
         </Text>
       </View>

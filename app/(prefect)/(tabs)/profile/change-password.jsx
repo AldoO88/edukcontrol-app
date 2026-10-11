@@ -73,19 +73,30 @@ export default function PrefectChangePasswordScreen() {
         user={user}
       />
 
-      {/* HEADER */}
-      <View className="flex-row items-center px-4 mt-4">
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Volver al perfil"
-          className="items-center justify-center -ml-2"
-          style={{ padding: 8 }}
-          hitSlop={8}
+      {/* BACK BUTTON (mismo estilo que CitationsListScreen/announcements).
+          Usa router.replace hacia profile EXPLÍCITAMENTE: como
+          profile/ no tiene _layout.jsx, change-password es screen
+          directa del navigator de tabs y router.back() salía hacia
+          el dashboard en vez de al perfil. */}
+      <Pressable
+        onPress={() => router.replace('/(prefect)/(tabs)/profile')}
+        accessibilityRole="button"
+        accessibilityLabel="Volver al perfil"
+        hitSlop={12}
+        className="flex-row items-center px-4 mt-4"
+      >
+        <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
+        <Text className="text-sm font-semibold text-sky-600 ml-1">
+          Volver
+        </Text>
+      </Pressable>
+
+      {/* HEADER: título */}
+      <View className="px-4 mt-4 mb-1">
+        <Text
+          className="text-[22px] font-bold text-[#0F172A]"
+          numberOfLines={1}
         >
-          <ChevronLeft size={22} color="#0F172A" strokeWidth={2.25} />
-        </Pressable>
-        <Text className="flex-1 ml-1 text-slate-900" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={1}>
           Cambiar Contraseña
         </Text>
       </View>
