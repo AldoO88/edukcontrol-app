@@ -17,13 +17,15 @@
 // React + hooks.
 import React, { useState } from 'react';
 
-// Primitivas RN.
+// Primitivas RN. Platform: para detectar Android y anclar el form
+// arriba con el teclado.
 import {
   View,
   Text,
   Pressable,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
 
 // useRouter + useLocalSearchParams de expo-router.
@@ -55,6 +57,10 @@ import {
   requestReset,
 } from '../../../src/services/passwordResetService';
 
+// Hook de visibilidad del teclado: devuelve true mientras el
+// teclado virtual está abierto.
+import { useKeyboardVisible } from '../../../src/hooks/useKeyboardVisible';
+
 export default function ForgotPasswordVerifyScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -63,6 +69,14 @@ export default function ForgotPasswordVerifyScreen() {
   const [code, setCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
+
+  // Visibilidad del teclado (hook ANTES del if (!phone) de abajo:
+  // regla de hooks, siempre en el mismo orden incondicional). Solo
+  // se usa en Android: con el teclado abierto anclamos el form
+  // arriba para que el teclado no tape el input OTP (con pan el
+  // contenido centrado queda a medio tapar).
+  const keyboardVisible = useKeyboardVisible();
+  const anclarArriba = Platform.OS === 'android' && keyboardVisible;
 
   const isValid = code.length === 6;
 
@@ -133,7 +147,14 @@ export default function ForgotPasswordVerifyScreen() {
     >
       <BrandHeader />
 
-      <View className="flex-1 items-center justify-center px-6 py-4 w-full">
+      {/* Wrapper principal: centrado por defecto; con el teclado
+          abierto en Android (anclarArriba) se ancla arriba para que
+          el input OTP quede en la zona que el teclado no tapa. */}
+      <View
+        className={`flex-1 items-center px-6 py-4 w-full ${
+          anclarArriba ? 'justify-start' : 'justify-center'
+        }`}
+      >
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Código de verificación"

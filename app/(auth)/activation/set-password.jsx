@@ -19,8 +19,9 @@
 // React + hooks.
 import React, { useState } from 'react';
 
-// Primitivas RN: View, Text, Alert.
-import { View, Text, Alert } from 'react-native';
+// Primitivas RN: View, Text, Alert y Platform (para detectar
+// Android y anclar el form arriba con el teclado).
+import { View, Text, Alert, Platform } from 'react-native';
 
 // useRouter + useLocalSearchParams de expo-router. Esta pantalla
 // recibe phone y code como params de la pantalla anterior.
@@ -59,6 +60,10 @@ import { useAuth } from '../../../src/hooks/useAuth';
 // /auth/activate-account con { phone, otpCode, newPassword }.
 import { completeActivation } from '../../../src/services/activationService';
 
+// Hook de visibilidad del teclado: devuelve true mientras el
+// teclado virtual está abierto.
+import { useKeyboardVisible } from '../../../src/hooks/useKeyboardVisible';
+
 // Mínimo de caracteres para considerar la contraseña segura.
 // Coincide con el mínimo que valida el backend (>= 8 chars).
 const MIN_PASSWORD_LENGTH = 8;
@@ -80,6 +85,14 @@ export default function SetPasswordScreen() {
 
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Visibilidad del teclado (siempre en el mismo orden, sin
+  // early-returns debajo). Solo se usa en Android: con el teclado
+  // abierto anclamos el form arriba para que el teclado no tape el
+  // input de contraseña (con pan el contenido centrado queda a
+  // medio tapar).
+  const keyboardVisible = useKeyboardVisible();
+  const anclarArriba = Platform.OS === 'android' && keyboardVisible;
 
   const isValid = password.length >= MIN_PASSWORD_LENGTH;
 
@@ -169,7 +182,15 @@ export default function SetPasswordScreen() {
     >
       <BrandHeader />
 
-      <View className="flex-1 items-center justify-center px-6 py-4 w-full">
+      {/* Wrapper principal: centrado por defecto; con el teclado
+          abierto en Android (anclarArriba) se ancla arriba para que
+          el input de contraseña quede en la zona que el teclado no
+          tapa. */}
+      <View
+        className={`flex-1 items-center px-6 py-4 w-full ${
+          anclarArriba ? 'justify-start' : 'justify-center'
+        }`}
+      >
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Crea tu contraseña"

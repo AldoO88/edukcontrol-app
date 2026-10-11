@@ -18,8 +18,9 @@
 // React + hooks de estado local.
 import React, { useEffect, useRef, useState } from 'react';
 
-// Primitivas RN: View, Text, Pressable, Alert.
-import { View, Text, Pressable, Alert } from 'react-native';
+// Primitivas RN: View, Text, Pressable, Alert y Platform (para
+// detectar Android y anclar el form arriba con el teclado).
+import { View, Text, Pressable, Alert, Platform } from 'react-native';
 
 // useRouter de expo-router.
 import { useRouter } from 'expo-router';
@@ -44,6 +45,10 @@ import ActivationCard from '../_components/ActivationCard';
 
 // Servicio de recuperación de contraseña.
 import { requestReset } from '../../../src/services/passwordResetService';
+
+// Hook de visibilidad del teclado: devuelve true mientras el
+// teclado virtual está abierto.
+import { useKeyboardVisible } from '../../../src/hooks/useKeyboardVisible';
 
 // Color del icono de Teléfono: sky-500 (mismo que login y activación).
 const PHONE_ICON_COLOR = '#0ea5e9'; // sky-500
@@ -75,6 +80,13 @@ export default function ForgotPasswordIndexScreen() {
 
   // Ref para el interval del countdown (cleanup en unmount).
   const intervalRef = useRef(null);
+
+  // Visibilidad del teclado (hook sin early-returns debajo, regla de
+  // hooks). Solo se usa en Android: con el teclado abierto anclamos
+  // el form arriba para que el teclado no tape los inputs (con pan
+  // el contenido centrado queda a medio tapar).
+  const keyboardVisible = useKeyboardVisible();
+  const anclarArriba = Platform.OS === 'android' && keyboardVisible;
 
   // Validación: 10 dígitos exactos.
   const isValid = phone.length === 10;
@@ -153,7 +165,14 @@ export default function ForgotPasswordIndexScreen() {
     >
       <BrandHeader />
 
-      <View className="flex-1 items-center justify-center px-6 py-4 w-full">
+      {/* Wrapper principal: centrado por defecto; con el teclado
+          abierto en Android (anclarArriba) se ancla arriba para que
+          los inputs queden en la zona que el teclado no tapa. */}
+      <View
+        className={`flex-1 items-center px-6 py-4 w-full ${
+          anclarArriba ? 'justify-start' : 'justify-center'
+        }`}
+      >
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Recuperar contraseña"

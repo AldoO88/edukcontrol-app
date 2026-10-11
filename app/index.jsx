@@ -20,14 +20,19 @@
 // React.
 import React from 'react';
 
-// Primitivas RN: View, Text, ActivityIndicator (splash).
-import { View, Text, ActivityIndicator } from 'react-native';
+// Primitivas RN: View, Text, ActivityIndicator (splash) y Platform
+// (para detectar Android y anclar el form arriba con el teclado).
+import { View, Text, ActivityIndicator, Platform } from 'react-native';
 
 // Redirect de expo-router: navegación declarativa.
 import { Redirect } from 'expo-router';
 
 // Hook de auth: lee { user, isLoading } del AuthContext.
 import { useAuth } from '../src/hooks/useAuth';
+
+// Hook de visibilidad del teclado: devuelve true mientras el
+// teclado virtual está abierto.
+import { useKeyboardVisible } from '../src/hooks/useKeyboardVisible';
 
 // Wrapper de pantalla institucional.
 import Screen from '../src/components/Screen';
@@ -76,6 +81,14 @@ const APP_VERSION = '1.0.0';
 export default function LoginScreen() {
   const { user, isLoading } = useAuth();
 
+  // Visibilidad del teclado. Se llama SIEMPRE aquí arriba (regla de
+  // hooks: nada de hooks detrás de los early-returns de isLoading/
+  // user de abajo). Solo se usa en Android: cuando el teclado está
+  // abierto anclamos el form arriba para que el teclado no tape los
+  // inputs (con pan el contenido centrado queda a medio tapar).
+  const keyboardVisible = useKeyboardVisible();
+  const anclarArriba = Platform.OS === 'android' && keyboardVisible;
+
   // Mientras el contexto está cargando, mostramos splash para
   // evitar el "flash" del login en cold-start.
   if (isLoading) {
@@ -114,8 +127,15 @@ export default function LoginScreen() {
       {/* Contenedor principal: centra verticalmente la card +
           feature badges + footer. px-6 mantiene el gutter lateral
           en pantallas anchas. max-w-sm en el form interior evita
-          que la card se estire demasiado en tablets. */}
-      <View className="flex-1 items-center justify-center px-6 py-4 w-full">
+          que la card se estire demasiado en tablets.
+          Con el teclado abierto en Android (anclarArriba) el
+          contenido pasa a alinearse arriba: así los inputs quedan
+          en la zona superior que el teclado nunca tapa. */}
+      <View
+        className={`flex-1 items-center px-6 py-4 w-full ${
+          anclarArriba ? 'justify-start' : 'justify-center'
+        }`}
+      >
         <View className="w-full max-w-sm">
           <LoginForm />
 
