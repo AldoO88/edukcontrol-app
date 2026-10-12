@@ -62,10 +62,10 @@ const openURL = async (url) => {
     if (canOpen) {
       await Linking.openURL(url);
     } else {
-      Alert.alert('Contacto', 'Correo: soporte@edukcontrol.com');
+      Alert.alert('Contacto', 'Correo: soporte@edukcontrol.net');
     }
   } catch {
-    Alert.alert('Contacto', 'Correo: soporte@edukcontrol.com');
+    Alert.alert('Contacto', 'Correo: soporte@edukcontrol.net');
   }
 };
 
@@ -289,7 +289,7 @@ export default function PrefectProfileScreen() {
             iconBg="#F0FDF4"
             iconColor="#16A34A"
             label="Contactar a Soporte"
-            onPress={() => openURL('mailto:soporte@edukcontrol.com?subject=Soporte%20EdukControl')}
+            onPress={() => openURL('mailto:soporte@edukcontrol.net?subject=Soporte%20EdukControl')}
           />
           <View className="mx-4" style={{ height: 1, backgroundColor: '#F1F5F9' }} />
           <ProfileRow
