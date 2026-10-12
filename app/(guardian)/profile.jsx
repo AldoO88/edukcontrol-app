@@ -296,7 +296,7 @@ export default function GuardianProfileScreen() {
             iconBg="#F0F9FF"
             iconColor="#0284C7"
             label="Términos y Privacidad"
-            onPress={() => openURL('https://edukcontrol.com/terminos')}
+            onPress={() => openURL('https://www.edukcontrol.net/terminos')}
           />
         </View>
 
