@@ -8,11 +8,12 @@ Play exige credenciales para revisores (seleccionar "Todos los revisores necesit
 |---|---|
 | Instrucciones | La app se ingresa con teléfono (10 dígitos) y contraseña. No hay registro público; las cuentas las crea la escuela. |
 | Correo electrónico (opcional) | *(correo que el usuario registre en Play Console)* |
-| Usuario / Teléfono (rol Docente) | `7710000002` |
-| Contraseña (Docente) | `EdukTest2026!` |
-| Usuario / Teléfono (rol Padre de familia) | `7710000003` |
-| Contraseña (Padre de familia) | `EdukTest2026!` |
 | URL (opcional) | `https://www.edukcontrol.net/login` |
+| Rol Admin | Teléfono `7710000001` / pass `EdukTest2026!` |
+| Rol Docente | Teléfono `7710000002` / pass `EdukTest2026!` |
+| Rol Padre de familia | Teléfono `7710000003` / pass `EdukTest2026!` |
+| Rol Prefecto | Teléfono `7710000004` / pass `EdukTest2026!` |
+| Rol Trabajador social | Teléfono `7710000005` / pass `EdukTest2026!` |
 
 Datos visibles al ingresar (Escuela de Prueba EdukControl, ciclo 2026-2027).
 
