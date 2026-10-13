@@ -5,7 +5,7 @@
 // del código OTP.
 // URL: /forgot-password/verify
 //
-// El usuario ingresa el código de 6 dígitos que recibió por SMS y
+// El usuario ingresa el código de 6 dígitos que recibió por WhatsApp y
 // presiona "Verificar código". Llama a:
 //   POST /auth/forgot-password/verify  { phone, otpCode }
 // Si OK, navega a la pantalla 3 pasando phone + code como params.
@@ -158,7 +158,7 @@ export default function ForgotPasswordVerifyScreen() {
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Código de verificación"
-            subtitle="Hemos enviado un código de 6 dígitos por SMS a tu celular."
+            subtitle="Hemos enviado un código de 6 dígitos por WhatsApp a tu celular."
           >
             {/* Input OTP. */}
             <TextField

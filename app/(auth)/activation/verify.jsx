@@ -4,7 +4,7 @@
 // Pantalla 2/3 del flujo de activación: verificación del código OTP.
 // URL: /activation/verify
 //
-// El usuario ingresa el código de 6 dígitos que recibió por SMS y
+// El usuario ingresa el código de 6 dígitos que recibió por WhatsApp y
 // presiona "Verificar código". Mock: simula la validación y navega
 // a la pantalla de creación de contraseña.
 //
@@ -139,7 +139,7 @@ export default function VerifyScreen() {
 
   // Handler de "Reenviar código". Llama al mismo endpoint que la
   // pantalla 1 (requestActivationOtp) — el backend genera un código
-  // nuevo y envía otro SMS. El código anterior queda invalidado.
+  // nuevo y envía otro mensaje. El código anterior queda invalidado.
   const handleResend = async () => {
     if (isResending) return;
     setIsResending(true);
@@ -148,7 +148,7 @@ export default function VerifyScreen() {
       if (!result.success) {
         Alert.alert('No se pudo reenviar', result.message);
       } else {
-        // Limpiamos el código actual: el nuevo SMS trae un código
+        // Limpiamos el código actual: el nuevo mensaje trae un código
         // distinto, el viejo ya no sirve. Buena UX: evitamos que el
         // usuario intente con el código anterior.
         setCode('');
@@ -184,7 +184,7 @@ export default function VerifyScreen() {
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Código de verificación"
-            subtitle="Hemos enviado un código de 6 dígitos por SMS a tu celular."
+            subtitle="Hemos enviado un código de 6 dígitos por WhatsApp a tu celular."
           >
             {/* Input OTP.
                 - label "CÓDIGO" UPPERCASE con labelClassName.
@@ -193,7 +193,7 @@ export default function VerifyScreen() {
                 - maxLength={6}.
                 - autoComplete="one-time-code" + textContentType=
                   "oneTimeCode": iOS/Android sugieren automáticamente
-                  el código recibido por SMS. Es la mejor UX posible
+                  el código recibido por WhatsApp. Es la mejor UX posible
                   para OTP. */}
             <TextField
               label="CÓDIGO"

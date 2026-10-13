@@ -5,7 +5,7 @@
 // URL: /activation
 //
 // El usuario ingresa el número de 10 dígitos que registró en la
-// institución y presiona "Enviar código por SMS". Llama a:
+// institución y presiona "Enviar código por WhatsApp". Llama a:
 //   POST /auth/request-activation  { phone }
 // Response 200: { message, expiresAt }  ← el expiresAt se usa para
 //   mostrar un countdown de 10 minutos.
@@ -249,11 +249,11 @@ export default function PhoneInputScreen() {
               </View>
             )}
 
-            {/* Botón "Enviar código por SMS" con icono Send (avión
+            {/* Botón "Enviar código por WhatsApp" con icono Send (avión
                 de papel) a la derecha del label — refuerza la idea
                 de "mandar algo". */}
             <Button
-              title="Enviar código por SMS"
+              title="Enviar código por WhatsApp"
               onPress={handleSendCode}
               loading={isLoading}
               disabled={!isValid || isLoading}
@@ -262,7 +262,7 @@ export default function PhoneInputScreen() {
               iconSize={20}
               iconColor="#ffffff"
               className="mt-4"
-              accessibilityLabel="Botón enviar código por SMS"
+              accessibilityLabel="Botón enviar código por WhatsApp"
             />
 
             {/* Divisor sutil para separar el bloque "acción" del

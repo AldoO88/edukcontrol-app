@@ -6,7 +6,7 @@
 //
 //   1. requestReset(phone)
 //                          → POST /auth/forgot-password/request
-//      Backend envía un SMS con un código de 6 dígitos. La response
+//      Backend envía un código de 6 dígitos por WhatsApp. La response
 //      incluye expiresAt para que el front pueda mostrar un countdown
 //      de 10 minutos.
 //
@@ -168,7 +168,7 @@ export const verifyResetOtp = async (phone, otpCode) => {
       }
       return {
         success: false,
-        message: serverMessage || 'El código es incorrecto. Verifica el SMS recibido.',
+        message: serverMessage || 'El código es incorrecto. Verifica el mensaje de WhatsApp recibido.',
         reason: 'invalid',
       };
     }
