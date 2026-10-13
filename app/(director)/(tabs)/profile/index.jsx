@@ -24,6 +24,7 @@ import {
   Moon,
   MessageCircle,
   Shield,
+  Trash2,
   LogOut,
   Phone,
   Mail,
@@ -275,6 +276,18 @@ export default function DirectorProfileScreen() {
             iconColor="#0284C7"
             label="Términos y Privacidad"
             onPress={() => openURL('https://www.edukcontrol.net/terminos')}
+          />
+          <View className="mx-4" style={{ height: 1, backgroundColor: '#F1F5F9' }} />
+          {/* Requisito de las tiendas: Google Play (User Data policy —
+              ruta in-app + link web de eliminación) y Apple (Guideline
+              5.1.1(v) — iniciar la eliminación de cuenta desde la app).
+              Abre la página pública dedicada /eliminacion-de-datos. */}
+          <ProfileRow
+            icon={Trash2}
+            iconBg="#FEF2F2"
+            iconColor="#DC2626"
+            label="Eliminar mi cuenta"
+            onPress={() => openURL('https://www.edukcontrol.net/eliminacion-de-datos')}
           />
         </View>
 
