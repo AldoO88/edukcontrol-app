@@ -8,9 +8,9 @@
     "userInterfaceStyle": "light",
     "scheme": "edukcontrol",
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "net.edukcontrol.app",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
