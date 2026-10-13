@@ -76,7 +76,7 @@ function RootSplash() {
 // Versión mostrada en el footer (sincronizada con la app store /
 // la release). Se hardcodea aquí; cuando haya un endpoint público
 // /version se puede hidratar.
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 
 export default function LoginScreen() {
   const { user, isLoading } = useAuth();

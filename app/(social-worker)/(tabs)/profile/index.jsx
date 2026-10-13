@@ -316,7 +316,7 @@ export default function SocialWorkerProfileScreen() {
 
         {/* VERSIÓN */}
         <Text className="text-center mt-5" style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8' }}>
-          Versión: 1.0.0
+          Versión: 1.0.1
         </Text>
 
         {/* CERRAR SESIÓN */}
