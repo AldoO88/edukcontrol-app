@@ -28,10 +28,7 @@
     "production": {
       "extends": "base",
       "environment": "production",
-      "channel": "production",
-      "buildArtifactPaths": [
-        "android/app/build/outputs/mapping/release/mapping.txt"
-      ]
+      "channel": "production"
     }
   },
   "submit": {
