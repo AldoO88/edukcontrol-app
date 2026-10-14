@@ -197,7 +197,7 @@ export default function ExpedienteScreen() {
                 <StudentAvatar
                   uri={item.photoUrl}
                   name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
-                  size={40}
+                  size={56}
                   fallbackColor="#E0E7FF"
                   textColor="#4F46E5"
                 />

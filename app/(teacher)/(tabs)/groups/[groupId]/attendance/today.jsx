@@ -663,7 +663,7 @@ export default function TakeAttendanceTodayScreen() {
                   <StudentAvatar
                     uri={student.photoUrl}
                     name={student.fullName}
-                    size={36}
+                    size={56}
                   />
 
                   {/* Student name (prefijo = posición en la lista). */}

@@ -463,7 +463,7 @@ const GenerateExitPassModal = ({
                               <StudentAvatar
                                 uri={stu.photoUrl}
                                 name={stu.fullName || `${stu.last_name || ''} ${stu.first_name || ''}`.trim()}
-                                size={36}
+                                size={56}
                                 fallbackColor="#FFF7ED"
                                 textColor="#C2410C"
                               />

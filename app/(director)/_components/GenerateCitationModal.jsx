@@ -747,7 +747,7 @@ const GenerateCitationModal = ({
                             <StudentAvatar
                               uri={stu.photoUrl}
                               name={`${stu.last_name || ''} ${stu.first_name || ''}`.trim()}
-                              size={36}
+                              size={56}
                               fallbackColor="#E0F2FE"
                               textColor="#0284C7"
                             />

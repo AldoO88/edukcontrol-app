@@ -166,9 +166,15 @@ const INITIAL_DATES = [
 }));
 
 // Dimensiones de la matriz.
-const STUDENT_COL_WIDTH = 220;
+// STUDENT_COL_WIDTH: 240 (antes 220) para dar más espacio al nombre del
+//   alumno, que ahora admite 3 líneas y convive con un avatar de 56px.
+// ROW_HEIGHT: 76 (antes 64) — altura FIJA necesaria para que las filas de la
+//   columna izquierda sigan alineadas 1:1 con las celdas del grid de fechas
+//   (ambas usan esta constante); acomoda 3 líneas de texto de fontSize 15
+//   y el avatar de 56px.
+const STUDENT_COL_WIDTH = 240;
 const DATE_COL_WIDTH = 80;
-const ROW_HEIGHT = 64;
+const ROW_HEIGHT = 76;
 const CELL_SIZE = 40;
 
 // =====================================================================
@@ -669,18 +675,24 @@ export default function TeacherMatrixScreen() {
                     className="flex-row items-center border-b border-[#F8FAFC] border-r"
                     style={{ height: ROW_HEIGHT, paddingHorizontal: 10 }}
                   >
+                    {/* AVATAR 56px (antes 38) — pedido por el usuario para
+                        que la foto del alumno se distinga en la lista. */}
                     <StudentAvatar
                       uri={student.photoUrl}
                       name={student.name}
-                      size={38}
+                      size={56}
                       fallbackColor="#E0F2FE"
                       textColor="#0284C7"
                     />
                     <View style={{ flex: 1, marginLeft: 8 }}>
+                      {/* numberOfLines={3} (antes 2): los nombres largos
+                          ("1. ALMERALLA BLANCAS MOISES DANIEL") se cortaban
+                          con 2 líneas; fontSize 15 (antes 16) ayuda a que
+                          quepan en el mismo ancho de columna. */}
                       <Text
-                        numberOfLines={2}
+                        numberOfLines={3}
                         ellipsizeMode="tail"
-                        style={{ fontSize: 16, fontWeight: '500', color: '#64748B' }}
+                        style={{ fontSize: 15, fontWeight: '500', color: '#64748B' }}
                       >
                         {`${String(index + 1)}. ${student.name}`}
                       </Text>

@@ -142,7 +142,7 @@ export default function SocialWorkerStudentsScreen() {
             <StudentAvatar
               uri={item.photoUrl}
               name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
-              size={40}
+              size={56}
               fallbackColor="#DBEAFE"
               textColor="#1D4ED8"
             />
@@ -250,7 +250,7 @@ export default function SocialWorkerStudentsScreen() {
         onEndReachedThreshold={0.3}
         ListEmptyComponent={
           <View className="items-center py-12">
-            <GraduationCap size={40} color="#CBD5E1" strokeWidth={1.5} />
+            <GraduationCap size={56} color="#CBD5E1" strokeWidth={1.5} />
             <Text className="text-slate-400 text-sm mt-3">
               {students.length === 0 ? 'No hay alumnos' : 'No hay alumnos con estos filtros'}
             </Text>

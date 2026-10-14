@@ -313,7 +313,7 @@ export default function CreateAnnouncementModal({
   // -------------------------------------------------------------------
   // AVATAR: foto circular o fallback a iniciales (StudentAvatar)
   // -------------------------------------------------------------------
-  const renderAvatar = (studentData, size = 40) => {
+  const renderAvatar = (studentData, size = 56) => {
     const bgColor = AVATAR_COLORS[studentData._id?.charCodeAt(0) % AVATAR_COLORS.length || 0];
     const studentName = studentData.fullName || studentData.name;
 
@@ -459,7 +459,7 @@ export default function CreateAnnouncementModal({
             style={{ backgroundColor: '#F0F9FF', borderWidth: 1, borderColor: '#BAE6FD' }}
           >
             {/* Avatar */}
-            {renderAvatar(student, 40)}
+            {renderAvatar(student, 56)}
             {/* Nombre + control number */}
             <View className="flex-1 ml-3">
               <Text

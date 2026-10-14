@@ -422,7 +422,7 @@ export default function GenerateConductReportModal({
                     accessibilityRole="button"
                     accessibilityState={{ selected: isSelected }}
                   >
-                    {renderAvatar(stu, 42)}
+                    {renderAvatar(stu, 56)}
                     <Text
                       style={{
                         flex: 1,

@@ -220,10 +220,19 @@ const SchoolInfoCard = ({
           <View className="flex-row items-center justify-between">
             {/* Stack vertical izquierda: nombre + pill debajo. */}
             <View className="flex-1 mr-3">
+              {/* Nombre del maestro: 2 líneas (antes 1) — con
+                  numberOfLines={1} el nombre completo ("Prof. ALDO OMAR
+                  GONZÁLEZ JUÁREZ") se cortaba con "…". flexShrink: 1 le
+                  permite envolver dentro del espacio que deja la fecha. */}
               <Text
                 className="font-bold"
-                style={{ fontSize: 15, fontWeight: '700', color: '#0F172A' }}
-                numberOfLines={1}
+                style={{
+                  fontSize: 15,
+                  fontWeight: '700',
+                  color: '#0F172A',
+                  flexShrink: 1,
+                }}
+                numberOfLines={2}
               >
                 {teacherTitle} {teacherName}
               </Text>

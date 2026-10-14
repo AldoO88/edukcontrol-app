@@ -105,9 +105,14 @@ import DashboardHeader from '@/src/components/DashboardHeader';
 // ---------------------------------------------------------------------
 // DIMENSIONES DE LA MATRIZ
 // ---------------------------------------------------------------------
-const STUDENT_COL_WIDTH = 220;
+// STUDENT_COL_WIDTH: 240 (antes 220) — más ancho para el nombre, que ahora
+//   admite 3 líneas junto a un avatar de 56px.
+// ROW_HEIGHT: 76 (antes 52) — altura FIJA compartida por la columna de
+//   alumnos y las celdas del grid (alineación 1:1); acomoda 3 líneas de
+//   fontSize 15 + avatar 56px.
+const STUDENT_COL_WIDTH = 240;
 const COL_WIDTH         = 70;
-const ROW_HEIGHT        = 52;
+const ROW_HEIGHT        = 76;
 const PROMEDIO_WIDTH    = 80;
 
 // ---------------------------------------------------------------------
@@ -681,28 +686,30 @@ export default function TeacherGradeEntryScreen() {
                       className="flex-row items-center border-b border-slate-100 border-r"
                       style={{ height: ROW_HEIGHT, paddingHorizontal: 8 }}
                     >
+                      {/* AVATAR 56px (antes 38) — más grande para que la
+                          foto se distinga en la lista de calificaciones. */}
                       <StudentAvatar
                         uri={student.photoUrl}
                         name={student.name}
-                        size={38}
+                        size={56}
                         fallbackColor="#E0F2FE"
                         textColor="#0284C7"
                       />
                       <View style={{ flex: 1, marginLeft: 8 }}>
-                      <Text 
-                        numberOfLines={2} 
-                        ellipsizeMode="tail" 
-                        style={{ 
-                          fontSize: 16, 
-                          fontWeight: '500', 
-                          color: '#64748B' 
-                          }}>
-                        
+                        {/* numberOfLines={3} (antes 2) + fontSize 15 (antes
+                            16): los nombres largos ya no se cortan. */}
+                        <Text
+                          numberOfLines={3}
+                          ellipsizeMode="tail"
+                          style={{
+                            fontSize: 15,
+                            fontWeight: '500',
+                            color: '#64748B',
+                          }}
+                        >
                           {`${String(index + 1)}. ${student.name}`}
-        
-                        
-                      </Text>
-                    </View>
+                        </Text>
+                      </View>
                     </View>
                   ))}
                 </View>

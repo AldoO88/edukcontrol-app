@@ -296,7 +296,7 @@ export default function DirectorGroupDetailScreen() {
               <StudentAvatar
                 uri={item.photoUrl}
                 name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
-                size={40}
+                size={56}
                 fallbackColor="#DBEAFE"
                 textColor="#1D4ED8"
               />
@@ -343,7 +343,7 @@ export default function DirectorGroupDetailScreen() {
               <StudentAvatar
                 uri={item.photoUrl}
                 name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
-                size={40}
+                size={56}
                 fallbackColor="#DBEAFE"
                 textColor="#1D4ED8"
               />
@@ -516,7 +516,7 @@ export default function DirectorGroupDetailScreen() {
             contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, paddingBottom: 100 }}
             ListEmptyComponent={
               <View className="items-center py-12">
-                <Users size={40} color="#CBD5E1" strokeWidth={1.5} />
+                <Users size={56} color="#CBD5E1" strokeWidth={1.5} />
                 <Text className="text-slate-400 text-sm mt-3">No hay alumnos en este grupo</Text>
               </View>
             }
@@ -578,7 +578,7 @@ export default function DirectorGroupDetailScreen() {
               contentContainerStyle={{ paddingTop: 4, paddingBottom: 100 }}
               ListEmptyComponent={
                 <View className="items-center py-12">
-                  <ClipboardCheck size={40} color="#CBD5E1" strokeWidth={1.5} />
+                  <ClipboardCheck size={56} color="#CBD5E1" strokeWidth={1.5} />
                   <Text className="text-slate-400 text-sm mt-3">No hay alumnos</Text>
                 </View>
               }
@@ -639,7 +639,7 @@ export default function DirectorGroupDetailScreen() {
                 scheduleByDay[selectedDay].map((slot, idx) => renderScheduleSlot(slot, idx))
               ) : (
                 <View className="items-center py-12">
-                  <Calendar size={40} color="#CBD5E1" strokeWidth={1.5} />
+                  <Calendar size={56} color="#CBD5E1" strokeWidth={1.5} />
                   <Text className="text-slate-400 text-sm mt-3">Sin clases este día</Text>
                 </View>
               )}

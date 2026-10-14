@@ -159,7 +159,7 @@ const StudentAccordionRow = ({
           ============================================================ */}
       <View className="flex-row items-center">
         {/* Avatar. */}
-        <Avatar student={student} size={40} />
+        <Avatar student={student} size={56} />
 
         {/* Stack: nombre + subtext. */}
         <View className="flex-1 ml-3">
