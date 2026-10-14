@@ -34,7 +34,6 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
   Pressable,
   KeyboardAvoidingView,
@@ -54,8 +53,8 @@ import {
   Check,
 } from 'lucide-react-native';
 
-// Helpers.
-import { getInitials } from '../../../src/utils/textHelpers';
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // Constantes del teclado.
 const KEYPAD = [
@@ -230,27 +229,13 @@ const GradeKeypadModal = ({
 
           {/* PERFIL DEL ALUMNO. */}
           <View className="flex-row items-center mb-4">
-            {student.photoUrl ? (
-              <Image
-                source={{ uri: student.photoUrl }}
-                style={{ width: 44, height: 44, borderRadius: 22 }}
-                accessibilityLabel={`Foto de ${student.name}`}
-              />
-            ) : (
-              <View
-                className="items-center justify-center"
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 22,
-                  backgroundColor: '#E0F2FE',
-                }}
-              >
-                <Text style={{ fontSize: 14, fontWeight: '800', color: '#0284C7' }}>
-                  {getInitials(student.name)}
-                </Text>
-              </View>
-            )}
+            <StudentAvatar
+              uri={student.photoUrl}
+              name={student.name}
+              size={44}
+              fallbackColor="#E0F2FE"
+              textColor="#0284C7"
+            />
             <View className="flex-1 ml-3">
               <Text
                 numberOfLines={1}

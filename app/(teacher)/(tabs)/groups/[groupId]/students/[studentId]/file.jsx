@@ -77,7 +77,7 @@ import DashboardHeader from '@/src/components/DashboardHeader';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
 // Helpers.
-import { getInitials } from '@/src/utils/textHelpers';
+import StudentAvatar from '@/src/components/StudentAvatar';
 // Sub-componentes independientes.
 import EvaluationTab from '@/app/(teacher)/_components/EvaluationTab';
 import AttendanceTab from '@/app/(teacher)/_components/AttendanceTab';
@@ -379,26 +379,15 @@ export default function StudentFileScreen() {
             </Text>
           </View>
 
-          {/* Avatar grande (iniciales en círculo azul claro). */}
-          <View
-            className="items-center justify-center mt-4"
-            style={{
-              width: 96,
-              height: 96,
-              borderRadius: 48,
-              backgroundColor: '#DBEAFE',
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 32,
-                fontWeight: '800',
-                color: '#0284C7',
-                letterSpacing: 0.5,
-              }}
-            >
-              {studentData.initials || getInitials(studentData.fullName)}
-            </Text>
+          {/* Avatar grande (foto de Cloudinary o iniciales). */}
+          <View className="items-center justify-center mt-4">
+            <StudentAvatar
+              uri={studentData.photoUrl}
+              name={studentData.fullName}
+              size={96}
+              fallbackColor="#DBEAFE"
+              textColor="#0284C7"
+            />
           </View>
 
           {/* Nombre completo. */}

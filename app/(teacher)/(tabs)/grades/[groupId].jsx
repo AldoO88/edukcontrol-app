@@ -661,7 +661,8 @@ export default function GradeReviewScreen() {
             student={{
               _id: student._id,
               name: student.fullName,
-              photoUrl: null,
+              // photoUrl viene del backend; si no llega, null → iniciales.
+              photoUrl: student.photoUrl || null,
             }}
             column={column}
             currentGrade={grades[student._id]?.[evalType._id] ?? ''}

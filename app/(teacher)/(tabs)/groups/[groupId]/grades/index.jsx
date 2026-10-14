@@ -42,7 +42,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
   Pressable,
   KeyboardAvoidingView,
@@ -91,8 +90,9 @@ import {
 // Card compuesta de la escuela + maestro.
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
-// Helpers puros reutilizables.
-import { getInitials } from '@/src/utils/textHelpers';
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
+
 // Modales privados del route group (teacher).
 import AddEvaluationModal from '@/app/(teacher)/_components/AddEvaluationModal';
 import ConfigModal from '@/app/(teacher)/_components/ConfigModal';
@@ -228,8 +228,8 @@ export default function TeacherGradeEntryScreen() {
       if (result.success && result.data) {
         const { students: s = [], evaluationTypes = [], grades: g = {}, averages: avg = {}, averagingRule } = result.data;
 
-        // Mapear students del backend.
-        setStudents(s.map((st) => ({ _id: st._id, name: st.fullName })));
+        // Mapear students del backend (conservar photoUrl para el avatar).
+        setStudents(s.map((st) => ({ _id: st._id, name: st.fullName, photoUrl: st.photoUrl || null })));
         setEnrollmentMap(Object.fromEntries(s.map((st) => [st._id, st.enrollment_id])));
 
         // Mapear evaluationTypes a columns del frontend.
@@ -339,7 +339,8 @@ export default function TeacherGradeEntryScreen() {
     });
     if (result.success && result.data) {
       const { students: s = [], evaluationTypes = [], grades: g = {}, averages: avg = {}, averagingRule } = result.data;
-      setStudents(s.map((st) => ({ _id: st._id, name: st.fullName })));
+      // Mapear students del backend (conservar photoUrl para el avatar).
+      setStudents(s.map((st) => ({ _id: st._id, name: st.fullName, photoUrl: st.photoUrl || null })));
       setEnrollmentMap(Object.fromEntries(s.map((st) => [st._id, st.enrollment_id])));
       setColumns(
         evaluationTypes
@@ -680,29 +681,13 @@ export default function TeacherGradeEntryScreen() {
                       className="flex-row items-center border-b border-slate-100 border-r"
                       style={{ height: ROW_HEIGHT, paddingHorizontal: 8 }}
                     >
-                      {student.photoUrl ? (
-                        <Image
-                          source={{ uri: student.photoUrl }}
-                          style={{ width: 38, height: 38, borderRadius: 84 }}
-                          accessibilityLabel={`Foto de ${student.name}`}
-                        />
-                      ) : (
-                        <View
-                          className="items-center justify-center"
-                          style={{
-                            width: 38,
-                            height: 38,
-                            borderRadius: 18,
-                            backgroundColor: '#E0F2FE',
-                          }}
-                        >
-                          <Text
-                            style={{ fontSize: 11, fontWeight: '800', color: '#0284C7' }}
-                          >
-                            {getInitials(student.name)}
-                          </Text>
-                        </View>
-                      )}
+                      <StudentAvatar
+                        uri={student.photoUrl}
+                        name={student.name}
+                        size={38}
+                        fallbackColor="#E0F2FE"
+                        textColor="#0284C7"
+                      />
                       <View style={{ flex: 1, marginLeft: 8 }}>
                       <Text 
                         numberOfLines={2} 

@@ -18,6 +18,8 @@
 //   - STATUS_STYLES:  mapeo status → { soft, color, label }.
 //   - STATUS_CYCLE:   orden del ciclo al tap en una celda.
 //   - cycleStatus(c): devuelve el siguiente status del ciclo.
+//   - mapBackendStatus(s): status backend ('present', …) → código UI.
+//   - toBackendStatus(c):  código UI ('P', …) → status backend (o null).
 // =====================================================================
 
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -90,4 +92,37 @@ export const cycleStatus = (current) => {
   const i = STATUS_CYCLE.indexOf(current);
   const next = STATUS_CYCLE[(i + 1) % STATUS_CYCLE.length];
   return next || 'P';
+};
+
+// ---------------------------------------------------------------------
+// Mapeo de status: backend ↔ código de UI.
+// El backend guarda strings ('present' | 'retard' | 'absent' |
+// 'justified') y la UI usa códigos cortos ('P' | 'R' | 'F' | 'FJ' |
+// '-'). Estos dos helpers son la ÚNICA fuente de verdad de esa
+// traducción — tanto la matriz como la vista today y el modal pasan
+// por aquí para no duplicar el mapeo.
+// ---------------------------------------------------------------------
+
+// Backend → código de UI (para hidratar el state desde sesiones GET).
+export const mapBackendStatus = (status) => {
+  switch (status) {
+    case 'present':   return 'P';
+    case 'absent':    return 'F';
+    case 'retard':    return 'R';
+    case 'justified': return 'FJ';
+    default:          return '-';
+  }
+};
+
+// Código de UI → backend (para el PATCH). Devuelve null si el código
+// es '-' (sin registro): no hay status backend equivalente y NO se
+// debe hacer PATCH en ese caso.
+export const toBackendStatus = (code) => {
+  switch (code) {
+    case 'P':  return 'present';
+    case 'F':  return 'absent';
+    case 'R':  return 'retard';
+    case 'FJ': return 'justified';
+    default:   return null;
+  }
 };

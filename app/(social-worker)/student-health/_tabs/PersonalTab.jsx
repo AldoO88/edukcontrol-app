@@ -19,6 +19,9 @@ import {
   Phone,
 } from 'lucide-react-native';
 
+// Avatar circular compartido (foto de Cloudinary → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
+
 // ---------------------------------------------------------------------
 // calcularEdad
 // ---------------------------------------------------------------------
@@ -90,16 +93,17 @@ export default function PersonalTab({ student, formData, updateField }) {
 
   return (
     <View className="px-4 py-3">
-      {/* Avatar + Nombre */}
+      {/* Avatar + Nombre — StudentAvatar (foto de Cloudinary o iniciales).
+          Antes estaba la condición invertida (foto → iniciales). */}
       <View className="flex-row items-center mb-4">
-        <View className="w-14 h-14 rounded-full bg-indigo-100 items-center justify-center mr-3">
-          {student?.photoUrl ? (
-            <Text className="text-lg font-bold text-indigo-700">
-              {`${student?.first_name?.[0] || ''}${student?.last_name?.[0] || ''}`.toUpperCase()}
-            </Text>
-          ) : (
-            <User size={24} color="#4F46E5" strokeWidth={2} />
-          )}
+        <View className="mr-3">
+          <StudentAvatar
+            uri={student?.photoUrl}
+            name={`${student?.first_name || ''} ${student?.last_name || ''}`.trim()}
+            size={56}
+            fallbackColor="#E0E7FF"
+            textColor="#4F46E5"
+          />
         </View>
         <View className="flex-1">
           <Text className="text-lg font-bold text-slate-900">

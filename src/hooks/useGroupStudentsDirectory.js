@@ -57,7 +57,8 @@ const mapStudentFromBackend = (s, index) => ({
   controlNumber: s.controlNumber,
   listNumber: index + 1,
   initials: s.initials,
-  photoUrl: null,
+  // photoUrl viene del backend (Fase 4); si no llega, null → iniciales.
+  photoUrl: s.photoUrl || null,
   status: s.average < 7.0 ? 'at_risk' : 'regular',
   metrics: {
     average: s.average,

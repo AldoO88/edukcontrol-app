@@ -46,6 +46,9 @@ import {
 
 import { createExitPass } from '@/src/services/directorService';
 
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
+
 // ---------------------------------------------------------------------
 // CONSTANTS
 // ---------------------------------------------------------------------
@@ -444,7 +447,6 @@ const GenerateExitPassModal = ({
                           return (a.first_name || '').toLowerCase().localeCompare((b.first_name || '').toLowerCase());
                         })
                         .map((stu) => {
-                          const initials = `${(stu.last_name || '?')[0]}${(stu.first_name || '?')[0]}`.toUpperCase();
                           return (
                             <Pressable
                               key={stu._id}
@@ -458,21 +460,13 @@ const GenerateExitPassModal = ({
                               accessibilityRole="button"
                               accessibilityLabel={`Seleccionar alumno ${stu.fullName || `${stu.last_name} ${stu.first_name}`}`}
                             >
-                              <View
-                                className="items-center justify-center rounded-full"
-                                style={{
-                                  width: 36,
-                                  height: 36,
-                                  backgroundColor: '#FFF7ED',
-                                }}
-                              >
-                                <Text
-                                  className="text-orange-700"
-                                  style={{ fontSize: 13, fontWeight: '700' }}
-                                >
-                                  {initials}
-                                </Text>
-                              </View>
+                              <StudentAvatar
+                                uri={stu.photoUrl}
+                                name={stu.fullName || `${stu.last_name || ''} ${stu.first_name || ''}`.trim()}
+                                size={36}
+                                fallbackColor="#FFF7ED"
+                                textColor="#C2410C"
+                              />
                               <View className="ml-3 flex-1">
                                 <Text
                                   className="text-slate-900"
@@ -528,16 +522,15 @@ const GenerateExitPassModal = ({
                       borderColor: '#FED7AA',
                     }}
                   >
-                    <View
-                      className="items-center justify-center rounded-full"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        backgroundColor: '#FFEDD5',
-                      }}
-                    >
-                      <User size={18} color="#ea580c" strokeWidth={2.25} />
-                    </View>
+                    <StudentAvatar
+                      uri={isDirectMode ? student?.photoUrl : selectedStudent?.photoUrl}
+                      name={isDirectMode
+                        ? `${student?.last_name || ''} ${student?.first_name || ''}`.trim()
+                        : `${selectedStudent?.last_name || ''} ${selectedStudent?.first_name || ''}`.trim()}
+                      size={40}
+                      fallbackColor="#FFEDD5"
+                      textColor="#C2410C"
+                    />
                     <View className="ml-3 flex-1">
                       <Text
                         className="text-slate-900"

@@ -64,6 +64,9 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 // Labels de tipos de citatorio.
 import { CITATION_TYPE_LABELS } from '../../../src/utils/announcementHelpers';
 
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
+
 // Servicio para cargar grupos del maestro.
 import { getMyGroups, createCitation } from '../../../src/services/directorService';
 
@@ -717,7 +720,6 @@ const GenerateCitationModal = ({
                           return (a.first_name || '').toLowerCase().localeCompare((b.first_name || '').toLowerCase());
                         })
                         .map((stu, index) => {
-                          const initials = `${(stu.last_name || '?')[0]}${(stu.first_name || '?')[0]}`.toUpperCase();
                           const isTaller = selectedGroup.type === 'taller'
                             || /taller|ofim[aá]tica|formaci[oó]n\s*para\s*el\s*trabajo/i.test(selectedGroup.label || '');
                           return (
@@ -733,21 +735,13 @@ const GenerateCitationModal = ({
                             accessibilityRole="button"
                             accessibilityLabel={`Seleccionar alumno ${stu.fullName}`}
                           >
-                            <View
-                              className="items-center justify-center rounded-full"
-                              style={{
-                                width: 36,
-                                height: 36,
-                                backgroundColor: '#E0F2FE',
-                              }}
-                            >
-                              <Text
-                                className="text-sky-700"
-                                style={{ fontSize: 13, fontWeight: '700' }}
-                              >
-                                {initials}
-                              </Text>
-                            </View>
+                            <StudentAvatar
+                              uri={stu.photoUrl}
+                              name={`${stu.last_name || ''} ${stu.first_name || ''}`.trim()}
+                              size={36}
+                              fallbackColor="#E0F2FE"
+                              textColor="#0284C7"
+                            />
                             <View className="ml-3 flex-1">
                               <Text
                                 className="text-slate-900"
@@ -790,16 +784,13 @@ const GenerateCitationModal = ({
                       }}
                     >
                       <View className="flex-row items-center p-3">
-                        <View
-                          className="items-center justify-center rounded-full"
-                          style={{
-                            width: 32,
-                            height: 32,
-                            backgroundColor: '#E0F2FE',
-                          }}
-                        >
-                          <User size={14} color="#0284C7" strokeWidth={2.25} />
-                        </View>
+                        <StudentAvatar
+                          uri={resolvedStudent?.photoUrl}
+                          name={resolvedStudent?.fullName || `${resolvedStudent?.last_name || ''} ${resolvedStudent?.first_name || ''}`.trim()}
+                          size={32}
+                          fallbackColor="#E0F2FE"
+                          textColor="#0284C7"
+                        />
                         <View className="flex-1 ml-2">
                           <Text
                             className="text-slate-900"

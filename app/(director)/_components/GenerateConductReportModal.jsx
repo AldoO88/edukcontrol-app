@@ -30,7 +30,6 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
-  Image,
 } from 'react-native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -46,7 +45,7 @@ import {
   Plus,
 } from 'lucide-react-native';
 
-import { getInitials } from '../../../src/utils/announcementHelpers';
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // ---------------------------------------------------------------------
 // CONSTANTS
@@ -301,30 +300,14 @@ export default function GenerateConductReportModal({
     const bgColor = AVATAR_COLORS[stu._id?.charCodeAt(0) % AVATAR_COLORS.length || 0];
     const name = stu.fullName || stu.name || `${stu.last_name || ''} ${stu.first_name || ''}`.trim();
 
-    if (stu.photoUrl) {
-      return (
-        <Image
-          source={{ uri: stu.photoUrl }}
-          style={{ width: size, height: size, borderRadius: size / 2 }}
-        />
-      );
-    }
-
     return (
-      <View
-        style={{
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: bgColor,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text style={{ color: '#ffffff', fontSize: size * 0.38, fontWeight: '700' }}>
-          {getInitials(name)}
-        </Text>
-      </View>
+      <StudentAvatar
+        uri={stu.photoUrl}
+        name={name}
+        size={size}
+        fallbackColor={bgColor}
+        textColor="#ffffff"
+      />
     );
   };
 

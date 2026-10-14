@@ -5,9 +5,13 @@
 //
 // FLUJO (refactor a "1-tap picker"):
 //   1. El usuario toca una de las 4 opciones (P/F/R/FJ).
-//   2. El modal dispara el PATCH al backend (best-effort, optimista).
+//   2. El modal notifica la elección vía `onSaved(student, code)`.
 //   3. El modal cierra automáticamente via `onClose()`.
-//   4. La pantalla actualiza su state local via `onSaved`.
+//   4. La PANTALLA que lo abrió persiste el cambio (PATCH con su
+//      sessionId) y actualiza su state local. La matriz (attendance/
+//      index.jsx) y la vista today hacen esa persistencia — el modal
+//      no llama a services (antes lo intentaba con params incorrectos
+//      y el PATCH fallaba silenciosamente).
 //
 // La selección del status es la acción completa (1 tap total =
 // aplicar + cerrar). Sin paso intermedio ni "Guardar".
@@ -20,12 +24,11 @@
 // PROPS:
 //   - visible: boolean.
 //   - student: objeto del alumno (para header avatar + id al PATCH).
-//   - date: { iso, full, label } — para el subheader y el PATCH.
+//   - date: { iso, full, label } — solo para el subheader.
 //   - currentStatus: status code actual (highlight en la opción).
-//   - groupId: id del grupo (para el PATCH).
 //   - onClose: cierra el modal.
-//   - onSaved: (student, status) => void. La pantalla actualiza
-//     su state local optimísticamente.
+//   - onSaved: (student, status) => void. La pantalla actualiza su
+//     state local y persiste (PATCH con su sessionId).
 // =====================================================================
 
 // React.
@@ -45,21 +48,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Iconos Lucide.
 import { X } from 'lucide-react-native';
 
-// Servicio: actualiza el registro de asistencia (PATCH).
-import { updateAttendanceRecord } from '../../../src/services/teacherService';
-
-// ---------------------------------------------------------------------
-// ATTENDANCE_STATUS
-// ---------------------------------------------------------------------
-// Cada estado tiene: codigo (letra), label corto, label largo y la
-// paleta suave/icono que usa la matriz. Se comparte con el grid.
-// ---------------------------------------------------------------------
-export const ATTENDANCE_STATUS = {
-  P: 'present',   // Presente.
-  F: 'absent',    // Falta.
-  R: 'late',      // Retardo.
-  J: 'justified', // Justificado.
-};
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // ---------------------------------------------------------------------
 // Opciones grandes del modal: codigo + título + color de acento.
@@ -80,7 +70,6 @@ export default function EditAttendanceModal({
   student = null,
   date = null,
   currentStatus = '-',
-  groupId = null,
   onClose,
   onSaved,
 }) {
@@ -97,36 +86,15 @@ export default function EditAttendanceModal({
   // referencia para los handlers de los Pressable de las opciones).
   // -----------------------------------------------------------------
   const handleSelectOption = useCallback(
-    async (code) => {
+    (code) => {
       if (!student) return;
-      try {
-        // Persistir contra el backend (best-effort).
-        const result = await updateAttendanceRecord({
-          groupId,
-          studentId: student._id || student.controlNumber,
-          date,
-          status: code,
-        });
-        if (!result.success) {
-          console.warn(
-            '[EditAttendanceModal] PATCH no persistido:',
-            result.message,
-          );
-        }
-        // Notificar a la pantalla para que actualice la matriz /
-        // la lista de today. Optimista: el state local se actualiza
-        // INCLUSO si el PATCH falla (patrón del prototipo).
-        onSaved?.(student, code, '');
-      } catch (err) {
-        console.error('[EditAttendanceModal] error inesperado:', err);
-        onSaved?.(student, code, '');
-      } finally {
-        // El modal se cierra SIEMPRE — la acción se considera
-        // completa. Si el PATCH falló, se verá en el siguiente refresh.
-        onClose?.();
-      }
+      // Solo notifica: la pantalla que nos abrió hace el PATCH (con su
+      // sessionId) y actualiza su state local en `onSaved`.
+      onSaved?.(student, code, '');
+      // El modal se cierra SIEMPRE — la acción es 1 tap.
+      onClose?.();
     },
-    [student, date, groupId, onSaved, onClose],
+    [student, onSaved, onClose],
   );
 
   return (
@@ -171,21 +139,14 @@ export default function EditAttendanceModal({
               ========================================================== */}
           <View className="flex-row items-center justify-between mb-5">
             <View className="flex-row items-center flex-1">
-              {/* Avatar 44x44 circular (iniciales si no hay foto). */}
-              <View
-                className="items-center justify-center"
-                style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#E0F2FE' }}
-              >
-                <Text style={{ fontSize: 15, fontWeight: '700', color: '#0284C7' }}>
-                  {(student?.name || student?.fullName || '?')
-                    .split(' ')
-                    .map((w) => w[0])
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .join('')
-                    .toUpperCase()}
-                </Text>
-              </View>
+              {/* Avatar 44x44 circular (foto de Cloudinary o iniciales). */}
+              <StudentAvatar
+                uri={student?.photoUrl}
+                name={student?.name || student?.fullName || ''}
+                size={44}
+                fallbackColor="#E0F2FE"
+                textColor="#0284C7"
+              />
               {/* Subheader: nombre + fecha. */}
               <View className="ml-4 flex-1">
                 <Text

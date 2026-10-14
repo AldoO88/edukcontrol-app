@@ -29,7 +29,7 @@
 import React from 'react';
 
 // Primitivas RN.
-import { View, Text, Image, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 
 // Iconos Lucide.
 import {
@@ -41,41 +41,24 @@ import {
   Phone,
 } from 'lucide-react-native';
 
-// Helpers de texto.
-import { getInitials } from '../../../src/utils/textHelpers';
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // =====================================================================
 // SUBCOMPONENTES LOCALES
 // =====================================================================
 
-// Avatar circular del alumno: photo si existe, si no iniciales en
-// fondo gris.
-const Avatar = ({ student, size = 40 }) => {
-  if (student.photoUrl) {
-    return (
-      <Image
-        source={{ uri: student.photoUrl }}
-        style={{ width: size, height: size, borderRadius: size / 2 }}
-        accessibilityLabel={`Foto de ${student.name}`}
-      />
-    );
-  }
-  return (
-    <View
-      className="items-center justify-center"
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: '#E2E8F0',
-      }}
-    >
-      <Text style={{ fontSize: 13, fontWeight: '800', color: '#0F172A' }}>
-        {getInitials(student.name)}
-      </Text>
-    </View>
-  );
-};
+// Avatar circular del alumno: delega en StudentAvatar (foto si existe,
+// si no iniciales en fondo gris).
+const Avatar = ({ student, size = 40 }) => (
+  <StudentAvatar
+    uri={student.photoUrl}
+    name={student.name}
+    size={size}
+    fallbackColor="#E2E8F0"
+    textColor="#0F172A"
+  />
+);
 
 // Score badge compacto: color según el promedio del alumno.
 //   - 8.0 - 10.0 → verde  (#DCFCE7 / #15803D).

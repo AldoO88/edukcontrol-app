@@ -2,40 +2,46 @@
 // app/(teacher)/(tabs)/groups/[groupId]/attendance/today.jsx
 // ---------------------------------------------------------------------
 // Ruta "/groups/:groupId/attendance/today" del route group (teacher).
-// Sub-route de `attendance.jsx` (la matrix completa). Esta pantalla
+// Sub-route de `attendance/index.jsx` (la matriz completa). Esta pantalla
 // es la "vista de acción rápida" del pase de lista del día actual:
 //
 //   ┌────────────────────────────────────────┐
 //   │ DashboardHeader + SchoolInfoCard       │  chrome compartido
 //   ├────────────────────────────────────────┤
-//   │ < Volver (a la matrix)                 │
+//   │ < Volver (a la matriz)                 │
 //   ├────────────────────────────────────────┤
-//   │ Header: "Tomar Asistencia"            │
-//   │ Card info clase + pill de fecha (hoy) │
+//   │ Header: "Tomar Asistencia"             │
+//   │ Card info clase + pill de fecha (hoy)  │
 //   ├────────────────────────────────────────┤
-//   │ 3 stats (Total / Presentes / Ausentes)│
+//   │ 3 stats (Total / Presentes / Ausentes) │
 //   ├────────────────────────────────────────┤
-//   │ Lista de alumnos                      │
-//   │   - Avatar + name + listNumber       │
-//   │   - Status pill                       │
-//   │   - Tap en status pill →             │
-//   │     abre EditAttendanceModal con la  │
-//   │     lista de opciones (P/F/R/FJ)     │
-//   │ - "Guardar Asistencia" (sticky)     │
+//   │ Lista de alumnos (REALES del grupo)    │
+//   │   - StudentAvatar + "N. Nombre"        │
+//   │   - Status pill                        │
+//   │   - Tap → EditAttendanceModal (P/F/…)  │
+//   │ - "Guardar Asistencia" (sticky)        │
 //   └────────────────────────────────────────┘
 //
-// Comportamiento nuevo (vs. ciclo de taps anterior):
-//   - Antes: tap en status → ciclaba P → F → R → FJ → - → P (4+ taps).
-//   - Ahora: tap en status → abre EditAttendanceModal con la lista
-//     de 4 estados + nota. El docente toca UNA opción y listo.
+// DATOS REALES (antes era 100% mock con MOCK_STUDENTS):
+//   1. GET /grading-periods  → auto-selecciona el período que contiene
+//      hoy (o el primero abierto) — misma fuente que la matriz.
+//   2. GET /attendance-sessions (groupId + subjectId + periodId) →
+//      lista REAL de alumnos del grupo (orden del backend, con
+//      photoUrl) + sesiones del período.
+//   3. Si ya existe sesión de HOY → se hidrata el status de cada
+//      alumno desde sus records (mapBackendStatus).
+//   4. Si NO existe sesión de HOY → los taps se acumulan en `dirty` y
+//      "Guardar Asistencia" crea la sesión (POST, todos nacen
+//      "present") + hace PATCH de los no-presentes.
 //
-// TODO: cuando exista el endpoint POST /api/attendance/session,
-// el handler de "Guardar Asistencia" hace el POST del array
-// de status y navega de vuelta a la matrix.
+// Flujo de edición (1-tap, igual que la matriz):
+//   - Tap en alumno → EditAttendanceModal → una opción → el modal
+//     notifica vía onSaved y la PANTALLA persiste con PATCH si ya
+//     existe sesión de hoy (optimista + rehidratación en fallo).
 // =====================================================================
 
 // React + hooks.
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 
 // Primitivas RN.
 import {
@@ -43,6 +49,8 @@ import {
   Text,
   ScrollView,
   Pressable,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 
 // Safe area.
@@ -53,13 +61,13 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 
 // Iconos Lucide.
 import {
-  ChevronLeft,   // Back a la matrix.
-  Save,           // Botón Guardar.
-  Users,          // Stats: Total.
-  CheckCircle2,   // Stats: Presentes.
-  XCircle,        // Stats: Ausentes.
-  Calendar,       // Header fecha.
-  ChevronRight,   // Hint: tap to edit.
+  ChevronLeft,   // Back a la matriz.
+  Save,          // Botón Guardar.
+  Users,         // Stats: Total.
+  CheckCircle2,  // Stats: Presentes.
+  XCircle,       // Stats: Ausentes.
+  Calendar,      // Header fecha.
+  ChevronRight,  // Hint: tap to edit.
 } from 'lucide-react-native';
 
 // Hook del dashboard docente (escuela + maestro).
@@ -72,33 +80,39 @@ import DashboardHeader from '@/src/components/DashboardHeader';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 
 // Modal reusable con la lista de opciones de status (P/F/R/FJ + nota).
-// Mismo componente que usa la matrix (attendance.jsx) para editar
-// celdas — UX consistente cross-feature.
+// Mismo componente que usa la matriz (attendance/index.jsx) para editar
+// celdas — UX consistente cross-feature. El modal solo NOTIFICA la
+// elección; la persistencia (PATCH/POST) vive en esta pantalla.
 import EditAttendanceModal from '@/app/(teacher)/_components/EditAttendanceModal';
 
-// Datos (alumnos del grupo) y helpers de status/fecha compartidos
-// con la matrix. Misma convención que `citationHelpers` + `mockCitatorios`.
-import MOCK_STUDENTS from '@/src/constants/mockStudents';
+// Avatar circular de alumno (foto Cloudinary → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
+
+// Endpoints de asistencia + períodos (mismos que la matriz).
+import {
+  getGradingPeriods,
+  getAttendanceSessions,
+  createAttendanceSession,
+  updateAttendanceRecord,
+} from '@/src/services/teacherService';
+
+// Helpers de fecha/status compartidos con la matriz. `mapBackendStatus`
+// hidrata desde los records del backend; `toBackendStatus` traduce el
+// código de UI para el PATCH.
 import {
   todayIso,
   formatFull,
   STATUS_STYLES,
+  mapBackendStatus,
+  toBackendStatus,
 } from '@/src/utils/attendanceHelpers';
-// ---------------------------------------------------------------------
-// MOCK_INITIAL_STATUS
-// ---------------------------------------------------------------------
-// Estado inicial de la sesión de HOY para cada alumno. Usamos el
-// esquema del modelo del backend (mapa studentId → status code 'P' |
-// 'F' | 'R' | 'FJ' | '-'). Inicializamos todo a '-' (sin registro) para
-// que el docente tenga que tocar a cada uno explícitamente. Cuando
-// exista el endpoint, este objeto se hidrata del backend.
-// ---------------------------------------------------------------------
-const MOCK_INITIAL_TODAY_STATUS = MOCK_STUDENTS.reduce((acc, s) => {
-  acc[s._id] = '-';
-  return acc;
-}, {});
 
-// Helper: cuenta totales a partir del mapa de status de HOY.
+// ---------------------------------------------------------------------
+// countByStatus
+// ---------------------------------------------------------------------
+// Cuenta totales a partir del mapa de status de HOY
+// (studentId → 'P' | 'F' | 'R' | 'FJ' | '-').
+// ---------------------------------------------------------------------
 const countByStatus = (statusMap) => {
   const counts = { total: 0, presentes: 0, ausentes: 0, retardo: 0, justificado: 0 };
   for (const code of Object.values(statusMap)) {
@@ -111,6 +125,32 @@ const countByStatus = (statusMap) => {
   return counts;
 };
 
+// ---------------------------------------------------------------------
+// pickInitialPeriod(periods)
+// ---------------------------------------------------------------------
+// Auto-selección de período para esta vista (no hay dropdown):
+//   1. El período ABIERTO que contiene hoy (startDate ≤ hoy ≤ endDate).
+//   2. Si ninguno contiene hoy → el primer período abierto.
+//   3. Si todos están cerrados → el primero de la lista.
+// Los períodos llegan ordenados por `order` desde el backend (igual
+// que en attendance/index.jsx).
+// ---------------------------------------------------------------------
+const pickInitialPeriod = (periods) => {
+  if (!periods || periods.length === 0) return null;
+  const today = todayIso();
+  const open = periods.filter((p) => !p.isClosed);
+  const candidates = open.length ? open : periods;
+  const containing = candidates.find((p) => {
+    // startDate/endDate vienen como ISO 8601 → comparar solo el
+    // prefijo de fecha (YYYY-MM-DD) funciona con strings.
+    const start = p.startDate ? String(p.startDate).slice(0, 10) : null;
+    const end = p.endDate ? String(p.endDate).slice(0, 10) : null;
+    if (!start || !end) return false;
+    return today >= start && today <= end;
+  });
+  return containing || candidates[0];
+};
+
 // =====================================================================
 // COMPONENTE PRINCIPAL
 // =====================================================================
@@ -119,9 +159,10 @@ export default function TakeAttendanceTodayScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  // groupId viene del segmento [groupId] (lo necesitamos para el PATCH
-  // al backend en el EditAttendanceModal).
+  // groupId viene del segmento [groupId]; subjectId lo pasa el
+  // TeacherDashboard al navegar (currentClass.subject._id).
   const groupId = params.groupId;
+  const subjectId = params.subjectId;
 
   // ============================================================
   // DASHBOARD DATA (mismo endpoint que el resto del (teacher))
@@ -138,73 +179,243 @@ export default function TakeAttendanceTodayScreen() {
     };
   }, [data?.school, data?.currentSchoolYear]);
 
+  // Fecha de hoy (YYYY-MM-DD) — usada en los fetch y en el modal.
+  const today = todayIso();
+  const todayLabel = formatFull(today);
+
   // ============================================================
-  // ESTADO: status map de HOY
+  // ESTADO: períodos (auto-selección, sin dropdown)
   // ============================================================
-  // Mapa studentId → status code ('P' | 'F' | 'R' | 'FJ' | '-').
-  // Inicializado desde MOCK_INITIAL_TODAY_STATUS (todos en '-').
-  const [statusByStudent, setStatusByStudent] = useState(
-    MOCK_INITIAL_TODAY_STATUS,
-  );
+  const [periodsLoading, setPeriodsLoading] = useState(true);
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+
+  // ============================================================
+  // ESTADO: alumnos + sesión de hoy
+  // ============================================================
+  // Lista REAL de alumnos del grupo (orden del backend, con photoUrl).
+  const [students, setStudents] = useState([]);
+  // id de la sesión ClassAttendance de HOY (null si aún no existe).
+  const [todaySessionId, setTodaySessionId] = useState(null);
+  // Mapa studentId → código de status ('P' | 'F' | 'R' | 'FJ' | '-').
+  const [statusByStudent, setStatusByStudent] = useState({});
+  // Taps hechos SIN sesión de hoy: studentId → código. Se persisten
+  // en "Guardar Asistencia" (POST crea la sesión + PATCH de faltantes).
+  const [dirty, setDirty] = useState({});
+  // Loading / error / guardado.
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   // ============================================================
   // ESTADO: modal de edición
   // ============================================================
-  // `editingStudent` = student object actualmente en el modal (o null
-  // si el modal está cerrado). Almacenamos el student completo (no
-  // solo el id) para que el modal pueda mostrar el nombre + avatar.
+  // `editingStudent` = objeto alumno en el modal (null = cerrado).
   const [editingStudent, setEditingStudent] = useState(null);
+
+  // ============================================================
+  // FETCH 1: períodos de evaluación → auto-selección
+  // ============================================================
+  useEffect(() => {
+    let cancelled = false;
+    const fetchPeriods = async () => {
+      setPeriodsLoading(true);
+      const result = await getGradingPeriods();
+      if (cancelled) return;
+      if (result.success && result.data?.periods) {
+        const periods = result.data.periods;
+        setSelectedPeriod(pickInitialPeriod(periods));
+      } else {
+        setError(result.message || 'No se pudieron cargar los períodos.');
+      }
+      setPeriodsLoading(false);
+    };
+    fetchPeriods();
+    return () => { cancelled = true; };
+  }, []);
+
+  // ============================================================
+  // FETCH 2: sesiones + alumnos del grupo
+  // ============================================================
+  // Se reutiliza como callback para: carga inicial, reintento tras
+  // fallo y recuperación del sessionId cuando el POST responde 409.
+  // Devuelve el id de la sesión de hoy (o null).
+  const loadSessions = useCallback(async () => {
+    if (!groupId || !subjectId || !selectedPeriod?._id) return null;
+    setLoading(true);
+    setError(null);
+    const result = await getAttendanceSessions({
+      groupId,
+      subjectId,
+      periodId: selectedPeriod._id,
+    });
+    if (!result.success) {
+      setError(result.message || 'No se pudieron cargar las sesiones.');
+      setLoading(false);
+      return null;
+    }
+    const { sessions = [], students: backendStudents = [] } = result.data || {};
+
+    // Lista de alumnos (orden del backend, con foto → iniciales).
+    setStudents(
+      backendStudents.map((s) => ({
+        _id: s._id,
+        fullName: s.fullName,
+        photoUrl: s.photoUrl || null,
+      })),
+    );
+
+    // ¿Ya existe sesión de HOY? → su id habilita el PATCH directo.
+    const todaySession = sessions.find(
+      (sess) => String(sess.date).split('T')[0] === today,
+    );
+    const sid = todaySession?._id || null;
+    setTodaySessionId(sid);
+
+    // Hidratar el status de HOY: todos en '-' y luego pisa con los
+    // records de la sesión de hoy (si existe).
+    const initial = {};
+    backendStudents.forEach((s) => { initial[s._id] = '-'; });
+    if (todaySession) {
+      (todaySession.records || []).forEach((rec) => {
+        if (initial[rec.student_id] !== undefined) {
+          initial[rec.student_id] = mapBackendStatus(rec.status);
+        }
+      });
+    }
+    setStatusByStudent(initial);
+    setDirty({});
+    setLoading(false);
+    return sid;
+  }, [groupId, subjectId, selectedPeriod?._id, today]);
+
+  // Dispara la carga cuando cambia el período seleccionado / params.
+  useEffect(() => {
+    loadSessions();
+  }, [loadSessions]);
 
   // ============================================================
   // HANDLERS
   // ============================================================
-  // Tap en un alumno: abre el modal de edición con las 4 opciones
-  // (P / F / R / FJ) en una lista (NO cicla status con múltiples taps).
+  // Tap en un alumno: abre el modal con las 4 opciones (P/F/R/FJ).
   const handleStudentTap = (student) => {
     setEditingStudent(student);
   };
 
-  // Cuando el modal guarda (onSaved), actualizamos el status del
-  // alumno en el mapa. El modal también maneja su propia lógica
-  // del PATCH al backend; acá solo actualizamos el state local.
-  const handleSaved = (student, newStatus) => {
+  // El modal notificó la elección → persistimos y actualizamos local.
+  const handleSaved = async (student, newStatus) => {
+    setEditingStudent(null);
+    const backendStatus = toBackendStatus(newStatus);
+
+    // Actualización optimista: la UI responde al toque de inmediato.
     setStatusByStudent((prev) => ({
       ...prev,
       [student._id]: newStatus,
     }));
-    setEditingStudent(null);
+
+    if (!todaySessionId) {
+      // La sesión de hoy aún no existe → se acumula para "Guardar".
+      setDirty((prev) => ({ ...prev, [student._id]: newStatus }));
+      return;
+    }
+    if (!backendStatus) return; // '-' no tiene equivalente backend.
+
+    // Persistencia directa (la sesión de hoy ya existe).
+    const result = await updateAttendanceRecord({
+      sessionId: todaySessionId,
+      studentId: student._id,
+      status: backendStatus,
+    });
+    if (!result.success) {
+      Alert.alert('Error', result.message || 'No se pudo actualizar la asistencia.');
+      // Rehidratar contra el servidor para reflejar el estado real.
+      loadSessions();
+    }
   };
 
-  // Cuando el modal se cierra sin guardar (tap fuera / X / back).
+  // Tap en el modal (fuera / X): solo cerrar.
   const handleCloseModal = () => {
     setEditingStudent(null);
   };
 
-  // Tap en "Guardar Asistencia": POST del status map al backend
-  // (TODO cuando exista el endpoint) + navega de vuelta a la matrix.
-  const handleSave = () => {
-    // TODO: POST al backend con statusByStudent + groupId + date.
-    console.log('[TakeAttendanceToday] save:', {
-      groupId,
-      date: todayIso(),
-      statusByStudent,
-    });
-    // Volvemos a la matrix para que el docente vea el resultado
-    // persistido (la matrix re-fetchea del backend).
-    router.replace(
-      `/(teacher)/groups/${groupId}/attendance`,
-    );
+  // "Guardar Asistencia": crea la sesión de hoy si no existe (POST,
+  // todos nacen "present"), persiste los taps acumulados en `dirty`
+  // y navega de vuelta a la matriz (que re-fetchea del backend).
+  const handleSave = async () => {
+    if (!groupId || !subjectId || !selectedPeriod?._id || saving) return;
+    setSaving(true);
+    try {
+      let sid = todaySessionId;
+
+      // 1) Crear la sesión de HOY si no existe.
+      if (!sid) {
+        const created = await createAttendanceSession({
+          groupId,
+          subjectId,
+          date: today,
+          periodId: selectedPeriod._id,
+        });
+        if (created.success) {
+          sid = created.data?.session?._id || null;
+        } else if (created.reason === 'conflict') {
+          // Ya existe (creada desde otro dispositivo): recupera su id.
+          sid = await loadSessions();
+          if (!sid) {
+            Alert.alert('Error', 'La sesión de hoy existe pero no se pudo cargar.');
+            return;
+          }
+        } else {
+          Alert.alert('Error', created.message || 'No se pudo crear la sesión.');
+          return;
+        }
+      }
+
+      // 2) Persistir los statuses tocados mientras no existía la sesión.
+      //    ('P' es el default de la sesión creada → no requiere PATCH.)
+      let failed = 0;
+      for (const [studentId, code] of Object.entries(dirty)) {
+        const backendStatus = toBackendStatus(code);
+        if (backendStatus && backendStatus !== 'present') {
+          const result = await updateAttendanceRecord({
+            sessionId: sid,
+            studentId,
+            status: backendStatus,
+          });
+          if (!result.success) {
+            failed += 1;
+            continue; // queda en `dirty` para un reintento.
+          }
+        }
+        // Registrado (o ya satisfecho por el default 'present').
+        setDirty((prev) => {
+          const next = { ...prev };
+          delete next[studentId];
+          return next;
+        });
+      }
+      if (failed > 0) {
+        Alert.alert(
+          'Aviso',
+          `No se pudieron guardar ${failed} registro(s). Reintenta el guardado.`,
+        );
+        return; // nos quedamos en la pantalla (la sesión ya existe).
+      }
+
+      // Volvemos a la matriz para que el docente vea el resultado
+      // persistido (la matriz re-fetchea del backend).
+      router.replace(`/(teacher)/groups/${groupId}/attendance`);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  // Stats derivados del estado actual.
+  // ============================================================
+  // DERIVADOS (stats + fecha para el modal)
+  // ============================================================
   const counts = useMemo(
     () => countByStatus(statusByStudent),
     [statusByStudent],
   );
 
-  // Fecha de hoy (formateada) para el pill del header + el modal.
-  const today = todayIso();
-  const todayLabel = formatFull(today);
   // Objeto date que consume EditAttendanceModal (label + full + iso).
   const todayDateObj = useMemo(
     () => ({ iso: today, full: todayLabel, label: 'Hoy' }),
@@ -216,6 +427,11 @@ export default function TakeAttendanceTodayScreen() {
   const editingCurrentStatus = editingStudent
     ? statusByStudent[editingStudent._id] || '-'
     : '-';
+
+  // ¿La pantalla aún no tiene datos para mostrar?
+  const showLoading = (periodsLoading || loading) && Boolean(subjectId);
+  // Falta el parámetro subjectId (deep link sin materia).
+  const missingSubject = !subjectId;
 
   return (
     <View className="flex-1 bg-[#F8FAFC]">
@@ -319,7 +535,7 @@ export default function TakeAttendanceTodayScreen() {
         </View>
 
         {/* ============================================================
-            LISTA DE ALUMNOS (tap → abre modal con opciones)
+            HEADER DE LISTA + hint
             ============================================================ */}
         <View className="flex-row items-center justify-between mt-4 mx-4 mb-2">
           <Text
@@ -331,7 +547,7 @@ export default function TakeAttendanceTodayScreen() {
               letterSpacing: 0.5,
             }}
           >
-            {`Alumnos (${MOCK_STUDENTS.length})`}
+            {`Alumnos (${students.length})`}
           </Text>
           <Text
             className="text-slate-400"
@@ -340,102 +556,162 @@ export default function TakeAttendanceTodayScreen() {
             Toca el status
           </Text>
         </View>
-        <View
-          className="bg-white rounded-2xl mx-4 border border-slate-100"
-          style={{
-            shadowColor: '#0F172A',
-            shadowOpacity: 0.04,
-            shadowRadius: 6,
-            shadowOffset: { width: 0, height: 1 },
-            elevation: 1,
-          }}
-        >
-          {MOCK_STUDENTS.map((student, index) => {
-            const code = statusByStudent[student._id] || '-';
-            const status = STATUS_STYLES[code] || STATUS_STYLES['-'];
-            const isLast = index === MOCK_STUDENTS.length - 1;
-            return (
-              <Pressable
-                key={student._id}
-                onPress={() => handleStudentTap(student)}
-                accessibilityRole="button"
-                accessibilityLabel={`Cambiar estado de ${student.name}, actual ${status.label}`}
-                className="flex-row items-center px-3 py-3"
-                style={
-                  isLast
-                    ? undefined
-                    : {
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#F1F5F9',
-                      }
-                }
+
+        {/* ============================================================
+            ESTADOS: loading / error / sin materia / lista real
+            ============================================================ */}
+        {showLoading && (
+          <View
+            className="bg-white rounded-2xl mx-4 border border-slate-100 items-center justify-center py-10"
+            style={{ elevation: 1 }}
+          >
+            <ActivityIndicator size="large" color="#0284C7" />
+            <Text className="text-slate-400 text-sm mt-3">
+              Cargando alumnos...
+            </Text>
+          </View>
+        )}
+
+        {!showLoading && error && (
+          <View
+            className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
+            style={{ elevation: 1 }}
+          >
+            <Text
+              className="text-slate-700 text-center"
+              style={{ fontSize: 13, fontWeight: '600' }}
+            >
+              {error}
+            </Text>
+            <Pressable
+              onPress={loadSessions}
+              accessibilityRole="button"
+              accessibilityLabel="Reintentar cargar la asistencia"
+              className="mt-4 px-5 py-2.5 rounded-xl bg-sky-500"
+            >
+              <Text
+                className="text-white"
+                style={{ fontSize: 13, fontWeight: '700' }}
               >
-                {/* List number circle. */}
-                <View
-                  className="items-center justify-center mr-3"
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
-                    backgroundColor: '#F1F5F9',
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      fontWeight: '800',
-                      color: '#475569',
-                    }}
-                  >
-                    {student.listNumber}
-                  </Text>
-                </View>
+                Reintentar
+              </Text>
+            </Pressable>
+          </View>
+        )}
 
-                {/* Student name. */}
-                <Text
-                  className="flex-1 text-slate-900"
-                  style={{ fontSize: 13, fontWeight: '700' }}
-                  numberOfLines={1}
-                >
-                  {student.name}
-                </Text>
+        {!showLoading && !error && missingSubject && (
+          <View
+            className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
+            style={{ elevation: 1 }}
+          >
+            <Text
+              className="text-slate-700 text-center"
+              style={{ fontSize: 13, fontWeight: '600' }}
+            >
+              No se pudo identificar la materia. Abre esta pantalla desde
+              tu clase de hoy en el dashboard.
+            </Text>
+          </View>
+        )}
 
-                {/* Status pill (tap → abre modal con opciones). */}
-                <View
-                  className="flex-row items-center pl-2.5 pr-1 py-1 rounded-full"
-                  style={{ backgroundColor: status.soft }}
+        {!showLoading && !error && !missingSubject && students.length === 0 && (
+          <View
+            className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
+            style={{ elevation: 1 }}
+          >
+            <Text
+              className="text-slate-500 text-center"
+              style={{ fontSize: 13 }}
+            >
+              Este grupo no tiene alumnos activos.
+            </Text>
+          </View>
+        )}
+
+        {!showLoading && !error && students.length > 0 && (
+          <View
+            className="bg-white rounded-2xl mx-4 border border-slate-100"
+            style={{
+              shadowColor: '#0F172A',
+              shadowOpacity: 0.04,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 1 },
+              elevation: 1,
+            }}
+          >
+            {students.map((student, index) => {
+              const code = statusByStudent[student._id] || '-';
+              const status = STATUS_STYLES[code] || STATUS_STYLES['-'];
+              const isLast = index === students.length - 1;
+              return (
+                <Pressable
+                  key={student._id}
+                  onPress={() => handleStudentTap(student)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Cambiar estado de ${student.fullName}, actual ${status.label}`}
+                  className="flex-row items-center px-3 py-3"
+                  style={
+                    isLast
+                      ? undefined
+                      : {
+                          borderBottomWidth: 1,
+                          borderBottomColor: '#F1F5F9',
+                        }
+                  }
                 >
+                  {/* Avatar: foto Cloudinary → iniciales. */}
+                  <StudentAvatar
+                    uri={student.photoUrl}
+                    name={student.fullName}
+                    size={36}
+                  />
+
+                  {/* Student name (prefijo = posición en la lista). */}
                   <Text
-                    style={{
-                      fontSize: 11,
-                      fontWeight: '800',
-                      color: status.color,
-                      letterSpacing: 0.5,
-                    }}
+                    className="flex-1 text-slate-900 ml-3"
+                    style={{ fontSize: 13, fontWeight: '700' }}
+                    numberOfLines={1}
                   >
-                    {code === '-' ? '—' : code}
+                    {`${index + 1}. ${student.fullName}`}
                   </Text>
-                  {/* Chevron hint: indica que se abre un picker. */}
+
+                  {/* Status pill (tap → abre modal con opciones). */}
                   <View
-                    className="ml-1.5 items-center justify-center"
-                    style={{
-                      width: 18,
-                      height: 18,
-                      borderRadius: 9,
-                      backgroundColor: status.color,
-                    }}
+                    className="flex-row items-center pl-2.5 pr-1 py-1 rounded-full"
+                    style={{ backgroundColor: status.soft }}
                   >
-                    <ChevronRight
-                      size={12}
-                      color="#ffffff"
-                      strokeWidth={2.5}
-                    />
+                    <Text
+                      style={{
+                        fontSize: 11,
+                        fontWeight: '800',
+                        color: status.color,
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {code === '-' ? '—' : code}
+                    </Text>
+                    {/* Chevron hint: indica que se abre un picker. */}
+                    <View
+                      className="ml-1.5 items-center justify-center"
+                      style={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: 9,
+                        backgroundColor: status.color,
+                      }}
+                    >
+                      <ChevronRight
+                        size={12}
+                        color="#ffffff"
+                        strokeWidth={2.5}
+                      />
+                    </View>
                   </View>
-                </View>
-              </Pressable>
-            );
-          })}
-        </View>
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
       </ScrollView>
 
       {/* ============================================================
@@ -450,11 +726,25 @@ export default function TakeAttendanceTodayScreen() {
       >
         <Pressable
           onPress={handleSave}
+          disabled={
+            saving ||
+            showLoading ||
+            Boolean(error) ||
+            missingSubject ||
+            students.length === 0
+          }
           accessibilityRole="button"
           accessibilityLabel="Guardar asistencia de hoy"
           className="flex-row items-center justify-center py-3 rounded-xl"
           style={{
-            backgroundColor: '#0284C7',
+            backgroundColor:
+              saving ||
+              showLoading ||
+              error ||
+              missingSubject ||
+              students.length === 0
+                ? '#94A3B8'
+                : '#0284C7',
             shadowColor: '#0284C7',
             shadowOpacity: 0.25,
             shadowRadius: 6,
@@ -462,12 +752,16 @@ export default function TakeAttendanceTodayScreen() {
             elevation: 3,
           }}
         >
-          <Save size={16} color="#ffffff" strokeWidth={2.5} />
+          {saving ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Save size={16} color="#ffffff" strokeWidth={2.5} />
+          )}
           <Text
             className="text-white ml-1.5"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
-            Guardar Asistencia
+            {saving ? 'Guardando...' : 'Guardar Asistencia'}
           </Text>
         </Pressable>
       </View>
@@ -476,17 +770,15 @@ export default function TakeAttendanceTodayScreen() {
           EDIT ATTENDANCE MODAL
           ============================================================
           Bottom-sheet con la lista de opciones de status (P/F/R/FJ).
-          Mismo componente que usa la matrix para editar celdas — UX
-          consistente cross-feature. Al tocar una opción, el modal hace
-          el PATCH al backend y nos notifica vía `onSaved` para
-          actualizar el state local optimísticamente.
+          Mismo componente que usa la matriz — UX consistente. El modal
+          solo notifica vía `onSaved`; el PATCH lo hace `handleSaved`
+          (si ya existe sesión de hoy) o "Guardar Asistencia" (si no).
           ============================================================ */}
       <EditAttendanceModal
         visible={editingStudent !== null}
         student={editingStudent}
         date={todayDateObj}
         currentStatus={editingCurrentStatus}
-        groupId={groupId}
         onClose={handleCloseModal}
         onSaved={handleSaved}
       />

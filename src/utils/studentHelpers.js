@@ -15,7 +15,7 @@
 //     _id: "65f0...",
 //     first_name: "Juan",
 //     last_name: "Pérez",
-//     photo_url: "https://...",
+//     photoUrl: "https://...",
 //     status: "active",
 //     ...
 //   }
@@ -33,7 +33,7 @@
 //
 //   id:           student._id (string MongoDB ObjectId).
 //   name:         "first_name last_name" (trim).
-//   avatarUrl:    student.photo_url (puede ser null).
+//   avatarUrl:    student.photoUrl (puede ser null).
 //   avatarLetter: inicial de first_name (uppercase, fallback "?").
 // ---------------------------------------------------------------------
 export const studentForFilter = (student) => {
@@ -52,7 +52,9 @@ export const studentForFilter = (student) => {
   return {
     id: student._id,
     name: fullName || 'Alumno',
-    avatarUrl: student.photo_url || null,
+    // El backend expone photoUrl (camelCase). Se acepta también
+    // photo_url por si alguna respuesta vieja usa snake_case.
+    avatarUrl: student.photoUrl || student.photo_url || null,
     avatarLetter,
   };
 };

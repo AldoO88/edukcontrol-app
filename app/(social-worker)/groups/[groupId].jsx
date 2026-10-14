@@ -36,6 +36,7 @@ import { useAuth } from '@/src/hooks/useAuth';
 import { useSocialWorkerDashboard } from '@/src/hooks/useSocialWorkerDashboard';
 import DashboardHeader from '@/src/components/DashboardHeader';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
+import StudentAvatar from '@/src/components/StudentAvatar';
 import { getSubjectColor, getSubjectIcon, tintWithAlpha } from '@/src/utils/subjectIcons';
 import {
   getGroupStudents,
@@ -291,10 +292,14 @@ export default function SocialWorkerGroupDetailScreen() {
               shadowOffset: { width: 0, height: 2 },
             }}
           >
-            <View className="w-10 h-10 rounded-full bg-blue-100 items-center justify-center mr-3">
-              <Text className="text-xs font-bold text-blue-700">
-                {`${item.first_name?.[0] || ''}${item.last_name?.[0] || ''}`.toUpperCase()}
-              </Text>
+            <View className="mr-3">
+              <StudentAvatar
+                uri={item.photoUrl}
+                name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
+                size={40}
+                fallbackColor="#DBEAFE"
+                textColor="#1D4ED8"
+              />
             </View>
             <View className="flex-1">
               <Text className="text-sm font-bold text-slate-900">
@@ -334,10 +339,14 @@ export default function SocialWorkerGroupDetailScreen() {
           }}
         >
           <View className="flex-row items-center">
-            <View className="w-10 h-10 rounded-full bg-blue-100 items-center justify-center mr-3">
-              <Text className="text-xs font-bold text-blue-700">
-                {`${item.first_name?.[0] || ''}${item.last_name?.[0] || ''}`.toUpperCase()}
-              </Text>
+            <View className="mr-3">
+              <StudentAvatar
+                uri={item.photoUrl}
+                name={`${item.first_name || ''} ${item.last_name || ''}`.trim()}
+                size={40}
+                fallbackColor="#DBEAFE"
+                textColor="#1D4ED8"
+              />
             </View>
             <View className="flex-1">
               <Text className="text-sm font-bold text-slate-900">

@@ -37,7 +37,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
-  Image,
   FlatList,
 } from 'react-native';
 
@@ -47,8 +46,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Iconos Lucide.
 import { X, Check, Send, User } from 'lucide-react-native';
 
-// Helpers: getInitials para avatar fallback.
-import { getInitials } from '../../../src/utils/announcementHelpers';
+// Avatar circular de alumno (foto → iniciales).
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // Servicio: crea el aviso.
 import { createTeacherAnnouncement } from '../../../src/services/teacherService';
@@ -312,40 +311,20 @@ export default function CreateAnnouncementModal({
   }, []);
 
   // -------------------------------------------------------------------
-  // AVATAR: foto circular o fallback a iniciales
+  // AVATAR: foto circular o fallback a iniciales (StudentAvatar)
   // -------------------------------------------------------------------
   const renderAvatar = (studentData, size = 40) => {
     const bgColor = AVATAR_COLORS[studentData._id?.charCodeAt(0) % AVATAR_COLORS.length || 0];
     const studentName = studentData.fullName || studentData.name;
 
-    if (studentData.photoUrl) {
-      return (
-        <Image
-          source={{ uri: studentData.photoUrl }}
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-          }}
-        />
-      );
-    }
-
     return (
-      <View
-        style={{
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: bgColor,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text style={{ color: '#ffffff', fontSize: size * 0.38, fontWeight: '700' }}>
-          {getInitials(studentName)}
-        </Text>
-      </View>
+      <StudentAvatar
+        uri={studentData.photoUrl}
+        name={studentName}
+        size={size}
+        fallbackColor={bgColor}
+        textColor="#ffffff"
+      />
     );
   };
 

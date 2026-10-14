@@ -32,7 +32,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import {
   View,
   Text,
-  Image,
   Pressable,
   ScrollView,
   Alert,
@@ -53,6 +52,7 @@ import { useTeacherDashboard } from '@/src/hooks/useTeacherDashboard';
 import { useAuth } from '@/src/hooks/useAuth';
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 import DashboardHeader from '@/src/components/DashboardHeader';
+import StudentAvatar from '@/src/components/StudentAvatar';
 
 // Servicio para obtener períodos de evaluación y sesiones de asistencia.
 import {
@@ -68,30 +68,20 @@ import {
   formatShort,
   formatFull,
   STATUS_STYLES,
+  // Mapeo de status: backend ('present', …) ↔ código UI ('P', …).
+  // Compartido con la vista today (attendanceHelpers es la única
+  // fuente de verdad de esa traducción).
+  mapBackendStatus,
+  toBackendStatus,
 } from '@/src/utils/attendanceHelpers';
 // Modales privados del route group (teacher).
 import EditAttendanceModal from '@/app/(teacher)/_components/EditAttendanceModal';
 import AddDateModal from '@/app/(teacher)/_components/AddDateModal';
 
 // ---------------------------------------------------------------------
-// STATUS_STYLES → importado de '@/src/utils/attendanceHelpers' (status
-// colors y labels compartidos con el today view).
-// '@/src/utils/attendanceHelpers' (compartidos con la today view).
+// STATUS_STYLES y los mapeos mapBackendStatus / toBackendStatus vienen
+// de '@/src/utils/attendanceHelpers' (compartidos con la today view).
 // ---------------------------------------------------------------------
-
-// ---------------------------------------------------------------------
-// HELPERS: mapeo de status del backend al código del front.
-// ---------------------------------------------------------------------
-const mapBackendStatus = (status) => {
-  const map = { present: 'P', absent: 'F', retard: 'R', justified: 'FJ' };
-  return map[status] || '-';
-};
-
-// Mapeo inverso: código del front → status del backend.
-const mapToFrontendStatus = (code) => {
-  const map = { P: 'present', F: 'absent', R: 'retard', FJ: 'justified' };
-  return map[code] || 'present';
-};
 
 const buildRecordsFromSessions = (sessions, studentId) => {
   const records = {};
@@ -299,7 +289,8 @@ export default function TeacherMatrixScreen() {
         const mappedMatrix = students.map((s) => ({
           _id: s._id,
           name: s.fullName,
-          photoUrl: null,
+          // photoUrl viene del backend; si no llega, null → iniciales.
+          photoUrl: s.photoUrl || null,
           records: buildRecordsFromSessions(sessions, s._id),
         }));
         setMatrix(mappedMatrix);
@@ -322,10 +313,6 @@ export default function TeacherMatrixScreen() {
     fetchSessions();
     return () => { cancelled = true; };
   }, [groupId, subjectId, selectedPeriod?._id]);
-
-  // Iniciales para el avatar de la columna izquierda.
-  const getInitials = (name) =>
-    (name || '?').split(' ').map((w) => w[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
 
   // -----------------------------------------------------------------
   // HANDLERS
@@ -354,7 +341,20 @@ export default function TeacherMatrixScreen() {
       return;
     }
 
-    const backendStatus = mapToFrontendStatus(status);
+    // Código UI → status backend (null si el código no es válido, p. ej.
+    // '-' sin registro: en ese caso solo se actualiza el state local).
+    const backendStatus = toBackendStatus(status);
+    if (!backendStatus) {
+      setMatrix((prev) =>
+        prev.map((s) =>
+          s._id === student._id
+            ? { ...s, records: { ...s.records, [editingCell.date.iso]: status } }
+            : s,
+        ),
+      );
+      return;
+    }
+
     const result = await updateAttendanceRecord({
       sessionId: editingCell.date.sessionId,
       studentId: student._id,
@@ -669,27 +669,13 @@ export default function TeacherMatrixScreen() {
                     className="flex-row items-center border-b border-[#F8FAFC] border-r"
                     style={{ height: ROW_HEIGHT, paddingHorizontal: 10 }}
                   >
-                    {student.photoUrl ? (
-                      <Image
-                        source={{ uri: student.photoUrl }}
-                        style={{ width: 38, height: 38, borderRadius: 18 }}
-                        accessibilityLabel={`Foto de ${student.name}`}
-                      />
-                    ) : (
-                      <View
-                        className="items-center justify-center"
-                        style={{
-                          width: 38,
-                          height: 38,
-                          borderRadius: 18,
-                          backgroundColor: '#E0F2FE',
-                        }}
-                      >
-                        <Text style={{ fontSize: 12, fontWeight: '700', color: '#0284C7' }}>
-                          {getInitials(student.name)}
-                        </Text>
-                      </View>
-                    )}
+                    <StudentAvatar
+                      uri={student.photoUrl}
+                      name={student.name}
+                      size={38}
+                      fallbackColor="#E0F2FE"
+                      textColor="#0284C7"
+                    />
                     <View style={{ flex: 1, marginLeft: 8 }}>
                       <Text
                         numberOfLines={2}
@@ -787,7 +773,6 @@ export default function TeacherMatrixScreen() {
         student={editingCell?.student || null}
         date={editingCell?.date || null}
         currentStatus={editingCell?.currentStatus || '-'}
-        groupId={groupId}
         onClose={() => setEditingCell(null)}
         onSaved={handleCellSaved}
       />
