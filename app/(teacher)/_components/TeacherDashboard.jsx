@@ -46,7 +46,7 @@
 // =====================================================================
 
 // React.
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 // Primitivas RN.
 import {
@@ -131,9 +131,53 @@ export default function TeacherDashboard() {
       current_school_year: data.currentSchoolYear?.name || null,
     };
   }, [data?.school, data?.currentSchoolYear]);
-  // Datos del horario de hoy.
-  const currentClass = data?.todaySchedule?.currentClass || null;
+  // Datos del horario de hoy (solo el array; los estados se derivan
+  // del reloj vivo más abajo).
   const allClasses = data?.todaySchedule?.allClasses || [];
+
+  // -----------------------------------------------------------------
+  // RELOJ VIVO — minutos desde medianoche local
+  // -----------------------------------------------------------------
+  // BUG QUE ARREGLA: antes "Clase en curso" usaba
+  // `todaySchedule.currentClass`, que es una foto del momento del
+  // FETCH. Si el dashboard se abría antes de que empezara una clase
+  // y no se re-fetcheaba (useFocusEffect solo corre al ganar foco),
+  // a la hora de la clase ésta quedaba invisible en las TRES listas:
+  // no era "próxima" (ya empezó), no era "completada" (no acabó) y
+  // la card "en curso" seguía en null. Ahora las 3 secciones se
+  // derivan del MISMO reloj vivo, y un intervalo de 60 s re-renderiza
+  // para que las clases transicionen de lista sin navegar.
+  // -----------------------------------------------------------------
+  const [nowMinutes, setNowMinutes] = useState(() => {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  });
+  useEffect(() => {
+    const id = setInterval(() => {
+      const d = new Date();
+      setNowMinutes(d.getHours() * 60 + d.getMinutes());
+    }, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Clases que YA terminaron (incluye la de hace un minuto).
+  const completedClasses = useMemo(
+    () => allClasses.filter((cls) => cls.endMinutes <= nowMinutes),
+    [allClasses, nowMinutes],
+  );
+  // Clase en curso AHORA (la que cubre el minuto actual).
+  const currentClass = useMemo(
+    () =>
+      allClasses.find(
+        (cls) => cls.startMinutes <= nowMinutes && nowMinutes < cls.endMinutes,
+      ) || null,
+    [allClasses, nowMinutes],
+  );
+  // Clases que AÚN no empiezan.
+  const upcomingClasses = useMemo(
+    () => allClasses.filter((cls) => cls.startMinutes > nowMinutes),
+    [allClasses, nowMinutes],
+  );
 
   return (
     <View className="flex-1 bg-slate-50">
@@ -233,21 +277,13 @@ export default function TeacherDashboard() {
             estilo que "Próximas clases" para mantener coherencia.
             Cada una tiene un botón para corregir asistencia.
             ============================================================ */}
-        {allClasses.filter(cls => {
-          const now = new Date();
-          const currentMinutes = now.getHours() * 60 + now.getMinutes();
-          return cls.endMinutes <= currentMinutes;
-        }).length > 0 && (
+        {completedClasses.length > 0 && (
           <View className="px-4 mt-4">
             <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 px-1">
               Clases de hoy
             </Text>
             <View className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" style={{ elevation: 1 }}>
-              {allClasses.filter(cls => {
-                const now = new Date();
-                const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                return cls.endMinutes <= currentMinutes;
-              }).map((cls, index) => (
+              {completedClasses.map((cls, index) => (
                 <View
                   key={index}
                   className={clsx(
@@ -349,24 +385,10 @@ export default function TeacherDashboard() {
             pendientes para el resto del día. Cada una tiene un
             botón para tomar asistencia.
             ============================================================ */}
-        {allClasses.filter(cls => {
-          const now = new Date();
-          const currentMinutes = now.getHours() * 60 + now.getMinutes();
-          const isCurrent = currentClass
-            && cls.subject?.code === currentClass.subject?.code
-            && cls.group?.label === currentClass.group?.label;
-          return cls.startMinutes > currentMinutes && !isCurrent;
-        }).length > 0 && (
+        {upcomingClasses.length > 0 && (
           <View className="px-4 mt-3">
             <View className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" style={{ elevation: 1 }}>
-              {allClasses.filter(cls => {
-                const now = new Date();
-                const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                const isCurrent = currentClass
-                  && cls.subject?.code === currentClass.subject?.code
-                  && cls.group?.label === currentClass.group?.label;
-                return cls.startMinutes > currentMinutes && !isCurrent;
-              }).map((cls, index) => (
+              {upcomingClasses.map((cls, index) => (
                 <View
                   key={index}
                   className={clsx(
