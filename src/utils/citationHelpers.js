@@ -203,20 +203,25 @@ export const getMockCitatorioById = (id) => {
 // ---------------------------------------------------------------------
 /**
  * Extrae date ('YYYY-MM-DD') y time ('HH:MM') de un ISO datetime
- * string como "2026-08-25T10:30:00.000Z".
+ * string como "2026-08-25T16:30:00.000Z".
  *
- * Devuelve { date: '2026-08-25', time: '10:30' } o { date: '', time: '' }
+ * Usa getters LOCALES (no getUTC*): desde la migración 2026-10-14
+ * `scheduledDate` es instante UTC REAL, así que la hora que ve el
+ * usuario es la de su teléfono (antes, con el valor guardado como
+ * "hora pared fingiendo UTC", los getUTC* compensaban sin querer).
+ *
+ * Devuelve { date: '2026-08-25', time: '16:30' } o { date: '', time: '' }
  * si el input es nulo/vacío.
  */
 export const formatDateTime = (isoString) => {
   if (!isoString) return { date: '', time: '' };
   try {
     const d = new Date(isoString);
-    const yyyy = d.getUTCFullYear();
-    const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-    const dd = String(d.getUTCDate()).padStart(2, '0');
-    const hh = String(d.getUTCHours()).padStart(2, '0');
-    const min = String(d.getUTCMinutes()).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
     return { date: `${yyyy}-${mm}-${dd}`, time: `${hh}:${min}` };
   } catch {
     return { date: '', time: '' };

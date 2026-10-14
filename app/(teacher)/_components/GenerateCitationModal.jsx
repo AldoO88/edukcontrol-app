@@ -101,6 +101,13 @@ const LOCATIONS = ['Trabajo Social', 'Prefectura', 'Dirección'];
 // ---------------------------------------------------------------------
 // HELPERS
 // ---------------------------------------------------------------------
+// toNaiveLocalIso: formatea un Date como ISO SIN offset ("naïve") usando
+// los componentes LOCALES del teléfono: 'YYYY-MM-DDTHH:mm:ss'.
+const toNaiveLocalIso = (date) => {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
+};
+
 const combineDateTime = (dateStr, timeStr) => {
   let year = new Date().getFullYear();
   let month = 0;
@@ -126,11 +133,13 @@ const combineDateTime = (dateStr, timeStr) => {
     if (ampm === 'am' && hours === 12) hours = 0;
   }
 
-  const result = new Date(Date.UTC(year, month, day, hours, minutes));
-  if (Number.isNaN(result.getTime())) {
-    return new Date();
-  }
-  return result;
+  // Instante LOCAL del teléfono (NO Date.UTC): la cita "10:00" debe viajar
+  // como 10:00 hora del usuario. El backend la interpreta como hora pared
+  // escolar (shim parseScheduledDate) y la guarda como instante UTC real
+  // (convención desde 2026-10-14). Se envía SIN offset ("naïve") para que
+  // el backend distinga el formato nuevo del legacy "…Z" de builds viejas.
+  const result = new Date(year, month, day, hours, minutes);
+  return toNaiveLocalIso(Number.isNaN(result.getTime()) ? new Date() : result);
 };
 
 const buildCitationPayload = (data) => {
