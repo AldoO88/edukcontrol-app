@@ -6,9 +6,16 @@
 //
 // Auth flow (DECLARATIVO, dentro del screen — NO en el layout raíz):
 //   - isLoading === true   → splash.
-//   - user existe          → <Redirect href="/dashboard" />, rol-aware:
-//                            teacher → '/(teacher)/dashboard',
-//                            tutor → '/(guardian)/dashboard'.
+//   - user existe + rol con home → <Redirect href={roleHomeHref(role)} />
+//                            (fuente única: src/utils/roleRoutes.js;
+//                            cubre tutor, teacher, prefect,
+//                            social_worker y principal).
+//   - user existe + rol SIN home (admin, registrar, super_admin)
+//                            → vista de "sin acceso" con botón de
+//                            cerrar sesión. NO se redirige: un
+//                            <Redirect> a un grupo ajeno formaba un
+//                            bucle infinito de gates (guardian ⇄
+//                            teacher) que colgaba la app.
 //   - sin user             → renderizar la pantalla de login.
 // El <Redirect> declarativo es el patrón canónico de Expo Router
 // v5: navega en la fase de render sin necesidad de useEffect ni
@@ -27,8 +34,13 @@ import { View, Text, ActivityIndicator, Platform } from 'react-native';
 // Redirect de expo-router: navegación declarativa.
 import { Redirect } from 'expo-router';
 
-// Hook de auth: lee { user, isLoading } del AuthContext.
+// Hook de auth: lee { user, isLoading, logout } del AuthContext.
 import { useAuth } from '../src/hooks/useAuth';
+
+// Fuente única de navegación por rol (role → href del dashboard de
+// su grupo). Ver src/utils/roleRoutes.js — incluye la explicación
+// del bucle infinito que evita.
+import { roleHomeHref } from '../src/utils/roleRoutes';
 
 // Hook de visibilidad del teclado: devuelve true mientras el
 // teclado virtual está abierto.
@@ -36,6 +48,10 @@ import { useKeyboardVisible } from '../src/hooks/useKeyboardVisible';
 
 // Wrapper de pantalla institucional.
 import Screen from '../src/components/Screen';
+
+// Botón reutilizable (se usa en la vista de "rol sin acceso" para
+// cerrar la sesión).
+import Button from '../src/components/Button';
 
 // Componentes privados del route (viven en _components/, el "_"
 // los esconde del routing de Expo Router).
@@ -78,6 +94,57 @@ function RootSplash() {
 // /version se puede hidratar.
 const APP_VERSION = '1.0.1';
 
+// ---------------------------------------------------------------------
+// Vista de "rol sin acceso a la app móvil"
+// ---------------------------------------------------------------------
+// Se renderiza cuando HAY sesión activa pero el rol no tiene grupo
+// de rutas en app/ (hoy: admin, registrar, super_admin).
+//
+// Devolvemos un estado con botón de CERRAR SESIÓN en lugar de un
+// <Redirect>: redirigir a un grupo ajeno es lo que provocaba el
+// bucle infinito guardian ⇄ teacher (los gates se rebotaban el rol
+// para siempre y la app se quedaba colgada con el spinner girando).
+// Aquí NO se redirige ⇒ el bucle es imposible por construcción.
+function UnsupportedRoleView({ role }) {
+  // logout() del AuthContext: limpia tokens locales y (best-effort)
+  // el refresh token en el backend.
+  const { logout } = useAuth();
+
+  return (
+    <Screen edges={['top']} background="bg-slate-50">
+      <BrandHeader />
+      {/* Card centrada con el aviso. max-w-sm igual que el login para
+          que en tablets no se estire. elevation: 3 (sombra Android —
+          ver AGENTS.md "Sombras multiplataforma"). */}
+      <View className="flex-1 items-center justify-center px-6">
+        <View
+          className="w-full max-w-sm bg-white rounded-2xl p-6 items-center"
+          style={{ elevation: 3 }}
+        >
+          <Text className="text-slate-900 text-lg font-bold text-center">
+            Tu cuenta aún no tiene acceso a la app
+          </Text>
+          <Text className="text-slate-500 text-sm text-center mt-2">
+            El rol{' '}
+            <Text className="font-bold text-slate-700">{role}</Text>{' '}
+            todavía no está habilitado para la aplicación móvil. Pide
+            al administrador de tu escuela que te asigne un rol con
+            acceso.
+          </Text>
+          {/* Cerrar sesión: borra la sesión local y regresa al login,
+              de donde el usuario puede entrar con otra cuenta. */}
+          <Button
+            title="Cerrar sesión"
+            variant="danger"
+            onPress={() => logout()}
+            className="w-full mt-5"
+          />
+        </View>
+      </View>
+    </Screen>
+  );
+}
+
 export default function LoginScreen() {
   const { user, isLoading } = useAuth();
 
@@ -96,18 +163,16 @@ export default function LoginScreen() {
   }
 
   // Si el usuario YA está autenticado, saltamos a su dashboard.
-  // Con route groups por rol, el redirect es rol-aware: cada grupo
-  // tiene su propio dashboard.jsx (shared route /dashboard), así que
-  // navegamos explícitamente al grupo correcto según user.role.
+  // El destino sale de roleHomeHref() (fuente única role → grupo).
+  // Si el rol NO tiene home (admin, registrar, super_admin) en vez
+  // de redirigir mostramos la vista de "sin acceso": un <Redirect>
+  // hacia un grupo ajeno disparaba el bucle infinito de gates
+  // (guardian ⇄ teacher) que colgaba la app con el spinner girando.
   if (user) {
-    const roleRedirectMap = {
-      teacher: '/(teacher)/dashboard',
-      prefect: '/(prefect)/dashboard',
-      social_worker: '/(social-worker)/dashboard',
-      principal: '/(director)/dashboard',
-      tutor: '/(guardian)/dashboard',
-    };
-    const href = roleRedirectMap[user.role] || '/(guardian)/dashboard';
+    const href = roleHomeHref(user.role);
+    if (!href) {
+      return <UnsupportedRoleView role={user.role} />;
+    }
     return <Redirect href={href} />;
   }
 

@@ -92,8 +92,13 @@ export default function ForgotPasswordResetScreen() {
         return;
       }
 
-      // Éxito: mostramos Alert y luego router.replace a "/" para
-      // que el usuario haga login con la nueva contraseña.
+      // Éxito: apagamos el spinner ANTES del Alert (si no, el
+      // ActivityIndicator del botón sigue girando detrás del modal
+      // hasta que el usuario toque "Iniciar sesión" — era el
+      // "spinner eterno" que se veía en esta pantalla). Luego
+      // Alert y router.replace a "/" para que el usuario haga
+      // login con la nueva contraseña.
+      setIsLoading(false);
       Alert.alert(
         'Contraseña restablecida',
         'Tu contraseña fue actualizada correctamente. Inicia sesión con tu nueva contraseña.',

@@ -24,6 +24,11 @@ import { Stack, Redirect } from 'expo-router';
 // Hook de autenticación.
 import { useAuth } from '../../src/hooks/useAuth';
 
+// Fuente única de navegación por rol (role → href del home de su
+// grupo). Ver src/utils/roleRoutes.js (documenta la anti-garantía
+// de bucle de este gate).
+import { roleHomeHref } from '../../src/utils/roleRoutes';
+
 // Hook de push notifications.
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
@@ -57,16 +62,16 @@ export default function PrefectLayout() {
     return <Redirect href="/" />;
   }
 
-  // Role gate: si el user NO es prefect, lo mandamos al dashboard
-  // de su rol correspondiente.
-  if (user?.role === 'teacher') {
-    return <Redirect href="/(teacher)/dashboard" />;
-  }
-  if (user?.role === 'tutor') {
-    return <Redirect href="/(guardian)/dashboard" />;
-  }
-  if (user?.role === 'principal') {
-    return <Redirect href="/(director)/dashboard" />;
+  // Role gate: este grupo es SOLO de 'prefect'. Cualquier otro rol
+  // se envía a su propio home vía roleHomeHref (fuente única), o a
+  // "/" si su rol no tiene home en la app (index.jsx muestra el
+  // aviso de "sin acceso" sin redirigir → sin posibilidad de bucle).
+  //
+  // ANTES solo se pateaban teacher/tutor/principal: un social_worker,
+  // registrar o admin entraba a las pantallas del prefecto (gate
+  // laxo → data expuesta a rol equivocado).
+  if (user?.role !== 'prefect') {
+    return <Redirect href={roleHomeHref(user.role) || '/'} />;
   }
 
   return (

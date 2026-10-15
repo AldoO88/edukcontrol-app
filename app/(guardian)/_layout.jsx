@@ -32,6 +32,11 @@ import { Stack, Redirect } from 'expo-router';
 // Hook de autenticación.
 import { useAuth } from '../../src/hooks/useAuth';
 
+// Fuente única de navegación por rol (role → href del home de su
+// grupo). Ver src/utils/roleRoutes.js (documenta el bucle infinito
+// guardian ⇄ teacher que este gate causaba con redirects ciegos).
+import { roleHomeHref } from '../../src/utils/roleRoutes';
+
 // Hook de push notifications (mismo patrón que el antiguo (app) layout).
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
@@ -65,12 +70,20 @@ export default function GuardianLayout() {
     return <Redirect href="/" />;
   }
 
-  // Role gate: si el user NO es tutor (p. ej. un teacher intenta
-  // entrar a una ruta del grupo guardian), lo mandamos al dashboard
-  // del maestro. Esto refuerza el flujo: cada grupo es autónomo y
-  // decide a qué rol pertenece.
+  // Role gate: si el user NO es tutor, lo mandamos al dashboard de
+  // SU rol según roleHomeHref (fuente única) — o a "/" si su rol no
+  // tiene home en la app (allí index.jsx muestra el aviso de "sin
+  // acceso" sin redirigir).
+  //
+  // ANTES este gate estaba hardcodeado a '(teacher)/dashboard', lo
+  // que combinado con el gate de (teacher) (hardcodeado a
+  // '(guardian)/dashboard') formaba un BUCLE INFINITO de Redirect:
+  // un principal/prefect/social_worker rebotaba guardian ⇄ teacher
+  // para siempre y la app se colgaba con el spinner girando (bug de
+  // "crear contraseña"). Con el mapa el ciclo es imposible: cada
+  // home cae en un grupo cuyo gate acepta exactamente ese rol.
   if (user?.role !== 'tutor') {
-    return <Redirect href="/(teacher)/dashboard" />;
+    return <Redirect href={roleHomeHref(user.role) || '/'} />;
   }
 
   return (

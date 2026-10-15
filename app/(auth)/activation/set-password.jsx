@@ -5,10 +5,14 @@
 // URL: /activation/set-password
 //
 // El usuario establece una contraseña (mínimo 8 caracteres) y
-// presiona "Guardar y entrar". Mock: simula el guardado final, hace
-// router.replace al dashboard para que el back gesture no devuelva
+// presiona "Guardar y entrar". Guardado REAL: POST
+// /auth/activate-account (vía activationService). Después del éxito
+// hace router.replace
+// al dashboard (NO push) para que el back gesture no devuelva
 // al usuario a la pantalla de password (flujo de activación
-// terminado, no debe ser reversible).
+// terminado, no debe ser reversible). El destino rol-aware sale de
+// roleHomeHref() (src/utils/roleRoutes.js) — ver el bug de bucle
+// infinito documentado ahí.
 //
 // Estilo: card blanca "ActivationCard" (mismo look que el login y
 // las pantallas anteriores del flow). Label CONTRASEÑA en
@@ -16,8 +20,9 @@
 // (entrada al sistema, mismo icono que el login principal).
 // =====================================================================
 
-// React + hooks.
-import React, { useState } from 'react';
+// React + hooks (useEffect controla el indicador de lentitud del
+// botón mientras el request está en vuelo).
+import React, { useState, useEffect } from 'react';
 
 // Primitivas RN: View, Text, Alert y Platform (para detectar
 // Android y anclar el form arriba con el teclado).
@@ -58,6 +63,11 @@ const LOCK_ICON_COLOR = '#f59e0b'; // amber-500
 // existe): reintenta el login con los datos en pantalla.
 import { useAuth } from '../../../src/hooks/useAuth';
 
+// Fuente única de navegación por rol (role → href del dashboard de
+// su grupo). Ver por qué NUNCA se debe usar un ternario
+// `role === 'teacher' ? … : guardian` aquí: src/utils/roleRoutes.js.
+import { roleHomeHref } from '../../../src/utils/roleRoutes';
+
 // Servicio de activación: completeActivation hace el POST
 // /auth/activate-account con { phone, otpCode, newPassword }.
 import { completeActivation } from '../../../src/services/activationService';
@@ -87,6 +97,25 @@ export default function SetPasswordScreen() {
 
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Indicador de lentitud: si el request sigue en vuelo pasados 8 s,
+  // mostramos una nota bajo el botón. Motivo real: Render (free) hace
+  // cold start de 30-90 s cuando lleva >15 min inactivo — sin la nota
+  // el usuario solo ve un spinner eterno y asume que la app se colgó
+  // (cierra y reintenta). Con ella sabe que debe esperar.
+  const [slowHint, setSlowHint] = useState(false);
+  useEffect(() => {
+    // Sin carga → nunca mostramos la nota (y limpiamos un hint
+    // huérfano de un intento anterior).
+    if (!isLoading) {
+      setSlowHint(false);
+      return undefined;
+    }
+    // En vuelo → a los 8 s levantamos la nota; el timer se limpia
+    // si el request termina antes (o si el componente se desmonta).
+    const timer = setTimeout(() => setSlowHint(true), 8000);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
 
   // Visibilidad del teclado (siempre en el mismo orden, sin
   // early-returns debajo). Solo se usa en Android: con el teclado
@@ -129,11 +158,13 @@ export default function SetPasswordScreen() {
           try {
             const loginResult = await login(phone, password, false);
             if (loginResult.success) {
-              const href =
-                loginResult.user?.role === 'teacher'
-                  ? '/(teacher)/dashboard'
-                  : '/(guardian)/dashboard';
-              router.replace(href);
+              // Destino vía fuente única (roleRoutes). Un rol sin
+              // home (admin/registrar/super_admin) va a "/": allí
+              // index.jsx muestra el aviso de "sin acceso" — JAMÁS
+              // a un grupo ajeno, que era lo que formaba el bucle
+              // infinito de Redirect (guardian ⇄ teacher) y dejaba
+              // la app colgada con el spinner girando.
+              router.replace(roleHomeHref(loginResult.user?.role) || '/');
               return;
             }
           } catch {
@@ -200,14 +231,21 @@ export default function SetPasswordScreen() {
       // activar, debe ir al dashboard, no a esta pantalla.
       //
       // Con route groups por rol ya NO hay dispatcher: cada rol tiene
-      // su propio grupo ((guardian) o (teacher)). setSession() ya
-      // seteó el user global con su role, así que navegamos
-      // explícitamente al dashboard del grupo correcto. Leemos el
-      // role de result.user (garantizado) — sessionResult.user
-      // antes no existía y revienta con TypeError.
-      const dashboardHref =
-        result.user.role === 'teacher' ? '/(teacher)/dashboard' : '/(guardian)/dashboard';
-      router.replace(dashboardHref);
+      // su propio grupo ((guardian), (teacher), (prefect),
+      // (social-worker), (director)). setSession() ya seteó el user
+      // global con su role, así que el destino sale de roleHomeHref()
+      // — la fuente única role → dashboard (src/utils/roleRoutes.js).
+      //
+      // IMPORTANTE (bug corregido): antes había un ternario de 2 vías
+      // `role === 'teacher' ? (teacher) : (guardian)`. Un principal/
+      // prefect/social_worker entraba a (guardian), su gate lo
+      // pateaba a (teacher), el gate de (teacher) lo pateaba de
+      // vuelta… BUCLE INFINITO de <Redirect>: la app se colgaba con
+      // el spinner girando (reportado como "se queda dando vueltas
+      // al guardar y entrar"). Con el mapa el ciclo es imposible.
+      // Rol sin home (admin/registrar/super_admin) → "/" (vista de
+      // "sin acceso" en index, sin redirect).
+      router.replace(roleHomeHref(result.user.role) || '/');
     } catch (error) {
       console.error('[Activation set-password] Error inesperado:', error);
       Alert.alert(
@@ -280,6 +318,18 @@ export default function SetPasswordScreen() {
               className="mt-2"
               accessibilityLabel="Botón guardar contraseña y entrar"
             />
+
+            {/* Nota de lentitud: aparece solo si el request lleva >8 s
+                en vuelo (típico: cold start de Render, 30-90 s). Le
+                dice al usuario que NO es un freeze y que no cierre la
+                app. Se oculta sola en cuanto el request termina. */}
+            {isLoading && slowHint && (
+              <Text className="text-slate-400 text-xs text-center mt-3 leading-4">
+                Está tardando más de lo normal (el servidor puede tardar
+                hasta 1 minuto la primera vez). Espera un momento y no
+                cierres la app.
+              </Text>
+            )}
           </ActivationCard>
         </View>
       </View>

@@ -8,6 +8,10 @@ import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { Stack, Redirect } from 'expo-router';
 import { useAuth } from '../../src/hooks/useAuth';
+// Fuente única de navegación por rol (role → href del home de su
+// grupo). Ver src/utils/roleRoutes.js (documenta la anti-garantía
+// de bucle de este gate).
+import { roleHomeHref } from '../../src/utils/roleRoutes';
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
 function RootSplash() {
@@ -34,11 +38,16 @@ export default function SocialWorkerLayout() {
     return <Redirect href="/" />;
   }
 
-  if (user?.role === 'teacher') {
-    return <Redirect href="/(teacher)/dashboard" />;
-  }
-  if (user?.role === 'tutor') {
-    return <Redirect href="/(guardian)/dashboard" />;
+  // Role gate: este grupo es SOLO de 'social_worker'. Cualquier otro
+  // rol se envía a su propio home vía roleHomeHref (fuente única), o
+  // a "/" si su rol no tiene home en la app (index.jsx muestra el
+  // aviso de "sin acceso" sin redirigir → sin posibilidad de bucle).
+  //
+  // ANTES solo se pateaban teacher y tutor: un prefect, principal,
+  // registrar o admin entraba a las pantallas del trabajador social
+  // (gate laxo → data expuesta a rol equivocado).
+  if (user?.role !== 'social_worker') {
+    return <Redirect href={roleHomeHref(user.role) || '/'} />;
   }
 
   return (
