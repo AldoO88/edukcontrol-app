@@ -57,7 +57,15 @@ const ENDPOINTS = {
 //   429 → rate limit (5/hora por IP)
 export const requestActivationOtp = async (phone) => {
   try {
-    const response = await api.post(ENDPOINTS.requestOtp, { phone });
+    // Timeout 30s (el default de api.js es 15s): el backend ESPERA el
+    // envío del WhatsApp de Meta antes de responder, y ese send externo
+    // fácilmente rebasa 15 s. Con 30s evitamos el falso "sin conexión"
+    // mientras el código sí se envía.
+    const response = await api.post(
+      ENDPOINTS.requestOtp,
+      { phone },
+      { timeout: 30000 },
+    );
     const { message, expiresAt } = response.data || {};
     return {
       success: true,
@@ -223,74 +231,128 @@ export const verifyActivationOtp = async (phone, otpCode) => {
 // Errores comunes:
 //   400 invalid   → código inválido/expirado (defense-in-depth: re-valida)
 //   400 password  → password muy corta (<8)
+//   400 already   → la cuenta YA se activó en un intento anterior
 //   409 conflict  → la cuenta ya está activa
-export const completeActivation = async ({ phone, otpCode, newPassword }) => {
-  try {
-    const response = await api.post(ENDPOINTS.complete, {
-      phone,
-      otpCode,
-      newPassword,
-    });
+//
+// TIMEOUT + REINTENTO (bug 2026-10-14): el backend en Render puede
+// tardar 30-90 s en cold start. Con el timeout global de 15 s el
+// celular abortaba mientras el backend SÍ completaba la activación —
+// el usuario veía "error de conexión" pero la contraseña quedaba
+// creada (y al reabrir la app podía entrar). Por eso:
+//   - Timeout propio de 60 s por petición.
+//   - UN reintento automático si no hubo respuesta HTTP (timeout o
+//     error de red). Si el primer intento ya llegó al backend, el
+//     reintento recibe 400 "already active" → lo mapeamos con
+//     reason 'already_active' para que la pantalla haga login
+//     silencioso con los datos que ya tiene en pantalla.
+const COMPLETE_TIMEOUT_MS = 60000;
+const NO_RESPONSE_RETRY_DELAY_MS = 2000;
 
-    const { authToken, user, message, refreshToken } = response.data || {};
-    if (!authToken || !user) {
-      return { success: false, message: 'Respuesta inválida del servidor.' };
-    }
+// Mapea un error de /auth/activate-account a { success: false, ... }.
+const mapCompleteActivationError = (error) => {
+  const status = error?.response?.status;
+  const serverMessage = error?.response?.data?.message;
 
-    // Normalización: el backend devuelve _id (convención MongoDB),
-    // pero el resto de la app espera `id` (convención JS). El
-    // login flow ya hace esta normalización en authService.payloadToAppUser
-    // porque decodifica un JWT que tiene _id. Aquí lo hacemos
-    // manualmente porque el user viene en el body de la response,
-    // no en un JWT.
-    const normalizedUser = { ...user, id: user._id };
-
-    return {
-      success: true,
-      user: normalizedUser,
-      authToken,
-      // El backend emite refresh en /auth/activate-account (contrato:
-      // { message, user, authToken, refreshToken }). Sin guardar este
-      // token la sesión se cae al expirar el access TTL.
-      refreshToken,
-      message: message || 'Cuenta activada correctamente.',
-    };
-  } catch (error) {
-    const status = error?.response?.status;
-    const serverMessage = error?.response?.data?.message;
-
-    if (status === 400) {
-      // Distinguimos entre código inválido y password corta para
-      // que el front pueda mostrar el mensaje correcto en cada caso.
-      if (serverMessage?.toLowerCase().includes('password')) {
-        return {
-          success: false,
-          message: serverMessage || 'La contraseña debe tener al menos 8 caracteres.',
-          reason: 'password',
-        };
-      }
+  if (status === 400) {
+    // "Account is already active. Please log in." — la cuenta YA existe
+    // (típico tras un timeout que sí llegó al backend). La pantalla
+    // puede intentar login silencioso con phone+password en pantalla.
+    if (serverMessage?.toLowerCase().includes('already active')) {
       return {
         success: false,
-        message: serverMessage || 'El código es inválido o expiró. Vuelve a verificarlo.',
-        reason: 'invalid_code',
-      };
-    }
-    if (status === 409) {
-      return {
-        success: false,
-        message: 'Esta cuenta ya está activa. Inicia sesión.',
         reason: 'already_active',
+        message: 'Tu cuenta ya fue creada.',
       };
     }
-    if (!error?.response) {
+    // Distinguimos entre código inválido y password corta para
+    // que el front pueda mostrar el mensaje correcto en cada caso.
+    if (serverMessage?.toLowerCase().includes('password')) {
       return {
         success: false,
-        message: 'No se pudo conectar con el servidor. Verifica tu conexión a internet.',
+        message: serverMessage || 'La contraseña debe tener al menos 8 caracteres.',
+        reason: 'password',
       };
     }
     return {
       success: false,
-      message: 'No se pudo completar la activación. Inténtalo de nuevo.',
+      message: serverMessage || 'El código es inválido o expiró. Vuelve a verificarlo.',
+      reason: 'invalid_code',
     };
   }
+  if (status === 409) {
+    return {
+      success: false,
+      reason: 'already_active',
+      message: 'Tu cuenta ya fue creada.',
+    };
+  }
+  if (!error?.response) {
+    // Timeout o red: tras el reintento automático seguimos sin respuesta.
+    // IMPORTANTE: el backend pudo haber completado la activación aunque
+    // el celular no lo supiera — el mensaje lo explica para que el
+    // usuario no reescriba la contraseña en vano.
+    return {
+      success: false,
+      reason: 'network',
+      message:
+        'No se pudo confirmar con el servidor. Si ya creaste tu contraseña, ' +
+        'cierra y vuelve a abrir la app para iniciar sesión. Si no, ' +
+        'verifica tu conexión e inténtalo de nuevo.',
+    };
+  }
+  return {
+    success: false,
+    message: 'No se pudo completar la activación. Inténtalo de nuevo.',
+  };
+};
+
+export const completeActivation = async ({ phone, otpCode, newPassword }) => {
+  const body = { phone, otpCode, newPassword };
+  let response;
+  try {
+    response = await api.post(ENDPOINTS.complete, body, {
+      timeout: COMPLETE_TIMEOUT_MS,
+    });
+  } catch (error) {
+    // ¿Sin respuesta HTTP (timeout/cold start o red caída)? → UN reintento.
+    const noHttpResponse = !error?.response;
+    if (noHttpResponse) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, NO_RESPONSE_RETRY_DELAY_MS),
+      );
+      try {
+        response = await api.post(ENDPOINTS.complete, body, {
+          timeout: COMPLETE_TIMEOUT_MS,
+        });
+      } catch (retryError) {
+        return mapCompleteActivationError(retryError);
+      }
+    } else {
+      return mapCompleteActivationError(error);
+    }
+  }
+
+  const { authToken, user, message, refreshToken } = response.data || {};
+  if (!authToken || !user) {
+    return { success: false, message: 'Respuesta inválida del servidor.' };
+  }
+
+  // Normalización: el backend devuelve _id (convención MongoDB),
+  // pero el resto de la app espera `id` (convención JS). El
+  // login flow ya hace esta normalización en authService.payloadToAppUser
+  // porque decodifica un JWT que tiene _id. Aquí lo hacemos
+  // manualmente porque el user viene en el body de la response,
+  // no en un JWT.
+  const normalizedUser = { ...user, id: user._id };
+
+  return {
+    success: true,
+    user: normalizedUser,
+    authToken,
+    // El backend emite refresh en /auth/activate-account (contrato:
+    // { message, user, authToken, refreshToken }). Sin guardar este
+    // token la sesión se cae al expirar el access TTL.
+    refreshToken,
+    message: message || 'Cuenta activada correctamente.',
+  };
 };

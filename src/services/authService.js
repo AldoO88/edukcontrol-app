@@ -43,12 +43,20 @@ const errorMessage = (error, fallback) => {
 // =====================================================================
 export const login = async (phone, password, remember) => {
   try {
-    const response = await api.post('/auth/login', {
-      phone: String(phone || '').trim(),
-      password,
-      remember: !!remember,
-      client: 'app',
-    });
+    // Timeout 45s (el default de api.js es 15s): el backend en Render
+    // puede tardar 30-90s en cold start; con 15s el login fallaba con
+    // "sin conexión" mientras el servidor sí respondía. `errorMessage`
+    // ya traduce ECONNABORTED a un mensaje amigable si se llega a agotar.
+    const response = await api.post(
+      '/auth/login',
+      {
+        phone: String(phone || '').trim(),
+        password,
+        remember: !!remember,
+        client: 'app',
+      },
+      { timeout: 45000 },
+    );
     const { authToken, refreshToken } = response.data || {};
     if (!authToken) {
       return { success: false, message: 'Respuesta inválida del servidor.' };

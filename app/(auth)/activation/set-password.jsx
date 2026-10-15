@@ -50,10 +50,12 @@ import ActivationCard from '../_components/ActivationCard';
 const LOCK_ICON_COLOR = '#f59e0b'; // amber-500
 
 // Hook de auth: usamos setSession (NO login) porque el backend
-// devuelve el token directamente en el response de /activate-account.
+// devuelve el token directamente en el response de /auth/activate-account.
 // setSession persiste el token en AsyncStorage, setea el header
 // de Axios y actualiza el user global — exactamente lo que hace
 // login(), pero sin pasar por /auth/login.
+// login() se usa SOLO en el caso "already_active" (la cuenta ya
+// existe): reintenta el login con los datos en pantalla.
 import { useAuth } from '../../../src/hooks/useAuth';
 
 // Servicio de activación: completeActivation hace el POST
@@ -70,7 +72,7 @@ const MIN_PASSWORD_LENGTH = 8;
 
 export default function SetPasswordScreen() {
   const router = useRouter();
-  const { setSession } = useAuth();
+  const { setSession, login } = useAuth();
 
   // Leemos los params de la pantalla anterior. Si llegamos aquí
   // por deep link sin haber pasado por las pantallas previas,
@@ -115,6 +117,48 @@ export default function SetPasswordScreen() {
       });
 
       if (!result.success) {
+        // "already_active": la cuenta YA fue creada en un intento
+        // anterior — el caso típico es un cold start de Render donde el
+        // primer POST llegó al backend y completó la activación, pero
+        // el celular abortó por timeout y no vio la respuesta (el
+        // service reintenta y el backend responde "already active").
+        // Login silencioso con el celular+contraseña que ya están en
+        // pantalla: si entra, vamos directo al dashboard sin que el
+        // usuario reescriba nada.
+        if (result.reason === 'already_active') {
+          try {
+            const loginResult = await login(phone, password, false);
+            if (loginResult.success) {
+              const href =
+                loginResult.user?.role === 'teacher'
+                  ? '/(teacher)/dashboard'
+                  : '/(guardian)/dashboard';
+              router.replace(href);
+              return;
+            }
+          } catch {
+            // login silencioso falló (p. ej. red caída): caemos al
+            // alert de abajo que lleva al usuario al login manual.
+          }
+          Alert.alert(
+            'Cuenta creada',
+            'Tu cuenta ya fue creada. Ve a la pantalla de inicio para iniciar sesión.',
+          );
+          router.replace('/');
+          setIsLoading(false);
+          return;
+        }
+
+        // "network": tras el reintento del service seguimos sin respuesta
+        // del servidor. El backend PUDO haber completado la activación
+        // aunque el celular no lo supiera — lo explicamos para que el
+        // usuario no reescriba la contraseña en vano.
+        if (result.reason === 'network') {
+          Alert.alert('No se pudo confirmar con el servidor', result.message);
+          setIsLoading(false);
+          return;
+        }
+
         Alert.alert('No se pudo completar la activación', result.message);
         setIsLoading(false);
         return;
