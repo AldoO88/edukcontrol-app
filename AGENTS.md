@@ -97,6 +97,17 @@ NativeWind no siempre aplica `elevation` (Android) además de `shadow*` (iOS). P
 
 `shadow-{sm,md,lg}` da el render en iOS; `elevation` (vía `style`) cubre Android. No omitir `elevation`.
 
+## Ancho de contenido en tablets Android (portrait) — Fase 2
+
+Regla: toda pantalla scrollable de tarjetas/texto centra su contenido con **`w-full max-w-2xl mx-auto`** (672px máx.) para que en tablet portrait (~800dp) no se estire edge-to-edge. **En celulares (< 672px) la clase no tiene ningún efecto** — es seguro aplicarla sin QA de regresión en teléfono.
+
+- **ScrollView simple:** `className="flex-1 w-full max-w-2xl mx-auto"`.
+- **Pantallas con chrome full-width arriba (`DashboardHeader`) y varios hermanos** (SchoolInfoCard, buscadores, FlatList): se envuelven en `<View className="flex-1 w-full max-w-2xl mx-auto">` justo después del header. En esos wrappers **los hijos conservan su indentación original** (diff mínimo, decisión deliberada — no re-indentar bloques de 40+ líneas).
+- **FlatList compartido:** `src/components/CitationsListScreen.jsx` tiene el wrapper — aplica a los 4 roles (teacher/prefect/director/social-worker) de una sola vez.
+- **Excepción:** pantallas con tablas o scroll horizontal (grades del maestro, grids anchos) NO se limitan — el ancho extra las beneficia. Modales (`max-w-md`) y pantallas de auth (`max-w-sm`) ya estaban resueltos.
+- **BottomTabBar:** la fila interna de tabs tiene `max-w-lg mx-auto` (512px) para que en tablet no se esparzan; el borde/fondo de la barra sigue full-width.
+- **QA pendiente:** verificación visual en emulador de tablet Android portrait (Fase 1 real) para pantallas de detalle no cubiertas por este pase estático.
+
 ## Trampas de SDK 57 (leer antes de tocar)
 
 1. **Notification handler deprecó `shouldShowAlert`.** Usar `shouldShowBanner` y `shouldShowList`:

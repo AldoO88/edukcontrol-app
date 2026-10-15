@@ -381,7 +381,11 @@ export default function TeacherAnnouncements() {
       {/* ============================================================
           CONTENIDO SCROLLEABLE
           ============================================================ */}
+      {/* Ajuste Fase 2 tablet: en celular w-full es idéntico; en
+          tablet la lista (y la SchoolInfoCard de su ListHeader)
+          queda centrada en 672px en vez de estirarse a 800px. */}
       <FlatList
+        className="flex-1 w-full max-w-2xl mx-auto"
         data={filteredItems}
         renderItem={renderFeedItem}
         keyExtractor={keyExtractor}

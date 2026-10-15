@@ -53,46 +53,54 @@ const BottomTabBar = ({ tabs = GUARDIAN_TABS }) => {
 
   return (
     // bg-white: fondo blanco.
-    // border-t border-slate-100: línea sutil arriba.
-    // flex-row: tabs en horizontal.
+    // border-t border-slate-100: línea sutil arriba (full-width:
+    // la barra cruza todo el ancho de la pantalla, también en tablet).
     // paddingBottom = insets.bottom → respeta el home indicator.
     <View
-      className="bg-white border-t border-slate-100 flex-row"
+      className="bg-white border-t border-slate-100"
       style={{ paddingBottom: insets.bottom }}
     >
-      {tabs.map((tab) => {
-        const Icon = tab.icon;
-        const isActive = currentSegment === tab.match;
-        return (
-          <Pressable
-            key={tab.id}
-            onPress={() => router.push(tab.route)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: isActive }}
-            accessibilityLabel={tab.label}
-            className="flex-1 items-center justify-center"
-            style={{ paddingVertical: 8 }}
-          >
-            <View className="items-center justify-center" style={{ height: 26 }}>
-              <Icon
-                size={22}
-                color={isActive ? '#0ea5e9' : '#94a3b8'}
-                strokeWidth={isActive ? 2.5 : 2}
-              />
-            </View>
-            <Text
-              numberOfLines={1}
-              style={{ fontSize: 10 }}
-              className={clsx(
-                'mt-0.5',
-                isActive ? 'text-sky-600 font-semibold' : 'text-slate-400',
-              )}
+      {/* Fila interna de tabs. max-w-lg mx-auto = ajuste de TABLET
+          (Fase 2, portrait): en pantallas anchas los tabs se
+          agrupan centrados en 512px en vez de esparcirse a ~200px
+          cada uno a lo ancho de un tablet de 800dp. En celulares
+          (390-430px < 512px) la clase NO tiene ningún efecto: la
+          fila sigue ocupando el 100% como antes. */}
+      <View className="flex-row w-full max-w-lg mx-auto">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = currentSegment === tab.match;
+          return (
+            <Pressable
+              key={tab.id}
+              onPress={() => router.push(tab.route)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              accessibilityLabel={tab.label}
+              className="flex-1 items-center justify-center"
+              style={{ paddingVertical: 8 }}
             >
-              {tab.label}
-            </Text>
-          </Pressable>
-        );
-      })}
+              <View className="items-center justify-center" style={{ height: 26 }}>
+                <Icon
+                  size={22}
+                  color={isActive ? '#0ea5e9' : '#94a3b8'}
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={{ fontSize: 10 }}
+                className={clsx(
+                  'mt-0.5',
+                  isActive ? 'text-sky-600 font-semibold' : 'text-slate-400',
+                )}
+              >
+                {tab.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 };

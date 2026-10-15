@@ -143,17 +143,26 @@ export default function GuardianDashboard() {
       {/* Header compartido: brand + campana. */}
       <DashboardHeader />
 
-      {/* School info card fija (no scrollea). Fuera del ScrollView
-          para que se mantenga visible al hacer scroll. */}
-      <SchoolInfoCard
-        school={data?.school}
-        isLoading={isLoading}
-        className="mx-4 mt-4"
-      />
+      {/* Columna de contenido centrada (Fase 2 tablet): en celular
+          w-full = layout idéntico al anterior (390px < 672px, el
+          max-w no aplica); en tablet portrait (~800dp) la tarjeta
+          y el scroll quedan centrados en 672px en vez de estirarse
+          a todo el ancho. */}
+      <View className="w-full max-w-2xl mx-auto">
+        {/* School info card fija (no scrollea). Fuera del ScrollView
+            para que se mantenga visible al hacer scroll. */}
+        <SchoolInfoCard
+          school={data?.school}
+          isLoading={isLoading}
+          className="mx-4 mt-4"
+        />
+      </View>
 
-      {/* ScrollView con flex-1. refreshControl permite pull-to-refresh. */}
+      {/* ScrollView con flex-1. refreshControl permite pull-to-refresh.
+          w-full max-w-2xl mx-auto = mismo ajuste de tablet que la
+          SchoolInfoCard de arriba (columna centrada de 672px). */}
       <ScrollView
-        className="flex-1"
+        className="flex-1 w-full max-w-2xl mx-auto"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
         refreshControl={

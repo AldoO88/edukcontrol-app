@@ -166,6 +166,10 @@ export default function DirectorStudentsScreen() {
   return (
     <View className="flex-1 bg-slate-50">
       <DashboardHeader />
+      {/* Columna centrada (Fase 2 tablet): en celular w-full es
+          idéntico; en tablet el contenido queda centrado en 672px.
+          Los hijos conservan su indentación original (diff mínimo). */}
+      <View className="flex-1 w-full max-w-2xl mx-auto">
       <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
 
       <View className="px-4 mt-4 mb-1">
@@ -208,6 +212,7 @@ export default function DirectorStudentsScreen() {
         }
         ListFooterComponent={isLoading && students.length > 0 ? <ActivityIndicator size="small" color="#4F46E5" className="my-4" /> : null}
       />
+      </View>
 
       <Modal visible={showGroupDropdown} transparent animationType="fade" onRequestClose={() => setShowGroupDropdown(false)}>
         <Pressable className="flex-1 bg-black/40 justify-center items-center" onPress={() => setShowGroupDropdown(false)}>

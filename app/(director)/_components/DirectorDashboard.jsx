@@ -149,14 +149,23 @@ export default function DirectorDashboard() {
   return (
     <View className="flex-1 bg-slate-50">
       <DashboardHeader />
-      <SchoolInfoCard
-        school={school}
-        isLoading={isLoading}
-        className="mx-4 mt-2"
-      />
+      {/* Columna de contenido centrada (Fase 2 tablet): en celular
+          w-full = layout idéntico al anterior (390px < 672px, el
+          max-w no aplica); en tablet portrait (~800dp) la tarjeta
+          y el scroll quedan centrados en 672px en vez de estirarse
+          a todo el ancho. */}
+      <View className="w-full max-w-2xl mx-auto">
+        <SchoolInfoCard
+          school={school}
+          isLoading={isLoading}
+          className="mx-4 mt-2"
+        />
+      </View>
 
+      {/* w-full max-w-2xl mx-auto = mismo ajuste de tablet que la
+          SchoolInfoCard de arriba (columna centrada de 672px). */}
       <ScrollView
-        className="flex-1"
+        className="flex-1 w-full max-w-2xl mx-auto"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
         refreshControl={

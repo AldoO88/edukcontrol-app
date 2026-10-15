@@ -150,6 +150,10 @@ export default function DirectorTeachersScreen() {
   return (
     <View className="flex-1 bg-slate-50">
       <DashboardHeader />
+      {/* Columna centrada (Fase 2 tablet): en celular w-full es
+          idéntico; en tablet el contenido queda centrado en 672px.
+          Los hijos conservan su indentación original (diff mínimo). */}
+      <View className="flex-1 w-full max-w-2xl mx-auto">
       <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
 
       <View className="px-4 mt-4 mb-1">
@@ -182,6 +186,7 @@ export default function DirectorTeachersScreen() {
           </View>
         }
       />
+      </View>
     </View>
   );
 }

@@ -436,6 +436,12 @@ export default function ScheduleScreen() {
     <View className="flex-1 bg-[#F8FAFC]">
       {/* CHROME COMPARTIDO */}
       <DashboardHeader />
+      {/* Columna de contenido centrada (Fase 2 tablet): envuelve
+          SchoolInfoCard, back button, tabs de días y la lista de
+          clases para que en tablet portrait queden centrados en
+          672px (en celular w-full = idéntico). Los hijos conservan
+          su indentación original para mantener el diff mínimo. */}
+      <View className="flex-1 w-full max-w-2xl mx-auto">
       <SchoolInfoCard
         school={school}
         isLoading={!school}
@@ -545,6 +551,7 @@ export default function ScheduleScreen() {
           </View>
         )}
       </ScrollView>
+      </View>
     </View>
   );
 }

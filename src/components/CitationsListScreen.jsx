@@ -493,6 +493,11 @@ const CitationsListScreen = ({
   // ============================================================
   return (
     <View className="flex-1 bg-[#F8FAFC]">
+      {/* Columna centrada (Fase 2 tablet): la lista y su listHeader
+          (chrome: header, card, back, filtros) quedan en 672px
+          centrados en tablet; en celular w-full = idéntico. FAB
+          queda FUERA para conservar su anclaje actual. */}
+      <View className="flex-1 w-full max-w-2xl mx-auto">
       <FlatList
         data={filteredItems}
         keyExtractor={(item) => item.id}
@@ -514,6 +519,7 @@ const CitationsListScreen = ({
           paddingBottom: 100,
         }}
       />
+      </View>
 
       {/* ============================================================
           FAB "CREAR NUEVO CITATORIO"

@@ -301,6 +301,10 @@ export default function SocialWorkerGroupsScreen() {
   return (
     <View className="flex-1 bg-slate-50">
       <DashboardHeader />
+      {/* Columna centrada (Fase 2 tablet): en celular w-full es
+          idéntico; en tablet el contenido queda centrado en 672px.
+          Los hijos conservan su indentación original (diff mínimo). */}
+      <View className="flex-1 w-full max-w-2xl mx-auto">
       <SchoolInfoCard
         school={school}
         isLoading={!school}
@@ -364,6 +368,7 @@ export default function SocialWorkerGroupsScreen() {
           </View>
         }
       />
+      </View>
     </View>
   );
 }
