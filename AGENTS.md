@@ -356,7 +356,7 @@ const { expoPushToken, status, error, lastNotification, lastNotificationResponse
 Componente `src/components/NotificationBell.jsx` que muestra:
 - Ícono de campana en `DashboardHeader` (todos los roles)
 - Badge rojo con count de no leídas (polling cada 60s)
-- Dropdown panel con últimas 20 notificaciones
+- Dropdown panel con las últimas 50 notificaciones (el hook pide `limit: 50`; el backend admite hasta 100)
 - Tap en item: marca como leída + navega al deep link
 
 Backend soporta:
@@ -364,6 +364,11 @@ Backend soporta:
 - `GET /api/me/notifications/unread-count`
 - `PATCH /api/me/notifications/:id/read`
 - `PATCH /api/me/notifications/read-all`
+
+Retención (2026-10-17):
+- **Ventana UX de 30 días**: badge y lista solo consideran notificaciones de los últimos 30 días (`VENTANA_DIAS` en `services/notifications.service.js` del backend) — lo más viejo no leído expira visualmente solo y el badge no se queda pegado con acumulación de meses.
+- **TTL de 90 días en BD**: MongoDB borra los docs solos a los 90 días (índice `notifications_ttl_90d` sobre `createdAt` en `models/Notification.model.js`) — retención limitada por PII de menores (auditoría reciente + minimización de datos).
+- El tap en la **push del sistema** navega pero NO marca como leída (solo el tap en la campanita lo hace) — mejora pendiente: llevar `notificationId` en el `data` del push y auto-marcar al abrir.
 
 Colección MongoDB: `Notification` (ver `models/Notification.model.js`).
 
