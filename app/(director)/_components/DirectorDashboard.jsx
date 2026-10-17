@@ -32,6 +32,7 @@ import {
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 import DashboardHeader from '@/src/components/DashboardHeader';
 import { useDirectorDashboard } from '@/src/hooks/useDirectorDashboard';
+import { formatAsistPct } from '@/src/utils/asistenciaPct';
 
 export default function DirectorDashboard() {
   const router = useRouter();
@@ -222,7 +223,7 @@ export default function DirectorDashboard() {
                 <TrendingUp size={14} color="#64748b" />
               </View>
               <Text className="text-2xl font-extrabold text-sky-600 mt-1">
-                {stats.dayTotal > 0 ? Math.round((stats.dayPresent / stats.dayTotal) * 100) : 0}%
+                {formatAsistPct(stats)}
               </Text>
             </View>
           </View>

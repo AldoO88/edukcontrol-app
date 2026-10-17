@@ -38,6 +38,7 @@ import {
 import SchoolInfoCard from '@/src/components/SchoolInfoCard';
 import DashboardHeader from '@/src/components/DashboardHeader';
 import { usePrefectDashboard } from '@/src/hooks/usePrefectDashboard';
+import { formatAsistPct } from '@/src/utils/asistenciaPct';
 
 // =====================================================================
 // COMPONENTE PRINCIPAL
@@ -257,7 +258,7 @@ export default function PrefectDashboard() {
                 <TrendingUp size={14} color="#64748b" />
               </View>
               <Text className="text-2xl font-extrabold text-sky-600 mt-1">
-                {stats.dayTotal > 0 ? Math.round((stats.dayPresent / stats.dayTotal) * 100) : 0}%
+                {formatAsistPct(stats)}
               </Text>
             </View>
           </View>
