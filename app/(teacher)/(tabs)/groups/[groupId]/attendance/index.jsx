@@ -73,6 +73,10 @@ import {
   // fuente de verdad de esa traducción).
   mapBackendStatus,
   toBackendStatus,
+  // Auto-selección de período: MISMA lógica que la vista "hoy" — si
+  // esta matriz elegía periods[0] a ciegas, tras guardar en "hoy"
+  // mostraba un período donde la sesión creada no existía.
+  pickInitialPeriod,
 } from '@/src/utils/attendanceHelpers';
 // Modales privados del route group (teacher).
 import EditAttendanceModal from '@/app/(teacher)/_components/EditAttendanceModal';
@@ -258,16 +262,25 @@ export default function TeacherMatrixScreen() {
     let cancelled = false;
     const fetchPeriods = async () => {
       setPeriodsLoading(true);
-      const result = await getGradingPeriods();
-      if (cancelled) return;
-      if (result.success && result.data?.periods) {
-        setPeriods(result.data.periods);
-        // Auto-seleccionar el primer período
-        if (result.data.periods.length > 0) {
-          setSelectedPeriod(result.data.periods[0]);
+      try {
+        const result = await getGradingPeriods();
+        if (cancelled) return;
+        if (result.success && result.data?.periods) {
+          setPeriods(result.data.periods);
+          // Auto-selección con la MISMA lógica de la vista "hoy"
+          // (pickInitialPeriod): el período abierto que contiene hoy.
+          // Antes se tomaba periods[0] a ciegas y, si no era el de
+          // hoy, la sesión recién guardada en la vista "hoy" no
+          // aparecía en esta matriz.
+          if (result.data.periods.length > 0) {
+            setSelectedPeriod(pickInitialPeriod(result.data.periods));
+          }
         }
+      } finally {
+        // finally defensivo: el pill "Cargando..." no puede quedarse
+        // pegado aunque falle algo no previsto.
+        if (!cancelled) setPeriodsLoading(false);
       }
-      setPeriodsLoading(false);
     };
     fetchPeriods();
     return () => { cancelled = true; };
@@ -277,44 +290,60 @@ export default function TeacherMatrixScreen() {
   // FETCH: sesiones de asistencia + alumnos
   // ============================================================
   useEffect(() => {
-    if (!groupId || !subjectId || !selectedPeriod?._id) return;
+    if (!groupId) return;
+    // Sin subjectId no hay nada que fetchear. Hay que APAGAR el
+    // spinner inicial (su estado de arranque es `true`): esta ruta
+    // también se abre desde el replace posterior al guardado en la
+    // vista "hoy" — que antes no traía subjectId — y el early-return
+    // dejaba el spinner girando para siempre.
+    if (!subjectId) {
+      setLoadingSessions(false);
+      return;
+    }
+    // Aún no hay período elegido (el fetch de períodos sigue en
+    // vuelo): seguir esperando sin tocar el spinner todavía.
+    if (!selectedPeriod?._id) return;
 
     let cancelled = false;
     const fetchSessions = async () => {
       setLoadingSessions(true);
-      const result = await getAttendanceSessions({
-        groupId,
-        subjectId,
-        periodId: selectedPeriod._id,
-      });
-      if (cancelled) return;
-      if (result.success && result.data) {
-        const { sessions = [], students = [] } = result.data;
-
-        // Mapear students del endpoint a matrix
-        const mappedMatrix = students.map((s) => ({
-          _id: s._id,
-          name: s.fullName,
-          // photoUrl viene del backend; si no llega, null → iniciales.
-          photoUrl: s.photoUrl || null,
-          records: buildRecordsFromSessions(sessions, s._id),
-        }));
-        setMatrix(mappedMatrix);
-
-        // Mapear sessions a dates (incluyendo sessionId para PATCH)
-        const mappedDates = sessions.map((sess) => {
-          const iso = sess.date.split('T')[0];
-          return {
-            iso,
-            short: formatShort(iso),
-            full: formatFull(iso),
-            day: iso === todayIso(),
-            sessionId: sess._id,
-          };
+      try {
+        const result = await getAttendanceSessions({
+          groupId,
+          subjectId,
+          periodId: selectedPeriod._id,
         });
-        setDates(mappedDates);
+        if (cancelled) return;
+        if (result.success && result.data) {
+          const { sessions = [], students = [] } = result.data;
+
+          // Mapear students del endpoint a matrix
+          const mappedMatrix = students.map((s) => ({
+            _id: s._id,
+            name: s.fullName,
+            // photoUrl viene del backend; si no llega, null → iniciales.
+            photoUrl: s.photoUrl || null,
+            records: buildRecordsFromSessions(sessions, s._id),
+          }));
+          setMatrix(mappedMatrix);
+
+          // Mapear sessions a dates (incluyendo sessionId para PATCH)
+          const mappedDates = sessions.map((sess) => {
+            const iso = sess.date.split('T')[0];
+            return {
+              iso,
+              short: formatShort(iso),
+              full: formatFull(iso),
+              day: iso === todayIso(),
+              sessionId: sess._id,
+            };
+          });
+          setDates(mappedDates);
+        }
+      } finally {
+        // finally defensivo: el spinner de la matriz se apaga siempre.
+        if (!cancelled) setLoadingSessions(false);
       }
-      setLoadingSessions(false);
     };
     fetchSessions();
     return () => { cancelled = true; };

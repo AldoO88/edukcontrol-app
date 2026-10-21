@@ -20,6 +20,8 @@
 //   - cycleStatus(c): devuelve el siguiente status del ciclo.
 //   - mapBackendStatus(s): status backend ('present', …) → código UI.
 //   - toBackendStatus(c):  código UI ('P', …) → status backend (o null).
+//   - pickInitialPeriod(ps): auto-selección de período, COMPARTIDA entre
+//     la matriz y la vista "hoy" para que elijan el mismo período.
 // =====================================================================
 
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -125,4 +127,38 @@ export const toBackendStatus = (code) => {
     case 'FJ': return 'justified';
     default:   return null;
   }
+};
+
+// ---------------------------------------------------------------------
+// pickInitialPeriod(periods)
+// ---------------------------------------------------------------------
+// Auto-selección de período para las vistas de asistencia (la matriz
+// attendance/index.jsx y la vista "hoy" attendance/today.jsx):
+//   1. El período ABIERTO que contiene hoy (startDate ≤ hoy ≤ endDate).
+//   2. Si ninguno contiene hoy → el primer período abierto.
+//   3. Si todos están cerrados → el primero de la lista.
+// Los períodos llegan ordenados por `order` desde el backend.
+//
+// COMPARTIDA A PROPÓSITO: si cada pantalla elegía su propio período
+// por defecto (la matriz tomaba periods[0] a ciegas), tras guardar en
+// "hoy" la matriz abría un período DISTINTO al de la sesión creada y
+// la lista recién tomada "no aparecía". Aquí ambas usan la MISMA
+// lógica y caen en el período de hoy.
+//
+// startDate/endDate llegan como ISO 8601 → comparar el prefijo de
+// fecha (YYYY-MM-DD) con strings es suficiente (sorteable) y evita
+// conversiones de zona horaria.
+// ---------------------------------------------------------------------
+export const pickInitialPeriod = (periods) => {
+  if (!periods || periods.length === 0) return null;
+  const today = todayIso();
+  const open = periods.filter((p) => !p.isClosed);
+  const candidates = open.length ? open : periods;
+  const containing = candidates.find((p) => {
+    const start = p.startDate ? String(p.startDate).slice(0, 10) : null;
+    const end = p.endDate ? String(p.endDate).slice(0, 10) : null;
+    if (!start || !end) return false;
+    return today >= start && today <= end;
+  });
+  return containing || candidates[0];
 };

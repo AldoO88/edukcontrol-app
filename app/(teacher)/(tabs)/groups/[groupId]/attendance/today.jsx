@@ -29,10 +29,14 @@
 //      lista REAL de alumnos del grupo (orden del backend, con
 //      photoUrl) + sesiones del período.
 //   3. Si ya existe sesión de HOY → se hidrata el status de cada
-//      alumno desde sus records (mapBackendStatus).
+//      alumno desde sus records (mapBackendStatus). Contrato clave:
+//      el backend almacena `date` en medianoche UTC (parseDateOnly),
+//      así que `split('T')[0]` devuelve exactamente el día local que
+//      enviamos al crearla, sin importar la TZ del servidor.
 //   4. Si NO existe sesión de HOY → los taps se acumulan en `dirty` y
 //      "Guardar Asistencia" crea la sesión (POST, todos nacen
-//      "present") + hace PATCH de los no-presentes.
+//      "present") + hace PATCH de los no-presentes EN PARALELO
+//      (Promise.allSettled: ~1 round-trip en vez de N secuenciales).
 //
 // Flujo de edición (1-tap, igual que la matriz):
 //   - Tap en alumno → EditAttendanceModal → una opción → el modal
@@ -105,6 +109,9 @@ import {
   STATUS_STYLES,
   mapBackendStatus,
   toBackendStatus,
+  // Auto-selección de período: compartida con la matriz para que ambas
+  // vistas elijan el MISMO período por defecto (ver nota abajo).
+  pickInitialPeriod,
 } from '@/src/utils/attendanceHelpers';
 
 // ---------------------------------------------------------------------
@@ -125,31 +132,11 @@ const countByStatus = (statusMap) => {
   return counts;
 };
 
-// ---------------------------------------------------------------------
-// pickInitialPeriod(periods)
-// ---------------------------------------------------------------------
-// Auto-selección de período para esta vista (no hay dropdown):
-//   1. El período ABIERTO que contiene hoy (startDate ≤ hoy ≤ endDate).
-//   2. Si ninguno contiene hoy → el primer período abierto.
-//   3. Si todos están cerrados → el primero de la lista.
-// Los períodos llegan ordenados por `order` desde el backend (igual
-// que en attendance/index.jsx).
-// ---------------------------------------------------------------------
-const pickInitialPeriod = (periods) => {
-  if (!periods || periods.length === 0) return null;
-  const today = todayIso();
-  const open = periods.filter((p) => !p.isClosed);
-  const candidates = open.length ? open : periods;
-  const containing = candidates.find((p) => {
-    // startDate/endDate vienen como ISO 8601 → comparar solo el
-    // prefijo de fecha (YYYY-MM-DD) funciona con strings.
-    const start = p.startDate ? String(p.startDate).slice(0, 10) : null;
-    const end = p.endDate ? String(p.endDate).slice(0, 10) : null;
-    if (!start || !end) return false;
-    return today >= start && today <= end;
-  });
-  return containing || candidates[0];
-};
+// NOTA: pickInitialPeriod se movió a '@/src/utils/attendanceHelpers'
+// para compartirla con la matriz (attendance/index.jsx). Ambas vistas
+// deben elegir el MISMO período por defecto: si no, tras guardar en
+// "hoy" la matriz abría otro período y la sesión recién creada no
+// aparecía en la columna de hoy.
 
 // =====================================================================
 // COMPONENTE PRINCIPAL
@@ -219,15 +206,21 @@ export default function TakeAttendanceTodayScreen() {
     let cancelled = false;
     const fetchPeriods = async () => {
       setPeriodsLoading(true);
-      const result = await getGradingPeriods();
-      if (cancelled) return;
-      if (result.success && result.data?.periods) {
-        const periods = result.data.periods;
-        setSelectedPeriod(pickInitialPeriod(periods));
-      } else {
-        setError(result.message || 'No se pudieron cargar los períodos.');
+      try {
+        const result = await getGradingPeriods();
+        if (cancelled) return;
+        if (result.success && result.data?.periods) {
+          const periods = result.data.periods;
+          setSelectedPeriod(pickInitialPeriod(periods));
+        } else {
+          setError(result.message || 'No se pudieron cargar los períodos.');
+        }
+      } finally {
+        // finally defensivo: aunque algo inesperado lance (los
+        // servicios ya capturan sus errores), el spinner de carga no
+        // puede quedarse pegado para siempre.
+        if (!cancelled) setPeriodsLoading(false);
       }
-      setPeriodsLoading(false);
     };
     fetchPeriods();
     return () => { cancelled = true; };
@@ -243,49 +236,56 @@ export default function TakeAttendanceTodayScreen() {
     if (!groupId || !subjectId || !selectedPeriod?._id) return null;
     setLoading(true);
     setError(null);
-    const result = await getAttendanceSessions({
-      groupId,
-      subjectId,
-      periodId: selectedPeriod._id,
-    });
-    if (!result.success) {
-      setError(result.message || 'No se pudieron cargar las sesiones.');
-      setLoading(false);
-      return null;
-    }
-    const { sessions = [], students: backendStudents = [] } = result.data || {};
-
-    // Lista de alumnos (orden del backend, con foto → iniciales).
-    setStudents(
-      backendStudents.map((s) => ({
-        _id: s._id,
-        fullName: s.fullName,
-        photoUrl: s.photoUrl || null,
-      })),
-    );
-
-    // ¿Ya existe sesión de HOY? → su id habilita el PATCH directo.
-    const todaySession = sessions.find(
-      (sess) => String(sess.date).split('T')[0] === today,
-    );
-    const sid = todaySession?._id || null;
-    setTodaySessionId(sid);
-
-    // Hidratar el status de HOY: todos en '-' y luego pisa con los
-    // records de la sesión de hoy (si existe).
-    const initial = {};
-    backendStudents.forEach((s) => { initial[s._id] = '-'; });
-    if (todaySession) {
-      (todaySession.records || []).forEach((rec) => {
-        if (initial[rec.student_id] !== undefined) {
-          initial[rec.student_id] = mapBackendStatus(rec.status);
-        }
+    try {
+      const result = await getAttendanceSessions({
+        groupId,
+        subjectId,
+        periodId: selectedPeriod._id,
       });
+      if (!result.success) {
+        setError(result.message || 'No se pudieron cargar las sesiones.');
+        return null;
+      }
+      const { sessions = [], students: backendStudents = [] } = result.data || {};
+
+      // Lista de alumnos (orden del backend, con foto → iniciales).
+      setStudents(
+        backendStudents.map((s) => ({
+          _id: s._id,
+          fullName: s.fullName,
+          photoUrl: s.photoUrl || null,
+        })),
+      );
+
+      // ¿Ya existe sesión de HOY? → su id habilita el PATCH directo y
+      // HIDRATA la lista ya tomada al reabrir la pantalla (contrato:
+      // el backend guarda `date` en medianoche UTC — parseDateOnly —
+      // así que `split('T')[0]` coincide con el día local de hoy).
+      const todaySession = sessions.find(
+        (sess) => String(sess.date).split('T')[0] === today,
+      );
+      const sid = todaySession?._id || null;
+      setTodaySessionId(sid);
+
+      // Hidratar el status de HOY: todos en '-' y luego pisa con los
+      // records de la sesión de hoy (si existe).
+      const initial = {};
+      backendStudents.forEach((s) => { initial[s._id] = '-'; });
+      if (todaySession) {
+        (todaySession.records || []).forEach((rec) => {
+          if (initial[rec.student_id] !== undefined) {
+            initial[rec.student_id] = mapBackendStatus(rec.status);
+          }
+        });
+      }
+      setStatusByStudent(initial);
+      setDirty({});
+      return sid;
+    } finally {
+      // finally defensivo: el spinner "Cargando alumnos..." se apaga
+      // siempre, aunque falle algo no previsto en el try.
+      setLoading(false);
     }
-    setStatusByStudent(initial);
-    setDirty({});
-    setLoading(false);
-    return sid;
   }, [groupId, subjectId, selectedPeriod?._id, today]);
 
   // Dispara la carga cuando cambia el período seleccionado / params.
@@ -370,28 +370,46 @@ export default function TakeAttendanceTodayScreen() {
       }
 
       // 2) Persistir los statuses tocados mientras no existía la sesión.
-      //    ('P' es el default de la sesión creada → no requiere PATCH.)
-      let failed = 0;
+      //    ('P' es el default de la sesión creada y '-' no tiene
+      //    equivalente backend → ninguno de los dos requiere PATCH.)
+      const toPatch = [];
       for (const [studentId, code] of Object.entries(dirty)) {
         const backendStatus = toBackendStatus(code);
         if (backendStatus && backendStatus !== 'present') {
-          const result = await updateAttendanceRecord({
+          toPatch.push({ studentId, backendStatus });
+        }
+      }
+
+      // En PARALELO con Promise.allSettled: antes era un PATCH
+      // secuencial por alumno (N round-trips encadenados) y, con el
+      // servidor lento o en cold start, el spinner "Guardando..."
+      // podía tardar minutos y parecer que nunca salía. Ahora todos
+      // los PATCH vuelven aunque alguno falle y el total ≈ 1 round-trip.
+      const settled = await Promise.allSettled(
+        toPatch.map(({ studentId, backendStatus }) =>
+          updateAttendanceRecord({
             sessionId: sid,
             studentId,
             status: backendStatus,
+          }),
+        ),
+      );
+
+      let failed = 0;
+      settled.forEach((outcome, i) => {
+        const { studentId } = toPatch[i];
+        const result = outcome.status === 'fulfilled' ? outcome.value : null;
+        if (result?.success) {
+          // Registrado → fuera de `dirty`.
+          setDirty((prev) => {
+            const next = { ...prev };
+            delete next[studentId];
+            return next;
           });
-          if (!result.success) {
-            failed += 1;
-            continue; // queda en `dirty` para un reintento.
-          }
+        } else {
+          failed += 1; // queda en `dirty` para un reintento.
         }
-        // Registrado (o ya satisfecho por el default 'present').
-        setDirty((prev) => {
-          const next = { ...prev };
-          delete next[studentId];
-          return next;
-        });
-      }
+      });
       if (failed > 0) {
         Alert.alert(
           'Aviso',
@@ -401,8 +419,14 @@ export default function TakeAttendanceTodayScreen() {
       }
 
       // Volvemos a la matriz para que el docente vea el resultado
-      // persistido (la matriz re-fetchea del backend).
-      router.replace(`/(teacher)/groups/${groupId}/attendance`);
+      // persistido (la matriz re-fetchea del backend). IMPORTANTE:
+      // pasar subjectId como param — sin él la matriz hacía
+      // early-return en su fetch y su spinner inicial quedaba girando
+      // para siempre (bug: "al guardar, el spinner no sale").
+      router.replace({
+        pathname: `/(teacher)/groups/${groupId}/attendance`,
+        params: { subjectId },
+      });
     } finally {
       setSaving(false);
     }
