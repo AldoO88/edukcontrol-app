@@ -149,14 +149,14 @@ export default function EditAttendanceModal({
               />
               {/* Subheader: nombre + fecha. */}
               <View className="ml-4 flex-1">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900"
                   style={{ fontSize: 15, fontWeight: '600' }}
                   numberOfLines={1}
                 >
                   {student?.name || student?.fullName || 'Alumno'}
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500 mt-0.5"
                   style={{ fontSize: 12 }}
                   numberOfLines={1}
@@ -217,7 +217,7 @@ export default function EditAttendanceModal({
                       backgroundColor: isCurrent ? opt.color : '#E2E8F0',
                     }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 15,
                         fontWeight: '800',
@@ -227,7 +227,7 @@ export default function EditAttendanceModal({
                       {opt.code}
                     </Text>
                   </View>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 13,
                       fontWeight: '700',
@@ -237,7 +237,7 @@ export default function EditAttendanceModal({
                   >
                     {opt.title}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{ fontSize: 11, color: '#64748B', marginTop: 2, textAlign: 'center' }}
                   >
                     {opt.subtitle}
@@ -250,7 +250,7 @@ export default function EditAttendanceModal({
           {/* ==========================================================
               HINT: el modal cierra al tocar una opción.
               ========================================================== */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400 mt-1 mb-2 text-center"
             style={{ fontSize: 11 }}
           >

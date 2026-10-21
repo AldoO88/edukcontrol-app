@@ -104,7 +104,7 @@ const NotificationItem = ({ notification, onPress }) => {
       {/* Contenido */}
       <View className="flex-1 min-w-0">
         <View className="flex-row items-start justify-between">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900 flex-1"
             style={{
               fontSize: 13,
@@ -125,14 +125,14 @@ const NotificationItem = ({ notification, onPress }) => {
             />
           )}
         </View>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-500 mt-0.5"
           style={{ fontSize: 12, fontWeight: '400' }}
           numberOfLines={2}
         >
           {notification.body}
         </Text>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-400 mt-1"
           style={{ fontSize: 10, fontWeight: '500' }}
         >

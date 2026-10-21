@@ -95,7 +95,7 @@ export default function RequestRescheduleModal({ visible, onClose, onSubmit, isL
                 >
                   <RefreshCw size={20} color="#92400E" strokeWidth={2} />
                 </View>
-                <Text className="text-lg font-bold text-slate-900">
+                <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
                   Solicitar Reagendación
                 </Text>
               </View>
@@ -119,25 +119,25 @@ export default function RequestRescheduleModal({ visible, onClose, onSubmit, isL
                   >
                     <CheckCircle size={32} color="#F59E0B" strokeWidth={2} />
                   </View>
-                  <Text className="text-amber-700 font-bold text-base">
+                  <Text maxFontSizeMultiplier={1.3} className="text-amber-700 font-bold text-base">
                     Solicitud enviada
                   </Text>
-                  <Text className="text-slate-500 text-sm mt-1 text-center">
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-1 text-center">
                     El docente收到 tu solicitud y decidirá la nueva fecha.
                   </Text>
                 </View>
               ) : (
                 <>
-                  <Text className="text-sm text-slate-600 mb-4">
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-600 mb-4">
                     Explica por qué no puedes asistir a la fecha actual. El docente decidirá la nueva fecha de la cita.
                   </Text>
 
                   {/* INPUT DE MOTIVO */}
                   <View className="mb-4">
-                    <Text className="text-xs font-bold text-slate-500 uppercase mb-2">
+                    <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-500 uppercase mb-2">
                       Motivo de la reagendación
                     </Text>
-                    <TextInput
+                    <TextInput maxFontSizeMultiplier={1.3}
                       value={reason}
                       onChangeText={setReason}
                       placeholder="Ej: No puedo asistir a esa hora, tengo otra cita médica..."
@@ -154,7 +154,7 @@ export default function RequestRescheduleModal({ visible, onClose, onSubmit, isL
                       editable={!isLoading}
                     />
                     {error ? (
-                      <Text className="text-rose-600 text-xs mt-1">{error}</Text>
+                      <Text maxFontSizeMultiplier={1.3} className="text-rose-600 text-xs mt-1">{error}</Text>
                     ) : null}
                   </View>
 
@@ -165,7 +165,7 @@ export default function RequestRescheduleModal({ visible, onClose, onSubmit, isL
                       disabled={isLoading}
                       className="flex-1 bg-slate-100 py-3 rounded-xl items-center"
                     >
-                      <Text className="text-slate-700 font-semibold text-sm">
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-700 font-semibold text-sm">
                         Cancelar
                       </Text>
                     </Pressable>
@@ -187,7 +187,7 @@ export default function RequestRescheduleModal({ visible, onClose, onSubmit, isL
                       ) : (
                         <>
                           <RefreshCw size={16} color="#ffffff" strokeWidth={2} />
-                          <Text className="text-white font-semibold text-sm ml-1.5">
+                          <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold text-sm ml-1.5">
                             Enviar solicitud
                           </Text>
                         </>

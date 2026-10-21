@@ -235,7 +235,7 @@ export default function PhoneInputScreen() {
             {expiresAt && remainingSeconds > 0 && (
               <View className="flex-row items-center mt-2 py-2 px-3 bg-sky-50 rounded-lg self-start">
                 <Clock size={14} color="#0369a1" strokeWidth={2} />
-                <Text className="text-xs font-medium text-sky-700 ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-sky-700 ml-1.5">
                   El código expira en {formatCountdown(remainingSeconds)}
                 </Text>
               </View>
@@ -243,7 +243,7 @@ export default function PhoneInputScreen() {
 
             {expiresAt && remainingSeconds === 0 && (
               <View className="mt-2 py-2 px-3 bg-amber-50 rounded-lg self-start">
-                <Text className="text-xs font-medium text-amber-700">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-amber-700">
                   El código expiró. Vuelve a solicitar uno.
                 </Text>
               </View>
@@ -279,7 +279,7 @@ export default function PhoneInputScreen() {
               accessibilityLabel="Cancelar y volver al inicio de sesión"
             >
               <ChevronLeft size={16} color="#64748b" strokeWidth={2.25} />
-              <Text className="text-sm text-slate-500 ml-1 font-medium">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 ml-1 font-medium">
                 Cancelar y volver al inicio de sesión
               </Text>
             </Pressable>

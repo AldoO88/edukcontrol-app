@@ -71,7 +71,7 @@ const GroupDiagnosticDashboard = ({
           HEADER (título + tag)
           ============================================================ */}
       <View className="flex-row items-center justify-between">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-base font-bold text-[#0F172A] flex-1"
           numberOfLines={1}
         >
@@ -82,7 +82,7 @@ const GroupDiagnosticDashboard = ({
             className="flex-row items-center px-2 py-1 rounded-lg ml-2"
             style={{ backgroundColor: '#E0F2FE' }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-[11px] font-bold"
               style={{ color: '#0284C7' }}
             >
@@ -98,13 +98,13 @@ const GroupDiagnosticDashboard = ({
           Misma fila, separados a los extremos con space-between.
           ============================================================ */}
       <View className="flex-row items-center justify-between mt-2">
-        <Text className="text-[13px] text-[#64748B]">
+        <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B]">
           {period}
         </Text>
      
         <View className="flex-row items-center px-4">
           <Users size={15} color="#64748B" strokeWidth={2} /> 
-          <Text className="ml-2 text-[13px] text-[#64748B]">
+          <Text maxFontSizeMultiplier={1.3} className="ml-2 text-[13px] text-[#64748B]">
           {`${studentCount} ${studentCount === 1 ? 'alumno' : 'alumnos'}`}
           </Text>
         </View>
@@ -134,7 +134,7 @@ const GroupDiagnosticDashboard = ({
       >
         {/* 1) PROMEDIO GRUPAL. */}
         <View className="items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -145,7 +145,7 @@ const GroupDiagnosticDashboard = ({
           >
             Promedio
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 18,
               fontWeight: '800',
@@ -159,7 +159,7 @@ const GroupDiagnosticDashboard = ({
 
         {/* 2) EN RIESGO. */}
         <View className="items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -174,7 +174,7 @@ const GroupDiagnosticDashboard = ({
             className="flex-row items-center px-2 py-0.5 rounded-full mt-1"
             style={{ backgroundColor: '#FEE2E2' }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 13,
                 fontWeight: '800',
@@ -183,7 +183,7 @@ const GroupDiagnosticDashboard = ({
             >
               {atRiskCount}
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1"
               style={{
                 fontSize: 11,
@@ -198,7 +198,7 @@ const GroupDiagnosticDashboard = ({
 
         {/* 3) ASISTENCIA. */}
         <View className="items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -209,7 +209,7 @@ const GroupDiagnosticDashboard = ({
           >
             Asistencia
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 18,
               fontWeight: '800',

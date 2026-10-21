@@ -228,7 +228,7 @@ export default function DirectorioAlumnosScreen() {
     <View>
       {/* Título de la pantalla. */}
       <View className="px-4 mt-3">
-        <Text style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
           Directorio de Alumnos
         </Text>
       </View>
@@ -243,7 +243,7 @@ export default function DirectorioAlumnosScreen() {
           accessibilityHint="Toque para cambiar periodo"
           disabled={periodsLoading}
         >
-          <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
             {periodsLoading ? 'Cargando...' : (selectedPeriod?.name || 'Sin períodos')}
           </Text>
           {!periodsLoading && (
@@ -284,7 +284,7 @@ export default function DirectorioAlumnosScreen() {
             accessibilityLabel="Ver horario completo del grupo"
           >
             <Clock size={16} color="#2563EB" strokeWidth={2.5} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2"
               style={{ fontSize: 13, fontWeight: '700', color: '#2563EB' }}
             >
@@ -311,7 +311,7 @@ export default function DirectorioAlumnosScreen() {
     if (studentsLoading) {
       return (
         <View className="px-4 py-12 items-center">
-          <Text className="text-sm text-slate-500 mt-1 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1 text-center">
             Cargando alumnos...
           </Text>
         </View>
@@ -320,8 +320,8 @@ export default function DirectorioAlumnosScreen() {
     if (studentsError) {
       return (
         <View className="px-4 py-12 items-center">
-          <Text className="text-2xl">⚠️</Text>
-          <Text className="text-sm font-bold text-rose-600 mt-3 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-2xl">⚠️</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-rose-600 mt-3 text-center">
             {studentsError}
           </Text>
         </View>
@@ -329,12 +329,12 @@ export default function DirectorioAlumnosScreen() {
     }
     return (
       <View className="px-4 py-12 items-center">
-        <Text className="text-2xl">🔍</Text>
-        <Text className="text-sm font-bold text-slate-600 mt-3 text-center">
+        <Text maxFontSizeMultiplier={1.3} className="text-2xl">🔍</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-600 mt-3 text-center">
           No se encontraron alumnos
         </Text>
         {searchTerm ? (
-          <Text className="text-xs text-slate-500 mt-1 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
             {`Intenta ajustar la búsqueda para "${searchTerm}".`}
           </Text>
         ) : null}
@@ -374,7 +374,7 @@ export default function DirectorioAlumnosScreen() {
         accessibilityLabel="Volver a mis grupos"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -466,10 +466,10 @@ export default function DirectorioAlumnosScreen() {
           >
             {/* Header del modal. */}
             <View className="px-5 pt-5 pb-3 border-b border-slate-100">
-              <Text className="text-[17px] font-bold text-slate-900">
+              <Text maxFontSizeMultiplier={1.3} className="text-[17px] font-bold text-slate-900">
                 Seleccionar Periodo
               </Text>
-              <Text className="text-sm text-slate-500 mt-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
                 Elige el periodo para ver el directorio
               </Text>
             </View>
@@ -478,7 +478,7 @@ export default function DirectorioAlumnosScreen() {
             <ScrollView showsVerticalScrollIndicator={false}>
               {periods.length === 0 && (
                 <View className="px-5 py-8 items-center">
-                  <Text className="text-slate-400 text-sm">
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm">
                     No hay períodos disponibles
                   </Text>
                 </View>
@@ -498,7 +498,7 @@ export default function DirectorioAlumnosScreen() {
                     }}
                   >
                     <View className="flex-1">
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 14,
                           fontWeight: isSelected ? '700' : '500',
@@ -521,7 +521,7 @@ export default function DirectorioAlumnosScreen() {
               onPress={() => setPeriodDropdownVisible(false)}
               className="px-5 py-4 border-t border-slate-100 items-center"
             >
-              <Text className="text-sm font-semibold text-slate-500">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-500">
                 Cerrar
               </Text>
             </Pressable>

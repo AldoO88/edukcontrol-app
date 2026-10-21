@@ -203,7 +203,7 @@ export default function GroupDetailScreen() {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
         <ActivityIndicator size="large" color="#0284C7" />
-        <Text className="text-slate-400 text-sm mt-3">Cargando grupo...</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando grupo...</Text>
       </View>
     );
   }
@@ -214,13 +214,13 @@ export default function GroupDetailScreen() {
   if (!group) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 16, fontWeight: '700' }}
         >
           Grupo no encontrado
         </Text>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-500 mt-1"
           style={{ fontSize: 12 }}
         >
@@ -231,7 +231,7 @@ export default function GroupDetailScreen() {
           className="mt-4 px-4 py-2 rounded-xl"
           style={{ backgroundColor: '#0284C7' }}
         >
-          <Text className="text-white font-bold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-bold">Volver</Text>
         </Pressable>
       </View>
     );
@@ -260,7 +260,7 @@ export default function GroupDetailScreen() {
         accessibilityLabel="Volver a mis grupos"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -299,7 +299,7 @@ export default function GroupDetailScreen() {
                   return <Icon size={16} color={getSubjectColor(group.subject?.color)} strokeWidth={2.25} />;
                 })()}
               </View>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900 flex-1"
                 style={{ fontSize: 17, fontWeight: '700' }}
                 numberOfLines={1}
@@ -313,7 +313,7 @@ export default function GroupDetailScreen() {
                 backgroundColor: tintWithAlpha(getSubjectColor(group.subject?.color), 0.12),
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-[11px] font-bold"
                 style={{ color: getSubjectColor(group.subject?.color) }}
               >
@@ -324,7 +324,7 @@ export default function GroupDetailScreen() {
 
           {/* Materia (debajo del título). */}
           {group.subject?.name && (
-            <Text className="text-[13px] text-[#64748B] mt-1">
+            <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1">
               {group.subject.name}
             </Text>
           )}
@@ -333,19 +333,19 @@ export default function GroupDetailScreen() {
           <View className="mt-3">
             <View className="flex-row items-center">
               <Users size={15} color="#64748B" strokeWidth={2} />
-              <Text className="text-[13px] text-[#475569] ml-2">
+              <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                 {totalStudents} Alumnos
               </Text>
             </View>
             <View className="flex-row items-center mt-1.5">
               <Clock size={15} color="#64748B" strokeWidth={2} />
-              <Text className="text-[13px] text-[#475569] ml-2">
+              <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                 {schedule?.dayName || '—'} {timeRange}
               </Text>
             </View>
             <View className="flex-row items-center mt-1.5">
               <MapPin size={15} color="#64748B" strokeWidth={2} />
-              <Text className="text-[13px] text-[#475569] ml-2">
+              <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                 {classroom}
               </Text>
             </View>
@@ -354,7 +354,7 @@ export default function GroupDetailScreen() {
               <View className="flex-row items-center mt-1.5">
                 <Calendar size={15} color="#0284C7" strokeWidth={2} />
                 <View className="ml-2 px-2 py-0.5 rounded-full bg-[#E0F2FE]">
-                  <Text className="text-[11px] font-bold text-[#0369A1]">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold text-[#0369A1]">
                     Hoy
                   </Text>
                 </View>
@@ -372,7 +372,7 @@ export default function GroupDetailScreen() {
               accessibilityLabel="Ver horario del grupo"
             >
               <Clock size={16} color="#2563EB" strokeWidth={2.5} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2"
                 style={{ fontSize: 13, fontWeight: '700', color: '#2563EB' }}
               >
@@ -386,7 +386,7 @@ export default function GroupDetailScreen() {
             3 BOTONES DE ACCIÓN (Asistencia / Calificar / Alumnos)
             ============================================================ */}
         <View className="px-4">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2"
           >
             Acciones del Grupo
@@ -402,7 +402,7 @@ export default function GroupDetailScreen() {
               style={{ backgroundColor: '#0284C7' }}
             >
               <UserCheck size={16} color="#ffffff" strokeWidth={2.25} />
-              <Text className="text-white font-bold text-[12px] ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-white font-bold text-[12px] ml-1.5">
                 Asistencia
               </Text>
             </Pressable>
@@ -415,7 +415,7 @@ export default function GroupDetailScreen() {
               className="flex-1 flex-row items-center justify-center bg-white border border-[#E2E8F0] rounded-xl py-3"
             >
               <FileSpreadsheet size={16} color="#0F172A" strokeWidth={2.25} />
-              <Text className="text-[#0F172A] font-bold text-[12px] ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-[#0F172A] font-bold text-[12px] ml-1.5">
                 Calificar
               </Text>
             </Pressable>
@@ -428,7 +428,7 @@ export default function GroupDetailScreen() {
               className="flex-1 flex-row items-center justify-center bg-white border border-[#E2E8F0] rounded-xl py-3"
             >
               <List size={16} color="#0F172A" strokeWidth={2.25} />
-              <Text className="text-[#0F172A] font-bold text-[12px] ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-[#0F172A] font-bold text-[12px] ml-1.5">
                 Alumnos
               </Text>
             </Pressable>

@@ -220,7 +220,7 @@ export default function ConductDetailScreen() {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
         <ActivityIndicator size="large" color="#6366F1" />
-        <Text className="text-slate-500 mt-3" style={{ fontSize: 14 }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-3" style={{ fontSize: 14 }}>
           Cargando reporte...
         </Text>
       </View>
@@ -234,7 +234,7 @@ export default function ConductDetailScreen() {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC] px-6">
         <TriangleAlert size={32} color="#EF4444" strokeWidth={2} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900 mt-3 text-center"
           style={{ fontSize: 16, fontWeight: '600' }}
         >
@@ -244,7 +244,7 @@ export default function ConductDetailScreen() {
           onPress={() => router.back()}
           className="mt-4 px-5 py-2.5 rounded-xl bg-indigo-600"
         >
-          <Text className="text-white" style={{ fontSize: 14, fontWeight: '600' }}>
+          <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 14, fontWeight: '600' }}>
             Volver
           </Text>
         </Pressable>
@@ -288,14 +288,14 @@ export default function ConductDetailScreen() {
           className="flex-row items-center mr-3"
         >
           <ChevronLeft size={20} color="#6366F1" strokeWidth={2.5} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-indigo-600 ml-0.5"
             style={{ fontSize: 14, fontWeight: '600' }}
           >
             Volver
           </Text>
         </Pressable>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 15, fontWeight: '700' }}
         >
@@ -335,7 +335,7 @@ export default function ConductDetailScreen() {
                 }}
               >
                 <eventStyle.Icon size={14} color={eventStyle.fg} strokeWidth={2.5} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-1.5"
                   style={{
                     fontSize: 12,
@@ -359,7 +359,7 @@ export default function ConductDetailScreen() {
                   }}
                 >
                   <SeverityIcon size={12} color={severityStyle.fg} strokeWidth={2.5} />
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="ml-1"
                     style={{
                       fontSize: 12,
@@ -380,7 +380,7 @@ export default function ConductDetailScreen() {
                   backgroundColor: conduct?.eventType === 'merit' ? '#DCFCE7' : '#FEE2E2',
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 13,
                     fontWeight: '700',
@@ -410,14 +410,14 @@ export default function ConductDetailScreen() {
           >
             <View className="flex-row items-center mb-2">
               <FileText size={16} color="#6366F1" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900 ml-2"
                 style={{ fontSize: 13, fontWeight: '700' }}
               >
                 Descripción
               </Text>
             </View>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-700"
               style={{ fontSize: 14, fontWeight: '400', lineHeight: 20 }}
             >
@@ -443,14 +443,14 @@ export default function ConductDetailScreen() {
             >
               <View className="flex-row items-center mb-2">
                 <FileText size={16} color="#6366F1" strokeWidth={2} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 ml-2"
                   style={{ fontSize: 13, fontWeight: '700' }}
                 >
                   Detalles
                 </Text>
               </View>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-700"
                 style={{ fontSize: 14, fontWeight: '400', lineHeight: 20 }}
               >
@@ -491,13 +491,13 @@ export default function ConductDetailScreen() {
                 <Calendar size={16} color="#D97706" strokeWidth={2} />
               </View>
               <View className="flex-1 ml-3">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
                   Fecha del incidente
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 mt-0.5"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
@@ -523,19 +523,19 @@ export default function ConductDetailScreen() {
                 <User size={16} color="#2563EB" strokeWidth={2} />
               </View>
               <View className="flex-1 ml-3">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
                   Registrado por
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 mt-0.5"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
                   {conduct?.reported_by?.name || '—'}
                   {conduct?.reported_by?.role && (
-                    <Text className="text-slate-400">
+                    <Text maxFontSizeMultiplier={1.3} className="text-slate-400">
                       {' '}({conduct.reported_by.role})
                     </Text>
                   )}
@@ -557,13 +557,13 @@ export default function ConductDetailScreen() {
                 <Clock size={16} color="#16A34A" strokeWidth={2} />
               </View>
               <View className="flex-1 ml-3">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
                   Creado el
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 mt-0.5"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
@@ -605,19 +605,19 @@ export default function ConductDetailScreen() {
                 <User size={16} color="#DC2626" strokeWidth={2} />
               </View>
               <View className="flex-1 ml-3">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
                   Alumno
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 mt-0.5"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
                   {conduct?.student_id?.first_name} {conduct?.student_id?.last_name}
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-400 mt-0.5"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
@@ -640,13 +640,13 @@ export default function ConductDetailScreen() {
                 <Calendar size={16} color="#7C3AED" strokeWidth={2} />
               </View>
               <View className="flex-1 ml-3">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 11, fontWeight: '500' }}
                 >
                   Ciclo Escolar
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-900 mt-0.5"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
@@ -657,7 +657,7 @@ export default function ConductDetailScreen() {
                     className="self-start px-2 py-0.5 rounded-full mt-1"
                     style={{ backgroundColor: '#DCFCE7' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 10,
                         fontWeight: '700',

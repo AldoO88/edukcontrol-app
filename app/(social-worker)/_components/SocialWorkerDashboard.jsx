@@ -116,7 +116,7 @@ export default function SocialWorkerDashboard() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando dashboard...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando dashboard...</Text>
         </View>
       </View>
     );
@@ -128,10 +128,10 @@ export default function SocialWorkerDashboard() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={refetch} className="mt-4 bg-sky-500 px-6 py-2.5 rounded-xl">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -167,21 +167,21 @@ export default function SocialWorkerDashboard() {
       >
         {/* SALUDO + BADGE */}
         <View className="px-4 mt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             {`Hola, ${workerName}`}
           </Text>
           <View className="self-start mt-2 px-3 py-1 bg-violet-50 rounded-full">
-            <Text className="text-xs font-bold uppercase tracking-wide text-violet-700">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold uppercase tracking-wide text-violet-700">
               TRABAJO SOCIAL
             </Text>
           </View>
-          <Text className="text-sm text-slate-500 mt-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-2">
             Gestiona el bienestar y seguimiento{'\n'}de los estudiantes.
           </Text>
         </View>
 
         {/* QUICK ACTIONS */}
-        <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-3 px-5">
+        <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-3 px-5">
           Accesos rápidos
         </Text>
         <View className="px-4 flex-row flex-wrap gap-3">
@@ -199,7 +199,7 @@ export default function SocialWorkerDashboard() {
                 <View className={`w-14 h-14 rounded-2xl items-center justify-center ${action.iconBg}`}>
                   <Icon size={24} color={action.iconColor} strokeWidth={2} />
                 </View>
-                <Text className="text-sm font-semibold text-slate-700 mt-3">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-700 mt-3">
                   {action.label}
                 </Text>
               </Pressable>
@@ -209,30 +209,30 @@ export default function SocialWorkerDashboard() {
 
         {/* ESTADÍSTICAS DEL DÍA */}
         <View className="px-4 mt-6">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
             Resumen del Día
           </Text>
           <View className="flex-row gap-2">
             <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100" style={{ elevation: 1 }}>
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">Alumnos</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">Alumnos</Text>
                 <Users size={14} color="#64748b" />
               </View>
-              <Text className="text-2xl font-extrabold text-slate-900 mt-1">{stats.totalStudents}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-slate-900 mt-1">{stats.totalStudents}</Text>
             </View>
             <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100" style={{ elevation: 1 }}>
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">Grupos</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">Grupos</Text>
                 <ClipboardList size={14} color="#64748b" />
               </View>
-              <Text className="text-2xl font-extrabold text-slate-900 mt-1">{stats.totalGroups}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-slate-900 mt-1">{stats.totalGroups}</Text>
             </View>
             <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100" style={{ elevation: 1 }}>
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">% Asist.</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">% Asist.</Text>
                 <TrendingUp size={14} color="#64748b" />
               </View>
-              <Text className="text-2xl font-extrabold text-sky-600 mt-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-sky-600 mt-1">
                 {formatAsistPct(stats)}
               </Text>
             </View>
@@ -244,36 +244,36 @@ export default function SocialWorkerDashboard() {
           <View className="flex-row gap-2">
             <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100" style={{ elevation: 1 }}>
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">Niños</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">Niños</Text>
                 <User size={14} color="#0284c7" />
               </View>
-              <Text className="text-2xl font-extrabold text-sky-600 mt-1">{stats.maleCount}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-sky-600 mt-1">{stats.maleCount}</Text>
             </View>
             <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100" style={{ elevation: 1 }}>
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">Niñas</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">Niñas</Text>
                 <User size={14} color="#e11d48" />
               </View>
-              <Text className="text-2xl font-extrabold text-rose-600 mt-1">{stats.femaleCount}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-rose-600 mt-1">{stats.femaleCount}</Text>
             </View>
           </View>
         </View>
 
         {/* ASISTENCIA DE HOY */}
         <View className="px-4 mt-6">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
             Asistencia de Hoy
           </Text>
           <View className="bg-white rounded-2xl border border-slate-100 shadow-sm" style={{ elevation: 1 }}>
             <View className="flex-row">
               <View className="flex-1 items-center py-3">
-                <Text className="text-[11px] font-semibold text-slate-500">Presentes</Text>
-                <Text className="text-2xl font-extrabold text-emerald-600 mt-1">{stats.dayPresent}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-semibold text-slate-500">Presentes</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-emerald-600 mt-1">{stats.dayPresent}</Text>
               </View>
               <View className="w-px bg-slate-100" />
               <View className="flex-1 items-center py-3">
-                <Text className="text-[11px] font-semibold text-slate-500">Faltas</Text>
-                <Text className="text-2xl font-extrabold text-rose-600 mt-1">{stats.dayAbsent}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-semibold text-slate-500">Faltas</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-rose-600 mt-1">{stats.dayAbsent}</Text>
               </View>
             </View>
           </View>
@@ -285,7 +285,7 @@ export default function SocialWorkerDashboard() {
             <View className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
               <View className="flex-row items-center">
                 <Mail size={18} color="#b45309" />
-                <Text className="text-sm font-bold text-amber-800 ml-2">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-amber-800 ml-2">
                   {pendingCitations} citatorio{pendingCitations !== 1 ? 's' : ''} pendiente{pendingCitations !== 1 ? 's' : ''}
                 </Text>
               </View>
@@ -295,12 +295,12 @@ export default function SocialWorkerDashboard() {
 
         {/* ÚLTIMAS INCIDENCIAS */}
         <View className="px-4 mt-6">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
             Últimas Incidencias
           </Text>
           {conductLogs.length === 0 && (
             <View className="items-center py-8">
-              <Text className="text-xs text-slate-400">Sin incidencias registradas</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">Sin incidencias registradas</Text>
             </View>
           )}
           {conductLogs.map((log) => (
@@ -318,10 +318,10 @@ export default function SocialWorkerDashboard() {
                   )}
                 </View>
                 <View className="flex-1 ml-3">
-                  <Text className="text-sm font-bold text-slate-900" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900" numberOfLines={1}>
                     {log.studentName}
                   </Text>
-                  <Text className="text-xs text-slate-500 mt-0.5" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5" numberOfLines={1}>
                     {log.description || (log.eventType === 'demerit' ? 'Demérito' : 'Mérito')}
                   </Text>
                 </View>
@@ -333,7 +333,7 @@ export default function SocialWorkerDashboard() {
         {/* AVISOS RECIENTES */}
         {announcements.length > 0 && (
           <View className="px-4 mt-6">
-            <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">
               Avisos Recientes
             </Text>
             {announcements.map((ann) => (
@@ -342,9 +342,9 @@ export default function SocialWorkerDashboard() {
                 className="bg-white rounded-2xl p-4 mb-3 border border-slate-100 shadow-sm"
                 style={{ elevation: 1, borderLeftWidth: 3, borderLeftColor: ann.priority === 'urgent' ? '#e11d48' : '#0284C7' }}
               >
-                <Text className="text-sm font-bold text-slate-900" numberOfLines={1}>{ann.title}</Text>
-                <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>{ann.message}</Text>
-                <Text className="text-[10px] text-slate-400 mt-2">{ann.sender}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900" numberOfLines={1}>{ann.title}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>{ann.message}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 mt-2">{ann.sender}</Text>
               </View>
             ))}
           </View>

@@ -102,11 +102,11 @@ const AttendanceRing = ({
           justify-center para centrar perfectamente sobre el
           anillo. */}
       <View className="absolute inset-0 items-center justify-center">
-        <Text className="text-4xl font-bold text-sky-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-4xl font-bold text-sky-500">
           {percentage}%
         </Text>
         {label && (
-          <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1">
             {label}
           </Text>
         )}

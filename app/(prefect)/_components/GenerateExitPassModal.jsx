@@ -71,7 +71,7 @@ const REASON_OPTIONS = [
 // SUBCOMPONENTE: SectionLabel
 // ---------------------------------------------------------------------
 const SectionLabel = ({ children, mt = 0 }) => (
-  <Text
+  <Text maxFontSizeMultiplier={1.3}
     className="text-slate-500"
     style={{
       fontSize: 11,
@@ -290,7 +290,7 @@ const GenerateExitPassModal = ({
                 >
                   <LogOut size={20} color="#ea580c" strokeWidth={2.25} />
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-3 text-slate-900"
                   style={{ fontSize: 18, fontWeight: '700' }}
                   numberOfLines={1}
@@ -330,14 +330,14 @@ const GenerateExitPassModal = ({
                   {isLoadingGroups ? (
                     <View className="py-8 items-center">
                       <ActivityIndicator size="small" color="#ea580c" />
-                      <Text className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
                         Cargando grupos...
                       </Text>
                     </View>
                   ) : groups.length === 0 ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <Users size={24} color="#94A3B8" strokeWidth={2} />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         No hay grupos disponibles
                       </Text>
                     </View>
@@ -374,14 +374,14 @@ const GenerateExitPassModal = ({
                                   >
                                     <Users size={16} color="#ea580c" strokeWidth={2.25} />
                                   </View>
-                                  <Text
+                                  <Text maxFontSizeMultiplier={1.3}
                                     className="ml-2 text-slate-900"
                                     style={{ fontSize: 15, fontWeight: '700' }}
                                   >
                                     {group.label}
                                   </Text>
                                 </View>
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   className="ml-10 text-slate-400 mt-0.5"
                                   style={{ fontSize: 11 }}
                                 >
@@ -410,7 +410,7 @@ const GenerateExitPassModal = ({
                     accessibilityRole="button"
                     accessibilityLabel="Volver a seleccionar grupo"
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-sky-600"
                       style={{ fontSize: 12, fontWeight: '600' }}
                     >
@@ -425,14 +425,14 @@ const GenerateExitPassModal = ({
                   {isLoadingStudents ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <ActivityIndicator size="small" color="#ea580c" />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         Cargando alumnos...
                       </Text>
                     </View>
                   ) : selectedGroup.students?.length === 0 ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <User size={24} color="#94A3B8" strokeWidth={2} />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         No hay alumnos en este grupo
                       </Text>
                     </View>
@@ -468,7 +468,7 @@ const GenerateExitPassModal = ({
                                 textColor="#C2410C"
                               />
                               <View className="ml-3 flex-1">
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   className="text-slate-900"
                                   style={{ fontSize: 14, fontWeight: '600' }}
                                   numberOfLines={1}
@@ -476,7 +476,7 @@ const GenerateExitPassModal = ({
                                   {stu.fullName || `${stu.last_name}, ${stu.first_name}`}
                                 </Text>
                                 {stu.controlNumber ? (
-                                  <Text className="text-slate-400" style={{ fontSize: 11 }}>
+                                  <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>
                                     {`No. Control: ${stu.controlNumber}`}
                                   </Text>
                                 ) : null}
@@ -504,7 +504,7 @@ const GenerateExitPassModal = ({
                       accessibilityRole="button"
                       accessibilityLabel="Volver a seleccionar alumno"
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-sky-600"
                         style={{ fontSize: 12, fontWeight: '600' }}
                       >
@@ -532,7 +532,7 @@ const GenerateExitPassModal = ({
                       textColor="#C2410C"
                     />
                     <View className="ml-3 flex-1">
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-900"
                         style={{ fontSize: 14, fontWeight: '700' }}
                         numberOfLines={1}
@@ -542,7 +542,7 @@ const GenerateExitPassModal = ({
                           : `${selectedStudent.last_name || ''}, ${selectedStudent.first_name || ''}`
                         }
                       </Text>
-                      <Text className="text-orange-600" style={{ fontSize: 11, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-orange-600" style={{ fontSize: 11, fontWeight: '600' }}>
                         {isDirectMode
                           ? student.groupName || ''
                           : selectedGroup.label
@@ -553,7 +553,7 @@ const GenerateExitPassModal = ({
 
                   {/* Nombre de quien retira */}
                   <SectionLabel mt={0}>Nombre de quien retira</SectionLabel>
-                  <TextInput
+                  <TextInput maxFontSizeMultiplier={1.3}
                     value={guardianName}
                     onChangeText={setGuardianName}
                     placeholder="Nombre completo"
@@ -589,7 +589,7 @@ const GenerateExitPassModal = ({
                           accessibilityRole="button"
                           accessibilityLabel={`Parentesco: ${opt.label}`}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
@@ -621,7 +621,7 @@ const GenerateExitPassModal = ({
                           accessibilityRole="button"
                           accessibilityLabel={`Motivo: ${opt.label}`}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
@@ -637,7 +637,7 @@ const GenerateExitPassModal = ({
 
                   {/* Observaciones */}
                   <View className="flex-row items-center justify-between mb-2">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-slate-500"
                       style={{
                         fontSize: 11,
@@ -648,14 +648,14 @@ const GenerateExitPassModal = ({
                     >
                       Observaciones (opcional)
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-slate-400"
                       style={{ fontSize: 10, fontWeight: '600' }}
                     >
                       {`${reasonDetail.length} / 500`}
                     </Text>
                   </View>
-                  <TextInput
+                  <TextInput maxFontSizeMultiplier={1.3}
                     value={reasonDetail}
                     onChangeText={setReasonDetail}
                     placeholder="Detalles adicionales..."
@@ -699,7 +699,7 @@ const GenerateExitPassModal = ({
                     paddingVertical: 12,
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-700"
                     style={{ fontSize: 13, fontWeight: '700' }}
                   >
@@ -723,7 +723,7 @@ const GenerateExitPassModal = ({
                   ) : (
                     <>
                       <LogOut size={16} color="#ffffff" strokeWidth={2.25} />
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-white ml-2"
                         style={{ fontSize: 13, fontWeight: '700' }}
                       >

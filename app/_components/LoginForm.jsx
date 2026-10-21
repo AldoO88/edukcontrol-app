@@ -104,10 +104,10 @@ export default function LoginForm() {
           centrados porque la card es angosta y el contenido
           interior también lo es — un look más "marketing".
           ---------------------------------------------------- */}
-      <Text className="text-3xl font-bold text-slate-900 text-center">
+      <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900 text-center">
         Bienvenido
       </Text>
-      <Text className="text-slate-500 text-sm mt-2 mb-8 text-center leading-relaxed">
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 mb-8 text-center leading-relaxed">
         Ingresa tus credenciales para acceder{'\n'}al portal académico
       </Text>
 
@@ -192,7 +192,7 @@ export default function LoginForm() {
           {/* Tick blanco cuando está marcado. */}
           {rememberMe && <Check size={14} color="#ffffff" strokeWidth={3} />}
         </View>
-        <Text className="text-slate-700 text-sm ml-2.5 font-medium">
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-700 text-sm ml-2.5 font-medium">
           Recordar mi sesión
         </Text>
       </Pressable>
@@ -232,7 +232,7 @@ export default function LoginForm() {
         accessibilityRole="link"
         accessibilityLabel="Recuperar contraseña"
       >
-        <Text className="text-center text-sm font-semibold text-sky-600">
+        <Text maxFontSizeMultiplier={1.3} className="text-center text-sm font-semibold text-sky-600">
           ¿Olvidaste tu contraseña?
         </Text>
       </Pressable>
@@ -259,9 +259,9 @@ export default function LoginForm() {
         accessibilityRole="link"
         accessibilityLabel="Activar tu cuenta por primera vez"
       >
-        <Text className="text-center text-sm text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-center text-sm text-slate-500">
           ¿Es tu primera vez?{' '}
-          <Text className="text-sky-600 font-bold">
+          <Text maxFontSizeMultiplier={1.3} className="text-sky-600 font-bold">
             Activa tu cuenta aquí
           </Text>
         </Text>

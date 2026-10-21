@@ -99,15 +99,15 @@ export default function DirectorTeachersScreen() {
             style={{ borderLeftWidth: 4, borderLeftColor: '#7C3AED', elevation: 2, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 6, shadowOffset: { width: 0, height: 2 } }}
           >
             <View className="w-12 h-12 rounded-xl items-center justify-center bg-purple-100 mr-3">
-              <Text className="text-sm font-bold text-purple-600">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-purple-600">
                 {`${item.name?.[0] || ''}${item.last_name?.[0] || ''}`.toUpperCase()}
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-sm font-bold text-slate-900">{fullName}</Text>
-              {item.phoneNumber && <Text className="text-xs text-slate-500 mt-0.5">{item.phoneNumber}</Text>}
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">{fullName}</Text>
+              {item.phoneNumber && <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">{item.phoneNumber}</Text>}
               {item.totalHours > 0 && (
-                <Text className="text-xs text-slate-400 mt-0.5">{item.totalHours} hora{item.totalHours !== 1 ? 's' : ''}/semana</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-0.5">{item.totalHours} hora{item.totalHours !== 1 ? 's' : ''}/semana</Text>
               )}
             </View>
             <ChevronRight size={16} color="#7C3AED" strokeWidth={2} />
@@ -125,7 +125,7 @@ export default function DirectorTeachersScreen() {
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#7C3AED" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando maestros...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando maestros...</Text>
         </View>
       </View>
     );
@@ -137,10 +137,10 @@ export default function DirectorTeachersScreen() {
         <DashboardHeader />
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 px-6 py-2.5 rounded-xl bg-purple-600">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -157,14 +157,14 @@ export default function DirectorTeachersScreen() {
       <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
 
       <View className="px-4 mt-4 mb-1">
-        <Text className="text-2xl font-bold text-slate-900">Maestros</Text>
-        <Text className="text-sm text-slate-500 mt-1">Consulta horarios y información de contactos</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">Maestros</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">Consulta horarios y información de contactos</Text>
       </View>
 
       <View className="px-4 mt-3 mb-3">
         <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ height: 44 }}>
           <Search size={16} color="#94A3B8" strokeWidth={2} />
-          <TextInput value={searchText} onChangeText={setSearchText} placeholder="Buscar maestro..." placeholderTextColor="#94A3B8" className="flex-1 ml-2 text-sm text-slate-900" style={{ paddingVertical: 0 }} />
+          <TextInput maxFontSizeMultiplier={1.3} value={searchText} onChangeText={setSearchText} placeholder="Buscar maestro..." placeholderTextColor="#94A3B8" className="flex-1 ml-2 text-sm text-slate-900" style={{ paddingVertical: 0 }} />
           {searchText.length > 0 && (
             <Pressable onPress={() => setSearchText('')} hitSlop={8}>
               <X size={16} color="#94A3B8" strokeWidth={2} />
@@ -182,7 +182,7 @@ export default function DirectorTeachersScreen() {
         ListEmptyComponent={
           <View className="items-center py-12">
             <Briefcase size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-slate-400 text-sm mt-3">{teachers.length === 0 ? 'No hay maestros' : 'No hay maestros con estos filtros'}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">{teachers.length === 0 ? 'No hay maestros' : 'No hay maestros con estos filtros'}</Text>
           </View>
         }
       />

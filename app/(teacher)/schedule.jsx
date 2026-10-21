@@ -102,13 +102,13 @@ const StatCard = ({ label, value, icon: Icon, iconBg, iconColor }) => (
     >
       <Icon size={18} color={iconColor} strokeWidth={2.25} />
     </View>
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="mt-2 text-slate-900"
       style={{ fontSize: 18, fontWeight: '800' }}
     >
       {value}
     </Text>
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="text-slate-500"
       style={{ fontSize: 10, fontWeight: '600', textAlign: 'center' }}
     >
@@ -130,7 +130,7 @@ const TabPill = ({ active, label, onPress, isToday }) => (
       backgroundColor: active ? '#0284C7' : 'transparent',
     }}
   >
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       style={{
         fontSize: 12,
         fontWeight: '700',
@@ -176,13 +176,13 @@ const ClaseCard = ({ clase }) => {
           <Clock size={16} color="#94A3B8" strokeWidth={2.25} />
         </View>
         <View className="ml-3 flex-1">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
             Sin clase
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400"
             style={{ fontSize: 11 }}
           >
@@ -212,13 +212,13 @@ const ClaseCard = ({ clase }) => {
           <Coffee size={16} color="#94A3B8" strokeWidth={2.25} />
         </View>
         <View className="ml-3 flex-1">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
             Receso
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400"
             style={{ fontSize: 11 }}
           >
@@ -264,7 +264,7 @@ const ClaseCard = ({ clase }) => {
       </View>
       <View className="ml-3 flex-1">
         <View className="flex-row items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
             numberOfLines={1}
@@ -276,7 +276,7 @@ const ClaseCard = ({ clase }) => {
               className="ml-2 px-1.5 py-0.5 rounded-full"
               style={{ backgroundColor: tintWithAlpha(subjectColor, 0.15) }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 9,
                   fontWeight: '700',
@@ -292,7 +292,7 @@ const ClaseCard = ({ clase }) => {
         {clase.group && (
           <View className="flex-row items-center mt-0.5">
             <Users size={11} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1 text-slate-500"
               style={{ fontSize: 11, fontWeight: '500' }}
             >
@@ -302,7 +302,7 @@ const ClaseCard = ({ clase }) => {
         )}
         <View className="flex-row items-center mt-0.5">
           <Clock size={11} color="#64748B" strokeWidth={2} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-1 text-slate-500"
             style={{ fontSize: 11 }}
           >
@@ -313,7 +313,7 @@ const ClaseCard = ({ clase }) => {
         {clase.classroom && (
           <View className="flex-row items-center mt-0.5">
             <MapPin size={11} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1 text-slate-500"
               style={{ fontSize: 11 }}
               numberOfLines={1}
@@ -400,7 +400,7 @@ export default function ScheduleScreen() {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
         <ActivityIndicator size="large" color="#0284C7" />
-        <Text className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
           Cargando horario...
         </Text>
       </View>
@@ -413,7 +413,7 @@ export default function ScheduleScreen() {
   if (error) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 16, fontWeight: '700' }}
         >
@@ -424,7 +424,7 @@ export default function ScheduleScreen() {
           className="mt-4 px-4 py-2 rounded-xl"
           style={{ backgroundColor: '#0284C7' }}
         >
-          <Text className="text-white font-bold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-bold">Volver</Text>
         </Pressable>
       </View>
     );
@@ -462,14 +462,14 @@ export default function ScheduleScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* HEADER: título */}
       <View className="px-4 mt-4 mb-1">
-        <Text className="text-[22px] font-bold text-[#0F172A]">
+        <Text maxFontSizeMultiplier={1.3} className="text-[22px] font-bold text-[#0F172A]">
           Mi Horario Semanal
         </Text>
       </View>
@@ -525,13 +525,13 @@ export default function ScheduleScreen() {
       >
         {dayClasses.length === 0 ? (
           <View className="bg-white rounded-2xl p-6 mx-4 items-center border border-slate-100">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500"
               style={{ fontSize: 13, fontWeight: '600' }}
             >
               No hay clases este día
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-400 mt-1 text-center"
               style={{ fontSize: 11 }}
             >

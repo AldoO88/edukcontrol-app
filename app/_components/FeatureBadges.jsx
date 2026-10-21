@@ -81,7 +81,7 @@ export default function FeatureBadges() {
 
           {/* Etiqueta bajo el círculo. mt-2 separa del icono.
               text-sm = 14px (legible pero no compite con la card). */}
-          <Text className="text-slate-600 text-sm font-semibold mt-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-600 text-sm font-semibold mt-2">
             {feature.label}
           </Text>
 

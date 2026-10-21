@@ -47,7 +47,7 @@ function RootSplash() {
   return (
     <View className="flex-1 items-center justify-center bg-slate-50">
       <ActivityIndicator size="large" color="#0f172a" />
-      <Text className="text-slate-500 text-sm mt-4 font-medium">
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-4 font-medium">
         Cargando EdukControl...
       </Text>
     </View>

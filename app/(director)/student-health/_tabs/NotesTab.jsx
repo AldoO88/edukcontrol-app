@@ -93,10 +93,10 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
         <View className="w-7 h-7 rounded-lg bg-red-100 items-center justify-center mr-2">
           <AlertTriangle size={14} color="#DC2626" strokeWidth={2} />
         </View>
-        <Text className="text-sm font-bold text-slate-900">Alertas</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Alertas</Text>
         {alerts.length > 0 && (
           <View className="ml-2 px-2 py-0.5 rounded-full bg-red-50">
-            <Text className="text-[10px] font-bold text-red-500">{alerts.length}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-red-500">{alerts.length}</Text>
           </View>
         )}
       </View>
@@ -118,14 +118,14 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
                       className="px-2 py-0.5 rounded-full mr-2"
                       style={{ backgroundColor: alertType.color + '20' }}
                     >
-                      <Text style={{ fontSize: 9, fontWeight: '700', color: alertType.color }}>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: alertType.color }}>
                         {alertType.label}
                       </Text>
                     </View>
-                    <Text className="text-sm font-bold text-slate-900 flex-1">{alert.label}</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1">{alert.label}</Text>
                   </View>
                   {alert.description ? (
-                    <Text className="text-xs text-slate-600 mt-1">{alert.description}</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-600 mt-1">{alert.description}</Text>
                   ) : null}
                 </View>
                 <TouchableOpacity
@@ -144,7 +144,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
 
       {/* Formulario para nueva alerta */}
       <View className="bg-slate-50 rounded-xl p-3 border border-slate-200 mb-4">
-        <Text className="text-xs font-semibold text-slate-500 mb-2">Nueva alerta</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-500 mb-2">Nueva alerta</Text>
 
         {/* Selector de tipo */}
         <View className="flex-row flex-wrap mb-3">
@@ -159,7 +159,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
                 borderColor: newAlertType === t.key ? t.color : '#E2E8F0',
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 11,
                   fontWeight: newAlertType === t.key ? '700' : '500',
@@ -173,7 +173,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
         </View>
 
         {/* Nombre de la alerta */}
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={newAlertLabel}
           onChangeText={setNewAlertLabel}
           placeholder="Nombre de la alerta..."
@@ -183,7 +183,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
         />
 
         {/* Descripción */}
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={newAlertDescription}
           onChangeText={setNewAlertDescription}
           placeholder="Descripción (opcional)..."
@@ -200,7 +200,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
           className="flex-row items-center justify-center bg-red-500 rounded-xl py-2.5"
         >
           <Plus size={14} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 6 }} />
-          <Text className="text-white text-xs font-bold">Agregar Alerta</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-bold">Agregar Alerta</Text>
         </TouchableOpacity>
       </View>
 
@@ -212,10 +212,10 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
           <View className="w-7 h-7 rounded-lg bg-slate-100 items-center justify-center mr-2">
             <FileText size={14} color="#64748B" strokeWidth={2} />
           </View>
-          <Text className="text-sm font-bold text-slate-900">Notas Generales</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Notas Generales</Text>
         </View>
 
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={formData.notes || ''}
           onChangeText={(val) => updateField('notes', val)}
           placeholder="Observaciones generales sobre el alumno..."
@@ -235,7 +235,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
           <View className="w-7 h-7 rounded-lg bg-purple-100 items-center justify-center mr-2">
             <Calendar size={14} color="#8B5CF6" strokeWidth={2} />
           </View>
-          <Text className="text-sm font-bold text-slate-900">Última Evaluación</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Última Evaluación</Text>
         </View>
 
         <Pressable
@@ -243,7 +243,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
           className="bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-200 flex-row items-center"
         >
           <Calendar size={16} color="#8B5CF6" strokeWidth={2} style={{ marginRight: 8 }} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className={`text-sm flex-1 ${formData.last_evaluation_date ? 'text-slate-900' : 'text-slate-400'}`}
           >
             {formData.last_evaluation_date ? formatDate(formData.last_evaluation_date) : 'Seleccionar fecha...'}
@@ -289,7 +289,7 @@ export default function NotesTab({ formData, updateField, onSave, isSaving }) {
           ) : (
             <Save size={16} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 8 }} />
           )}
-          <Text className="text-white text-sm font-bold">
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-sm font-bold">
             {isSaving ? 'Guardando...' : 'Guardar Notas'}
           </Text>
         </TouchableOpacity>

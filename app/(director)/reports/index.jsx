@@ -300,34 +300,34 @@ export default function DirectorReportsScreen() {
           </View>
           <View className="flex-1">
             <View className="flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-slate-900 flex-1 mr-2" numberOfLines={1}>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1 mr-2" numberOfLines={1}>
                 {resolvedName}{resolvedGroup ? ` — ${resolvedGroup}` : ''}
               </Text>
               <View className={`px-2 py-0.5 rounded-full ${status.bg}`}>
-                <Text className={`text-[10px] font-bold ${status.text}`}>{status.label}</Text>
+                <Text maxFontSizeMultiplier={1.3} className={`text-[10px] font-bold ${status.text}`}>{status.label}</Text>
               </View>
             </View>
-            <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>
               {item.description}
             </Text>
             <View className="flex-row items-center mt-2 gap-2">
               <View className="px-2 py-0.5 rounded-full bg-slate-100">
-                <Text className="text-[10px] font-semibold text-slate-600">{event.label}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-600">{event.label}</Text>
               </View>
               {item.severity && (
                 <View className="px-2 py-0.5 rounded-full bg-slate-100">
-                  <Text className="text-[10px] font-semibold text-slate-600">{severityLabel}</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-600">{severityLabel}</Text>
                 </View>
               )}
               {item.points_impact != null && (
                 <View className={`px-2 py-0.5 rounded-full ${item.eventType === 'demerit' ? 'bg-rose-50' : 'bg-emerald-50'}`}>
-                  <Text className={`text-[10px] font-bold ${item.eventType === 'demerit' ? 'text-rose-600' : 'text-emerald-600'}`}>
+                  <Text maxFontSizeMultiplier={1.3} className={`text-[10px] font-bold ${item.eventType === 'demerit' ? 'text-rose-600' : 'text-emerald-600'}`}>
                     {item.eventType === 'merit' ? '+' : '-'}{item.points_impact} pts
                   </Text>
                 </View>
               )}
             </View>
-            <Text className="text-[10px] text-slate-400 mt-1.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 mt-1.5">
               {date}{reporterName ? ` — ${reporterName}` : ''}
             </Text>
           </View>
@@ -359,13 +359,13 @@ export default function DirectorReportsScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#E11D48" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando reportes...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando reportes...</Text>
         </View>
       </View>
     );
@@ -393,16 +393,16 @@ export default function DirectorReportsScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 px-6 py-2.5 rounded-xl" style={{ backgroundColor: '#E11D48' }}>
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -433,15 +433,15 @@ export default function DirectorReportsScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
 
         {/* HEADER */}
         <View className="px-4 mt-4 mb-1">
-          <Text className="text-2xl font-bold text-slate-900">Reportes</Text>
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">Reportes</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             {activeScope === 'mine' ? 'Tus reportes de conducta' : 'Reportes de conducta de la escuela'}
           </Text>
         </View>
@@ -463,7 +463,7 @@ export default function DirectorReportsScreen() {
                 accessibilityState={{ selected: isActive }}
                 accessibilityLabel={scope.label}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 13,
                     fontWeight: isActive ? '700' : '500',
@@ -492,7 +492,7 @@ export default function DirectorReportsScreen() {
           {/* Search bar */}
           <View className="flex-1 flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
             <Search size={16} color="#94A3B8" strokeWidth={2} />
-            <TextInput
+            <TextInput maxFontSizeMultiplier={1.3}
               value={searchText}
               onChangeText={setSearchText}
               placeholder="Buscar..."
@@ -516,7 +516,7 @@ export default function DirectorReportsScreen() {
             accessibilityLabel={`Filtro: ${FILTER_OPTIONS.find((o) => o.id === activeFilter)?.label || 'Todos'}`}
           >
             <Filter size={14} color="#64748B" strokeWidth={2} />
-            <Text className="text-xs font-semibold text-slate-700 ml-1.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 ml-1.5">
               {FILTER_OPTIONS.find((o) => o.id === activeFilter)?.label || 'Todos'}
             </Text>
             <ChevronDown size={14} color="#64748B" strokeWidth={2} style={{ marginLeft: 4 }} />
@@ -537,7 +537,7 @@ export default function DirectorReportsScreen() {
           ListEmptyComponent={
             <View className="items-center py-12">
               <FileText size={40} color="#CBD5E1" strokeWidth={1.5} />
-              <Text className="text-slate-400 text-sm mt-3">
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
                 {logs.length === 0 ? 'No hay reportes' : 'No hay reportes con estos filtros'}
               </Text>
             </View>
@@ -595,7 +595,7 @@ export default function DirectorReportsScreen() {
             onPress={(e) => e.stopPropagation()}
           >
             <View className="px-4 py-3 border-b border-slate-100">
-              <Text className="text-sm font-bold text-slate-900">Filtrar por</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Filtrar por</Text>
             </View>
             {FILTER_OPTIONS.map((option) => {
               const isActive = activeFilter === option.id;
@@ -609,7 +609,7 @@ export default function DirectorReportsScreen() {
                   className="px-4 py-3 flex-row items-center justify-between"
                   style={{ backgroundColor: isActive ? '#FFF1F2' : 'transparent' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 14,
                       fontWeight: isActive ? '600' : '400',

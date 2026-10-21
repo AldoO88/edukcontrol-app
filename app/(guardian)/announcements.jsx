@@ -326,10 +326,10 @@ export default function AnnouncementsScreen() {
             TÍTULO + SUBTÍTULO
             ============================================================ */}
         <View className="px-4 pt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Avisos
           </Text>
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             Comunicados y anuncios de la escuela.
           </Text>
         </View>
@@ -345,7 +345,7 @@ export default function AnnouncementsScreen() {
             ============================================================ */}
         {students.length > 0 && (
           <>
-            <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-3 px-5">
+            <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-3 px-5">
               Filtrar por estudiante
             </Text>
 
@@ -387,10 +387,10 @@ export default function AnnouncementsScreen() {
           {hasActiveFilter && !isLoading && error && items.length === 0 && (
             <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
               <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-              <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
                 No se pudieron cargar los avisos
               </Text>
-              <Text className="text-xs text-slate-500 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
                 {error}
               </Text>
               <Pressable
@@ -400,7 +400,7 @@ export default function AnnouncementsScreen() {
                 accessibilityLabel="Reintentar carga de avisos"
               >
                 <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-                <Text className="text-sm font-semibold text-white ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                   Reintentar
                 </Text>
               </Pressable>
@@ -428,12 +428,12 @@ export default function AnnouncementsScreen() {
                 está aplicado). */}
           {hasActiveFilter && !isLoading && !error && items.length === 0 && (
             <View className="bg-white rounded-2xl p-8 mt-4 items-center">
-              <Text className="text-sm text-slate-500 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
                 {activeFilterId === ALL_STUDENTS_ID
                   ? 'No hay avisos por mostrar.'
                   : `No hay avisos para ${activeStudentName}.`}
               </Text>
-              <Text className="text-xs text-slate-400 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-1 text-center">
                 Vuelve más tarde para ver nuevas publicaciones.
               </Text>
             </View>
@@ -446,7 +446,7 @@ export default function AnnouncementsScreen() {
                 "ver más" más adelante). */}
           {hasActiveFilter && !isLoading && !error && truncated && items.length > 0 && (
             <View className="bg-white rounded-2xl p-3 mt-2 items-center border border-slate-100">
-              <Text className="text-xs text-slate-500 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 text-center">
                 Mostrando los {items.length} más recientes de {total}.
               </Text>
             </View>

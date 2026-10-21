@@ -105,7 +105,7 @@ export default function AgreementModal({
         <View className="flex-1 bg-white">
           {/* HEADER */}
           <View className="flex-row items-center justify-between px-4 py-3 border-b border-slate-200">
-            <Text className="text-lg font-bold text-slate-900">
+            <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
               {agreement ? 'Editar Acuerdo' : 'Nuevo Acuerdo'}
             </Text>
             <Pressable onPress={onClose} hitSlop={8}>
@@ -115,8 +115,8 @@ export default function AgreementModal({
 
           <ScrollView className="flex-1 px-4 py-4" keyboardShouldPersistTaps="handled">
             {/* TITLE */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Título *</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Título *</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={title}
               onChangeText={setTitle}
               placeholder="Ej: Acuerdo de conducta..."
@@ -125,8 +125,8 @@ export default function AgreementModal({
             />
 
             {/* DESCRIPTION */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Descripción</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Descripción</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={description}
               onChangeText={setDescription}
               placeholder="Describe el acuerdo..."
@@ -138,7 +138,7 @@ export default function AgreementModal({
             />
 
             {/* TYPE */}
-            <Text className="text-xs font-bold text-slate-600 mb-2">Tipo de Acuerdo</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-2">Tipo de Acuerdo</Text>
             <View className="flex-row flex-wrap gap-2 mb-4">
               {AGREEMENT_TYPES.map((t) => (
                 <Pressable
@@ -150,7 +150,7 @@ export default function AgreementModal({
                       : 'bg-white border-slate-200'
                   }`}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className={`text-xs font-semibold ${
                       agreementType === t.value ? 'text-white' : 'text-slate-600'
                     }`}
@@ -164,7 +164,7 @@ export default function AgreementModal({
             {/* STATUS (only when editing) */}
             {agreement && (
               <>
-                <Text className="text-xs font-bold text-slate-600 mb-2">Estado</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-2">Estado</Text>
                 <View className="flex-row gap-2 mb-4">
                   {STATUS_OPTIONS.map((s) => (
                     <Pressable
@@ -180,7 +180,7 @@ export default function AgreementModal({
                           : 'bg-white border-slate-200'
                       }`}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className={`text-xs font-semibold ${
                           status === s.value ? 'text-white' : 'text-slate-600'
                         }`}
@@ -194,13 +194,13 @@ export default function AgreementModal({
             )}
 
             {/* REVIEW DATE */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Fecha Compromiso</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Fecha Compromiso</Text>
             <Pressable
               onPress={() => setShowDatePicker(true)}
               className="bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-200 mb-4 flex-row items-center"
             >
               <Calendar size={16} color="#64748B" strokeWidth={2} style={{ marginRight: 8 }} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className={`text-sm flex-1 ${reviewDate ? 'text-slate-900' : 'text-slate-400'}`}
               >
                 {reviewDate ? formatDate(reviewDate) : 'Seleccionar fecha...'}
@@ -224,8 +224,8 @@ export default function AgreementModal({
             )}
 
             {/* NOTES */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Notas</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Notas</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={notes}
               onChangeText={setNotes}
               placeholder="Notas adicionales..."
@@ -243,7 +243,7 @@ export default function AgreementModal({
               onPress={onClose}
               className="flex-1 bg-slate-100 rounded-xl py-3 items-center"
             >
-              <Text className="text-sm font-semibold text-slate-600">Cancelar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-600">Cancelar</Text>
             </Pressable>
             <Pressable
               onPress={handleSave}
@@ -257,7 +257,7 @@ export default function AgreementModal({
               ) : (
                 <>
                   <Check size={16} color="#FFF" strokeWidth={2.5} />
-                  <Text className="text-sm font-semibold text-white ml-1.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                     {agreement ? 'Guardar' : 'Crear'}
                   </Text>
                 </>

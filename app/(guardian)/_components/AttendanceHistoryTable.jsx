@@ -40,7 +40,7 @@ const AttendanceHistoryTable = ({ history = [] }) => {
   if (history.length === 0) {
     return (
       <View className="bg-white rounded-2xl p-6 items-center">
-        <Text className="text-sm text-slate-500 text-center">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
           No hay registros de asistencia para este estudiante.
         </Text>
       </View>
@@ -62,13 +62,13 @@ const AttendanceHistoryTable = ({ history = [] }) => {
           para que las horas calcen en columnas consistentes.
           ------------------------------------------------------ */}
       <View className="flex-row items-center px-5 py-3 bg-slate-50">
-        <Text className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Fecha
         </Text>
-        <Text className="w-24 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="w-24 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Entrada
         </Text>
-        <Text className="w-24 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="w-24 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Salida
         </Text>
       </View>
@@ -84,16 +84,16 @@ const AttendanceHistoryTable = ({ history = [] }) => {
             index > 0 && 'border-t border-slate-100',
           )}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 text-sm font-semibold text-slate-900"
             numberOfLines={1}
           >
             {record.date}
           </Text>
-          <Text className="w-24 text-center text-sm text-slate-700">
+          <Text maxFontSizeMultiplier={1.3} className="w-24 text-center text-sm text-slate-700">
             {record.entry}
           </Text>
-          <Text className="w-24 text-center text-sm text-slate-700">
+          <Text maxFontSizeMultiplier={1.3} className="w-24 text-center text-sm text-slate-700">
             {record.exit}
           </Text>
         </View>

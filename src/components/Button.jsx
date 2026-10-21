@@ -118,7 +118,7 @@ const Button = ({
 
       {/* Texto del botón. ml-2 si hay icono/spinner para separar. */}
       {(title || loading) && (
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className={clsx(
             'font-bold text-base ml-2',
             // Color del texto según variante.

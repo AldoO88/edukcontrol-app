@@ -83,7 +83,7 @@ const ScoreBadge = ({ score }) => {
       className="px-2 py-1 rounded-full"
       style={{ backgroundColor: bgColor }}
     >
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 12,
           fontWeight: '800',
@@ -163,13 +163,13 @@ const StudentAccordionRow = ({
 
         {/* Stack: nombre + subtext. */}
         <View className="flex-1 ml-3">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             numberOfLines={1}
             style={{ fontSize: 14, fontWeight: '700', color: '#0F172A' }}
           >
             {fullName}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-0.5"
             style={{ fontSize: 11, color: '#64748B' }}
           >
@@ -227,7 +227,7 @@ const StudentAccordionRow = ({
           >
             {/* Promedio. */}
             <View className="flex-1 items-center">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 9,
                   fontWeight: '700',
@@ -238,7 +238,7 @@ const StudentAccordionRow = ({
               >
                 Promedio
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 16,
                   fontWeight: '800',
@@ -252,7 +252,7 @@ const StudentAccordionRow = ({
 
             {/* Asistencia. */}
             <View className="flex-1 items-center">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 9,
                   fontWeight: '700',
@@ -263,7 +263,7 @@ const StudentAccordionRow = ({
               >
                 Asistencia
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 16,
                   fontWeight: '800',
@@ -277,7 +277,7 @@ const StudentAccordionRow = ({
 
             {/* Citas. */}
             <View className="flex-1 items-center">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 9,
                   fontWeight: '700',
@@ -288,7 +288,7 @@ const StudentAccordionRow = ({
               >
                 Citas
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 16,
                   fontWeight: '800',
@@ -330,7 +330,7 @@ const StudentAccordionRow = ({
 
             {student.tutor ? (
               <>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="flex-1 ml-2"
                   style={{ fontSize: 12, fontWeight: '700', color: '#0F172A' }}
                   numberOfLines={1}
@@ -340,7 +340,7 @@ const StudentAccordionRow = ({
                 {student.tutor.phone ? (
                   <View className="flex-row items-center">
                     <Phone size={12} color="#64748B" strokeWidth={2.25} />
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{ fontSize: 12, color: '#334155', marginLeft: 4 }}
                     >
                       {student.tutor.phone}
@@ -349,7 +349,7 @@ const StudentAccordionRow = ({
                 ) : null}
               </>
             ) : (
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-2"
                 style={{ fontSize: 12, color: '#64748B', fontStyle: 'italic' }}
               >
@@ -379,7 +379,7 @@ const StudentAccordionRow = ({
               }}
             >
               <AlertCircle size={14} color="#DC2626" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '700',
@@ -404,7 +404,7 @@ const StudentAccordionRow = ({
               }}
             >
               <AlertCircle size={14} color="#16A34A" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '700',
@@ -430,7 +430,7 @@ const StudentAccordionRow = ({
               }}
             >
               <FileText size={14} color="#ffffff" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '700',

@@ -72,7 +72,7 @@ const SocialWorkTab = ({ file }) => {
           Layout Stitch: bullet cyan + vertical line + fecha en sky
           + descripción. La última entrada no lleva línea vertical.
           ============================================================ */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="text-slate-500 mb-3"
         style={{
           fontSize: 11,
@@ -124,7 +124,7 @@ const SocialWorkTab = ({ file }) => {
 
                 {/* Contenido: fecha + descripción. */}
                 <View className={clsx('flex-1', !isLast && 'pb-4')}>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 12,
                       fontWeight: '700',
@@ -133,7 +133,7 @@ const SocialWorkTab = ({ file }) => {
                   >
                     {note.date}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="mt-1 text-slate-900"
                     style={{ fontSize: 13, fontWeight: '500' }}
                   >
@@ -155,7 +155,7 @@ const SocialWorkTab = ({ file }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
@@ -167,7 +167,7 @@ const SocialWorkTab = ({ file }) => {
       {/* ============================================================
           BITÁCORA PRIVADA DEL DOCENTE (input + history)
           ============================================================ */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="text-slate-500 mb-2 mt-2"
         style={{
           fontSize: 11,
@@ -190,7 +190,7 @@ const SocialWorkTab = ({ file }) => {
           elevation: 1,
         }}
       >
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={draft}
           onChangeText={setDraft}
           placeholder="Escribe una nota privada sobre este alumno en esta materia..."
@@ -220,7 +220,7 @@ const SocialWorkTab = ({ file }) => {
           }}
         >
           <Plus size={16} color="#ffffff" strokeWidth={2.25} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-white ml-1.5"
             style={{ fontSize: 13, fontWeight: '700' }}
           >
@@ -247,7 +247,7 @@ const SocialWorkTab = ({ file }) => {
               elevation: 1,
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500"
               style={{
                 fontSize: 10,
@@ -257,7 +257,7 @@ const SocialWorkTab = ({ file }) => {
             >
               {note.date}
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="mt-1 text-slate-900"
               style={{ fontSize: 13, fontWeight: '500' }}
             >
@@ -276,13 +276,13 @@ const SocialWorkTab = ({ file }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
             Sin notas registradas
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400 mt-1 text-center"
             style={{ fontSize: 11 }}
           >

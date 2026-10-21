@@ -338,7 +338,7 @@ export default function CitatorioDetailScreen() {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
         <ActivityIndicator size="large" color="#0284C7" />
-        <Text className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
           Cargando citatorio...
         </Text>
       </View>
@@ -351,13 +351,13 @@ export default function CitatorioDetailScreen() {
   if (error || !citatorio) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 16, fontWeight: '700' }}
         >
           {error || 'Citatorio no encontrado'}
         </Text>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-500 mt-1"
           style={{ fontSize: 12 }}
         >
@@ -368,7 +368,7 @@ export default function CitatorioDetailScreen() {
           className="mt-4 px-4 py-2 rounded-xl"
           style={{ backgroundColor: '#0284C7' }}
         >
-          <Text className="text-white font-bold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-bold">Volver</Text>
         </Pressable>
       </View>
     );
@@ -415,7 +415,7 @@ export default function CitatorioDetailScreen() {
           <ChevronLeft size={22} color="#0F172A" strokeWidth={2.25} />
         </Pressable>
 
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="flex-1 ml-1 text-slate-900"
           style={{ fontSize: 17, fontWeight: '700' }}
           numberOfLines={1}
@@ -455,7 +455,7 @@ export default function CitatorioDetailScreen() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: typeStyle.bg }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -478,7 +478,7 @@ export default function CitatorioDetailScreen() {
                 color={statusStyle.fg}
                 strokeWidth={2.5}
               />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1"
                 style={{
                   fontSize: 10,
@@ -493,7 +493,7 @@ export default function CitatorioDetailScreen() {
           </View>
 
           {/* Nombre del alumno. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-3 text-slate-900"
             style={{ fontSize: 18, fontWeight: '800' }}
             numberOfLines={2}
@@ -502,7 +502,7 @@ export default function CitatorioDetailScreen() {
           </Text>
 
           {/* Group + subject. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1 text-slate-500"
             style={{ fontSize: 13, fontWeight: '500' }}
             numberOfLines={1}
@@ -514,7 +514,7 @@ export default function CitatorioDetailScreen() {
           {citatorio.creatorName ? (
             <View className="flex-row items-center mt-2">
               <Users size={13} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{ fontSize: 12, fontWeight: '500' }}
               >
@@ -537,7 +537,7 @@ export default function CitatorioDetailScreen() {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 mb-2"
             style={{
               fontSize: 11,
@@ -552,7 +552,7 @@ export default function CitatorioDetailScreen() {
           {/* Date. */}
           <View className="flex-row items-center mt-2">
             <Calendar size={15} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2 text-slate-900"
               style={{ fontSize: 14, fontWeight: '700' }}
             >
@@ -563,7 +563,7 @@ export default function CitatorioDetailScreen() {
           {/* Time. */}
           <View className="flex-row items-center mt-1.5">
             <Clock size={15} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2 text-slate-900"
               style={{ fontSize: 14, fontWeight: '700' }}
             >
@@ -575,7 +575,7 @@ export default function CitatorioDetailScreen() {
           {citatorio.location ? (
             <View className="flex-row items-center mt-1.5">
               <Users size={15} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2 text-slate-900"
                 style={{ fontSize: 14, fontWeight: '700' }}
                 numberOfLines={1}
@@ -600,7 +600,7 @@ export default function CitatorioDetailScreen() {
           >
             <View className="flex-row items-center mb-2">
               <RefreshCw size={14} color="#92400E" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5"
                 style={{
                   fontSize: 12,
@@ -614,7 +614,7 @@ export default function CitatorioDetailScreen() {
               </Text>
             </View>
             {citatorio.rescheduleReason ? (
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 13,
                   fontWeight: '500',
@@ -644,7 +644,7 @@ export default function CitatorioDetailScreen() {
           >
             <View className="flex-row items-center mb-2">
               <FileText size={14} color="#0284C7" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{
                   fontSize: 11,
@@ -656,7 +656,7 @@ export default function CitatorioDetailScreen() {
                 Motivo / Notas
               </Text>
             </View>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-900"
               style={{ fontSize: 13, fontWeight: '500', lineHeight: 19 }}
             >
@@ -685,7 +685,7 @@ export default function CitatorioDetailScreen() {
           >
             <View className="flex-row items-center mb-3">
               <Activity size={14} color="#0284C7" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{
                   fontSize: 11,
@@ -732,7 +732,7 @@ export default function CitatorioDetailScreen() {
 
                   {/* Contenido: timestamp + actor + event + note. */}
                   <View className="flex-1 pb-3">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 12,
                         fontWeight: '700',
@@ -741,20 +741,20 @@ export default function CitatorioDetailScreen() {
                     >
                       {event.ts}
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="mt-0.5 text-slate-900"
                       style={{ fontSize: 13, fontWeight: '600' }}
                     >
                       {eventLabel}
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="mt-0.5 text-slate-500"
                       style={{ fontSize: 11, fontWeight: '500' }}
                     >
                       {event.actor}
                     </Text>
                     {event.note ? (
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="mt-1 text-slate-600 italic"
                         style={{ fontSize: 12, lineHeight: 17 }}
                       >
@@ -778,7 +778,7 @@ export default function CitatorioDetailScreen() {
             ============================================================ */}
         {!isFromTutoria && (
         <View className="mx-4 mt-4">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 mb-2"
             style={{
               fontSize: 11,
@@ -801,13 +801,13 @@ export default function CitatorioDetailScreen() {
                 elevation: 1,
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500"
                 style={{ fontSize: 13, fontWeight: '600' }}
               >
                 Sin acciones disponibles
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-400 mt-1 text-center"
                 style={{ fontSize: 11 }}
               >
@@ -817,7 +817,7 @@ export default function CitatorioDetailScreen() {
           ) : (
             <>
               {actionError && (
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-rose-600 text-center mb-2"
                   style={{ fontSize: 12 }}
                 >
@@ -853,7 +853,7 @@ export default function CitatorioDetailScreen() {
                             color={style.fg}
                             strokeWidth={2.25}
                           />
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="ml-1.5"
                             style={{
                               fontSize: 13,

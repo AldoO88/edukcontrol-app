@@ -71,7 +71,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                 >
                   <Megaphone size={20} color="#0284C7" strokeWidth={2.25} />
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-3 text-slate-900 flex-1"
                   style={{ fontSize: 17, fontWeight: '700' }}
                 >
@@ -82,7 +82,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                     className="px-2.5 py-1 rounded-full ml-2"
                     style={{ backgroundColor: '#BAE6FD' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 10,
                         fontWeight: '800',
@@ -159,7 +159,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                           className="px-2 py-0.5 rounded-full ml-2"
                           style={{ backgroundColor: style.bg }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 9,
                               fontWeight: '700',
@@ -173,7 +173,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                       </View>
 
                       {/* Título del aviso. */}
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-900 mt-2"
                         style={{ fontSize: 13, fontWeight: '600' }}
                         numberOfLines={1}
@@ -182,7 +182,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                       </Text>
 
                       {/* Mensaje truncado. */}
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-500 mt-0.5"
                         style={{ fontSize: 12, fontWeight: '400' }}
                         numberOfLines={2}
@@ -194,7 +194,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                       <View className="flex-row items-center mt-1.5">
                         <View className="flex-row items-center">
                           <Calendar size={11} color="#94A3B8" strokeWidth={2} />
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-400 ml-1"
                             style={{ fontSize: 11, fontWeight: '500' }}
                           >
@@ -202,7 +202,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                           </Text>
                         </View>
                         {aviso.sender && (
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-400 ml-auto"
                             style={{ fontSize: 10, fontWeight: '500' }}
                           >
@@ -226,7 +226,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
                 }}
               >
                 <Megaphone size={24} color="#CBD5E1" strokeWidth={1.5} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500 mt-2"
                   style={{ fontSize: 13, fontWeight: '500' }}
                 >
@@ -242,7 +242,7 @@ const AnnouncementsModal = ({ isVisible, onClose, announcements }) => {
               className="items-center justify-center rounded-xl mt-4"
               style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-white"
                 style={{ fontSize: 14, fontWeight: '700' }}
               >

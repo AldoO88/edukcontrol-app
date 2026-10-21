@@ -49,7 +49,7 @@ const RecipientItem = ({ name, isSelected, isLast, onPress }) => {
       </View>
 
       {/* Nombre del destinatario. */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className={clsx(
           'flex-1 text-sm',
           isSelected ? 'text-slate-900 font-semibold' : 'text-slate-700',

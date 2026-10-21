@@ -210,7 +210,7 @@ const AddEvaluationModal = ({
 
           {/* Header. */}
           <View className="flex-row items-center justify-between mb-4">
-            <Text style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
               {title}
             </Text>
             <Pressable
@@ -239,7 +239,7 @@ const AddEvaluationModal = ({
             />
           </View>
 
-          <Text className="text-xs text-slate-500 mb-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mb-3">
             {type === 'standard'
               ? 'Exámenes, Tareas, Proyectos, Prácticas.'
               : 'Conducta, Participación, Taller, Puntos adicionales.'}
@@ -358,7 +358,7 @@ function SegmentedOption({ label, selected, onPress, activeColor }) {
         elevation: selected ? 1 : 0,
       }}
     >
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 13,
           fontWeight: '700',
@@ -373,7 +373,7 @@ function SegmentedOption({ label, selected, onPress, activeColor }) {
 
 function FieldLabel({ children }) {
   return (
-    <Text className="text-xs font-bold text-slate-500 mt-4 mb-1">{children}</Text>
+    <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-500 mt-4 mb-1">{children}</Text>
   );
 }
 
@@ -389,7 +389,7 @@ function FieldInput({
   containerStyle,
 }) {
   return (
-    <TextInput
+    <TextInput maxFontSizeMultiplier={1.3}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -410,7 +410,7 @@ function FieldWithSuffix({ label, suffix, children }) {
   return (
     <>
       <FieldLabel>{label}</FieldLabel>
-      <View className="flex-row items-center">{children}<Text className="ml-2 text-base font-bold text-slate-500">{suffix}</Text></View>
+      <View className="flex-row items-center">{children}<Text maxFontSizeMultiplier={1.3} className="ml-2 text-base font-bold text-slate-500">{suffix}</Text></View>
     </>
   );
 }
@@ -432,7 +432,7 @@ function OutlineButton({ label, onPress }) {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ fontSize: 14, fontWeight: '700', color: '#475569' }}>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '700', color: '#475569' }}>
         {label}
       </Text>
     </Pressable>
@@ -455,7 +455,7 @@ function PrimaryButton({ label, onPress, disabled }) {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
         {label}
       </Text>
     </Pressable>

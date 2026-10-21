@@ -107,23 +107,23 @@ export default function DirectorReportsScreen() {
           </View>
           <View className="flex-1 ml-3">
             <View className="flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-slate-900" numberOfLines={1}>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900" numberOfLines={1}>
                 {item.studentName || 'Desconocido'}
               </Text>
-              <Text className={`text-[10px] font-bold uppercase ${severityColors.text}`}>
+              <Text maxFontSizeMultiplier={1.3} className={`text-[10px] font-bold uppercase ${severityColors.text}`}>
                 {item.severity === 'minor' ? 'Leve' : item.severity === 'moderate' ? 'Moderado' : 'Grave'}
               </Text>
             </View>
-            <Text className="text-xs text-slate-500 mt-0.5" numberOfLines={1}>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5" numberOfLines={1}>
               {item.description || (isDemerit ? 'Demérito' : 'Mérito')}
             </Text>
             <View className="flex-row items-center mt-2">
               <Clock size={12} color="#64748b" />
-              <Text className="text-[10px] text-slate-400 ml-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 ml-1">
                 {item.incidentDate ? new Date(item.incidentDate).toLocaleDateString('es-MX') : 'Sin fecha'}
               </Text>
-              <Text className="text-[10px] text-slate-300 mx-2">•</Text>
-              <Text className="text-[10px] text-slate-400">
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-300 mx-2">•</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400">
                 {item.reportedBy || 'Desconocido'}
               </Text>
             </View>
@@ -151,8 +151,8 @@ export default function DirectorReportsScreen() {
       />
 
       <View className="flex-row items-center justify-between px-4 mt-4 mb-2">
-        <Text className="text-lg font-bold text-slate-900">Reportes de Conducta</Text>
-        <Text className="text-xs text-slate-400">
+        <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">Reportes de Conducta</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">
           {reports.length} reporte{reports.length !== 1 ? 's' : ''}
         </Text>
       </View>
@@ -160,15 +160,15 @@ export default function DirectorReportsScreen() {
       {isLoading && !isRefreshing ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando reportes...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando reportes...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 bg-sky-500 px-6 py-2.5 rounded-xl">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       ) : (
@@ -183,7 +183,7 @@ export default function DirectorReportsScreen() {
           ListEmptyComponent={
             <View className="items-center py-16">
               <FileText size={40} color="#CBD5E1" strokeWidth={1.5} />
-              <Text className="text-slate-400 text-sm mt-4">No hay reportes</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-4">No hay reportes</Text>
             </View>
           }
         />

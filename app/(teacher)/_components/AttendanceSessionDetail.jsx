@@ -156,14 +156,14 @@ const AttendanceSessionDetail = ({
               <Calendar size={18} color="#0284C7" strokeWidth={2.25} />
             </View>
             <View className="flex-1 ml-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 16, fontWeight: '700' }}
                 numberOfLines={1}
               >
                 {`${session?.dateFormatted || '—'} · ${session?.group?.label || '—'}`}
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-0.5"
                 style={{ fontSize: 12, fontWeight: '500' }}
                 numberOfLines={1}
@@ -197,7 +197,7 @@ const AttendanceSessionDetail = ({
                   backgroundColor: attendanceColor(detail.stats.present * 100 / detail.stats.total).bg,
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 12,
                     fontWeight: '700',
@@ -212,7 +212,7 @@ const AttendanceSessionDetail = ({
                   className="px-3 py-1.5 rounded-full"
                   style={{ backgroundColor: '#FEE2E2' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 12,
                       fontWeight: '700',
@@ -228,7 +228,7 @@ const AttendanceSessionDetail = ({
                   className="px-3 py-1.5 rounded-full"
                   style={{ backgroundColor: '#FEF3C7' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 12,
                       fontWeight: '700',
@@ -254,7 +254,7 @@ const AttendanceSessionDetail = ({
             {loading && (
               <View className="items-center py-10">
                 <ActivityIndicator size="large" color="#0284C7" />
-                <Text className="text-slate-400 text-sm mt-3">
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
                   Cargando detalle...
                 </Text>
               </View>
@@ -295,7 +295,7 @@ const AttendanceSessionDetail = ({
 
                 {/* Sin datos. */}
                 {detail.students.length === 0 && (
-                  <Text className="text-slate-400 text-center text-sm py-6">
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-center text-sm py-6">
                     No hay datos de asistencia para esta sesión.
                   </Text>
                 )}
@@ -320,7 +320,7 @@ const StudentGroup = ({ label, count, students, status }) => {
       {/* Header de grupo. */}
       <View className="flex-row items-center mb-2">
         <IconComponent size={14} color={config.color} strokeWidth={2.25} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="ml-1.5"
           style={{
             fontSize: 11,
@@ -371,7 +371,7 @@ const StudentGroup = ({ label, count, students, status }) => {
               />
 
               {/* Name. */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-3 text-slate-900"
                 style={{ fontSize: 13, fontWeight: '600' }}
                 numberOfLines={1}

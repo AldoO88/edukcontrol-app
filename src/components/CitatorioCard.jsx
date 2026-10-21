@@ -32,7 +32,7 @@ const CitatorioCard = ({ citatorio }) => {
           className="self-start px-2.5 py-1 rounded-full"
           style={{ backgroundColor: typeStyle.bg }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '800',
@@ -48,7 +48,7 @@ const CitatorioCard = ({ citatorio }) => {
       </View>
 
       {/* Nombre del alumno */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="mt-2 text-slate-900"
         style={{ fontSize: 16, fontWeight: '700' }}
         numberOfLines={1}
@@ -57,7 +57,7 @@ const CitatorioCard = ({ citatorio }) => {
       </Text>
 
       {/* Group badge: 1° A • Materia */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="mt-0.5 text-slate-500"
         style={{ fontSize: 12, fontWeight: '500' }}
         numberOfLines={1}
@@ -70,7 +70,7 @@ const CitatorioCard = ({ citatorio }) => {
       {/* Date & Time row */}
       <View className="flex-row items-center mt-2">
         <Calendar size={14} color="#64748B" strokeWidth={2} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="ml-1.5 text-slate-700"
           style={{ fontSize: 12, fontWeight: '600' }}
         >
@@ -82,7 +82,7 @@ const CitatorioCard = ({ citatorio }) => {
       {citatorio.location ? (
         <View className="flex-row items-center mt-1">
           <MapPin size={14} color="#64748B" strokeWidth={2} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-1.5 text-slate-700"
             style={{ fontSize: 12, fontWeight: '500' }}
             numberOfLines={1}
@@ -95,7 +95,7 @@ const CitatorioCard = ({ citatorio }) => {
       {/* STATUS */}
       <View className="flex-row items-center mt-3">
         <StatusIcon size={14} color={statusStyle.fg} strokeWidth={2.25} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="ml-1.5"
           style={{
             fontSize: 12,

@@ -68,7 +68,7 @@ const OptionButton = ({ label, isActive, onPress, activeColor, activeBg }) => (
       borderColor: isActive ? activeColor : '#E2E8F0',
     }}
   >
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       style={{
         fontSize: 12,
         fontWeight: isActive ? '700' : '500',
@@ -88,7 +88,7 @@ const Chip = ({ label, onRemove, color }) => (
     className="flex-row items-center rounded-full px-3 py-1.5 mr-2 mb-2"
     style={{ backgroundColor: (color || '#4F46E5') + '15' }}
   >
-    <Text style={{ fontSize: 12, color: color || '#4F46E5', fontWeight: '500', marginRight: 6 }}>
+    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, color: color || '#4F46E5', fontWeight: '500', marginRight: 6 }}>
       {label}
     </Text>
     <TouchableOpacity onPress={onRemove} hitSlop={8}>
@@ -105,7 +105,7 @@ const SectionHeader = ({ icon: Icon, color, title }) => (
     <View className="w-7 h-7 rounded-lg items-center justify-center mr-2" style={{ backgroundColor: color + '15' }}>
       <Icon size={14} color={color} strokeWidth={2} />
     </View>
-    <Text className="text-sm font-bold text-slate-900">{title}</Text>
+    <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">{title}</Text>
   </View>
 );
 
@@ -144,7 +144,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
         ))}
       </View>
 
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={formData.style_hint || ''}
         onChangeText={(val) => updateField('style_hint', val)}
         placeholder="Indicaciones adicionales del estilo..."
@@ -160,7 +160,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
       {/* ============================================= */}
       <SectionHeader icon={Stethoscope} color="#7C3AED" title="Diagnóstico" />
 
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={formData.diagnosis || ''}
         onChangeText={(val) => updateField('diagnosis', val)}
         placeholder="Ej: TDAH, Tea, discalculia..."
@@ -176,7 +176,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
       {/* ============================================= */}
       <SectionHeader icon={Shield} color="#0EA5E9" title="Discapacidad" />
 
-      <Text className="text-[10px] font-semibold text-slate-500 mb-1">Tipo</Text>
+      <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Tipo</Text>
       <View className="flex-row flex-wrap mb-2">
         {DISABILITY_TYPES.map((d) => (
           <OptionButton
@@ -192,7 +192,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
 
       {formData.disability_type && formData.disability_type !== 'ninguna' && (
         <>
-          <Text className="text-[10px] font-semibold text-slate-500 mb-1">Severidad</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Severidad</Text>
           <View className="flex-row flex-wrap mb-3">
             {SEVERITY_LEVELS.map((s) => (
               <OptionButton
@@ -226,7 +226,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
 
       <View className="flex-row items-center mb-3">
         <View className="flex-1 flex-row items-center bg-slate-50 rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={formData._newCondition || ''}
             onChangeText={(val) => updateField('_newCondition', val)}
             placeholder="Agregar condición..."
@@ -269,7 +269,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
 
       <View className="flex-row items-center mb-3">
         <View className="flex-1 flex-row items-center bg-slate-50 rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={formData._newMedication || ''}
             onChangeText={(val) => updateField('_newMedication', val)}
             placeholder="Agregar medicamento..."
@@ -299,7 +299,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
       {/* ============================================= */}
       <SectionHeader icon={AlertTriangle} color="#F59E0B" title="Alergias" />
 
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={formData.allergies || ''}
         onChangeText={(val) => updateField('allergies', val)}
         placeholder="Ej: Penicilina, mariscos, polen..."
@@ -315,7 +315,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
       {/* ============================================= */}
       <SectionHeader icon={BadgeCheck} color="#059669" title="Derechohabiencia" />
 
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={formData.health_insurance || ''}
         onChangeText={(val) => updateField('health_insurance', val)}
         placeholder="IMSS, ISSSTE, Popular, Privado, Ninguno..."
@@ -346,10 +346,10 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
             }}
           >
             {formData.vaccination_authorization && (
-              <Text className="text-white text-[10px] font-bold">✓</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white text-[10px] font-bold">✓</Text>
             )}
           </View>
-          <Text className="text-xs font-semibold text-slate-700">Vacunación</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700">Vacunación</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -368,10 +368,10 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
             }}
           >
             {formData.protection_civil_authorization && (
-              <Text className="text-white text-[10px] font-bold">✓</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white text-[10px] font-bold">✓</Text>
             )}
           </View>
-          <Text className="text-xs font-semibold text-slate-700">Prot. Civil</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700">Prot. Civil</Text>
         </TouchableOpacity>
       </View>
 
@@ -397,7 +397,7 @@ export default function HealthTab({ formData, updateField, onSave, isSaving }) {
           ) : (
             <Save size={16} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 8 }} />
           )}
-          <Text className="text-white text-sm font-bold">
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-sm font-bold">
             {isSaving ? 'Guardando...' : 'Guardar Salud'}
           </Text>
         </TouchableOpacity>

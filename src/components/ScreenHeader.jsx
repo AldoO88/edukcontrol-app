@@ -80,14 +80,14 @@ const ScreenHeader = ({
 
         {/* Contenedor vertical para título + subtítulo. */}
         <View className={`${Icon ? 'ml-2' : ''} flex-1`}>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900 text-lg font-bold"
             numberOfLines={1}
           >
             {title}
           </Text>
           {subtitle && (
-            <Text className="text-slate-500 text-xs" numberOfLines={1}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-xs" numberOfLines={1}>
               {subtitle}
             </Text>
           )}

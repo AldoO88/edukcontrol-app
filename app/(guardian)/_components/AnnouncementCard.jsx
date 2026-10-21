@@ -205,7 +205,7 @@ const AnnouncementCard = ({ announcement, onPress }) => {
               config.badge.bg,
             )}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx(
                 'text-[11px] font-bold uppercase tracking-wider',
                 config.badge.text,
@@ -217,7 +217,7 @@ const AnnouncementCard = ({ announcement, onPress }) => {
 
           {/* Fecha. text-xs slate-400, alineada a la derecha por
               el justify-between del padre. */}
-          <Text className="text-xs font-medium text-slate-400">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-slate-400">
             {date}
           </Text>
         </View>
@@ -229,14 +229,14 @@ const AnnouncementCard = ({ announcement, onPress }) => {
             2 líneas con "..." (consistente en TODA la pantalla,
             clave cuando hay descripciones largas).
             ---------------------------------------------------- */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-lg font-bold text-slate-900 mt-3 leading-snug"
           numberOfLines={2}
         >
           {title}
         </Text>
 
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-sm text-slate-500 mt-2 leading-relaxed"
           numberOfLines={2}
         >
@@ -253,7 +253,7 @@ const AnnouncementCard = ({ announcement, onPress }) => {
               - citation:     el nombre del alumno citado.
             ---------------------------------------------------- */}
         <View className="border-t border-slate-100 mt-4 pt-3">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-sm font-semibold text-slate-700"
             numberOfLines={1}
           >
@@ -283,7 +283,7 @@ const AnnouncementCard = ({ announcement, onPress }) => {
                   citatorioStatus.bgClass,
                 )}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className={clsx(
                     'text-[10px] font-bold uppercase tracking-wider',
                     citatorioStatus.textClass,
@@ -297,7 +297,7 @@ const AnnouncementCard = ({ announcement, onPress }) => {
 
           {/* Link de acción a la derecha. text-sm font-bold
               sky-600. numberOfLines={1} por si el texto es largo. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-sm font-bold text-sky-600 ml-2"
             numberOfLines={1}
           >

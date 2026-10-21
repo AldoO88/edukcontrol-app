@@ -136,7 +136,7 @@ export default function SocialWorkerStudentDetail() {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center">
         <ActivityIndicator size="large" color="#4F46E5" />
-        <Text className="text-slate-400 text-sm mt-3">Cargando ficha del alumno...</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando ficha del alumno...</Text>
       </View>
     );
   }
@@ -145,10 +145,10 @@ export default function SocialWorkerStudentDetail() {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center px-6">
         <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-        <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-        <Text className="text-slate-500 text-sm mt-2 text-center">{error || 'No se encontró el alumno'}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error || 'No se encontró el alumno'}</Text>
         <Pressable onPress={() => router.back()} className="mt-4 px-6 py-2.5 rounded-xl bg-slate-900">
-          <Text className="text-white font-semibold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Volver</Text>
         </Pressable>
       </View>
     );
@@ -178,14 +178,14 @@ export default function SocialWorkerStudentDetail() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* Título */}
       <View className="px-4 mt-2 mb-1">
-        <Text className="text-xl font-bold text-slate-900">Ficha del Alumno</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Ficha del Alumno</Text>
       </View>
 
       <ScrollView
@@ -219,24 +219,24 @@ export default function SocialWorkerStudentDetail() {
               className="items-center justify-center"
               style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: '#E0E7FF' }}
             >
-              <Text style={{ fontSize: 32, fontWeight: '800', color: '#4F46E5' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 32, fontWeight: '800', color: '#4F46E5' }}>
                 {`${student.first_name?.[0] || ''}${student.last_name?.[0] || ''}`.toUpperCase()}
               </Text>
             </View>
           )}
 
           {/* Nombre */}
-          <Text className="text-xl font-bold text-slate-900 mt-3">{fullName}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900 mt-3">{fullName}</Text>
 
           {/* Grupo + No. Control en la misma línea */}
           <View className="flex-row items-center mt-1">
-            <Text className="text-base text-slate-600">
+            <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-600">
               {student.current_group_id?.grade || ''}°{student.current_group_id?.section || ''}
             </Text>
             {student.controlNumber && (
               <>
-                <Text className="text-slate-300 mx-2">•</Text>
-                <Text className="text-base text-slate-500">
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-300 mx-2">•</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-500">
                   No. {student.controlNumber}
                 </Text>
               </>
@@ -245,7 +245,7 @@ export default function SocialWorkerStudentDetail() {
 
           {/* Badge de estado */}
           <View className={`px-2.5 py-1 rounded-full mt-2 ${student.status === 'active' ? 'bg-emerald-100' : 'bg-amber-100'}`}>
-            <Text className={`text-[11px] font-bold ${student.status === 'active' ? 'text-emerald-700' : 'text-amber-700'}`}>
+            <Text maxFontSizeMultiplier={1.3} className={`text-[11px] font-bold ${student.status === 'active' ? 'text-emerald-700' : 'text-amber-700'}`}>
               {STATUS_LABELS[student.status] || student.status}
             </Text>
           </View>
@@ -264,7 +264,7 @@ export default function SocialWorkerStudentDetail() {
             elevation: 2,
           }}
         >
-          <Text className="text-base font-bold text-slate-900 mb-3">Tutor Legal</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-base font-bold text-slate-900 mb-3">Tutor Legal</Text>
           {guardians.length > 0 ? (
             guardians.map((guardian, idx) => (
               <View key={guardian._id || idx} className={idx > 0 ? 'mt-3 pt-3 border-t border-slate-100' : ''}>
@@ -274,7 +274,7 @@ export default function SocialWorkerStudentDetail() {
               </View>
             ))
           ) : (
-            <Text className="text-base text-slate-400 italic">Sin tutor registrado</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-400 italic">Sin tutor registrado</Text>
           )}
         </View>
 
@@ -294,7 +294,7 @@ export default function SocialWorkerStudentDetail() {
                 elevation: 2,
               }}
             >
-              <Text className="text-base font-bold text-slate-900 mb-3">Datos Personales</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-base font-bold text-slate-900 mb-3">Datos Personales</Text>
               {hasData ? (
                 <>
                   <InfoRow icon={FileText} label="CURP" value={student.curp} />
@@ -310,7 +310,7 @@ export default function SocialWorkerStudentDetail() {
                   )}
                 </>
               ) : (
-                <Text className="text-base text-slate-400 italic">Sin datos registrados</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-400 italic">Sin datos registrados</Text>
               )}
             </View>
           );
@@ -330,7 +330,7 @@ export default function SocialWorkerStudentDetail() {
               elevation: 2,
             }}
           >
-            <Text className="text-base font-bold text-slate-900 mb-3">Salud</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-base font-bold text-slate-900 mb-3">Salud</Text>
             <InfoRow icon={AlertTriangle} label="Notas médicas" value={student.medical_notes} />
           </View>
         )}
@@ -356,7 +356,7 @@ export default function SocialWorkerStudentDetail() {
           <View className="items-center justify-center" style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: '#D1FAE5' }}>
             <Eye size={20} color="#059669" strokeWidth={2.25} />
           </View>
-          <Text className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
+          <Text maxFontSizeMultiplier={1.3} className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
             Trabajo Social
           </Text>
           <ChevronRight size={18} color="#94A3B8" strokeWidth={2} />
@@ -383,12 +383,12 @@ export default function SocialWorkerStudentDetail() {
           <View className="items-center justify-center" style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: '#FEF3C7' }}>
             <FileText size={20} color="#D97706" strokeWidth={2.25} />
           </View>
-          <Text className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
+          <Text maxFontSizeMultiplier={1.3} className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
             Citatorios
           </Text>
           {activeCitationsCount > 0 && (
             <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: '#FED7AA' }}>
-              <Text style={{ fontSize: 10, fontWeight: '800', color: '#C2410C', letterSpacing: 0.3 }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '800', color: '#C2410C', letterSpacing: 0.3 }}>
                 {activeCitationsCount}
               </Text>
             </View>
@@ -417,12 +417,12 @@ export default function SocialWorkerStudentDetail() {
           <View className="items-center justify-center" style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: '#FEF2F2' }}>
             <TrendingUp size={20} color="#E11D48" strokeWidth={2.25} />
           </View>
-          <Text className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
+          <Text maxFontSizeMultiplier={1.3} className="flex-1 ml-3 text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
             Conducta
           </Text>
           {conductLogs.length > 0 && (
             <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: '#FECDD3' }}>
-              <Text style={{ fontSize: 10, fontWeight: '800', color: '#9F1239', letterSpacing: 0.3 }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '800', color: '#9F1239', letterSpacing: 0.3 }}>
                 {conductLogs.length}
               </Text>
             </View>
@@ -460,8 +460,8 @@ function InfoRow({ icon: Icon, label, value }) {
     <View className="flex-row items-start mb-2.5">
       <Icon size={16} color="#94A3B8" strokeWidth={2} style={{ marginTop: 2, marginRight: 10 }} />
       <View className="flex-1">
-        <Text className="text-sm text-slate-400">{label}</Text>
-        <Text className="text-base text-slate-900" style={{ fontWeight: '500' }}>{value}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-400">{label}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-900" style={{ fontWeight: '500' }}>{value}</Text>
       </View>
     </View>
   );

@@ -464,7 +464,7 @@ export default function TakeAttendanceTodayScreen() {
         </Pressable>
 
         <View className="flex-1 ml-1">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900"
             style={{ fontSize: 17, fontWeight: '700' }}
             numberOfLines={1}
@@ -486,7 +486,7 @@ export default function TakeAttendanceTodayScreen() {
         }}
       >
         <Calendar size={16} color="#0284C7" strokeWidth={2.25} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="ml-2 text-sky-700"
           style={{ fontSize: 13, fontWeight: '700' }}
         >
@@ -538,7 +538,7 @@ export default function TakeAttendanceTodayScreen() {
             HEADER DE LISTA + hint
             ============================================================ */}
         <View className="flex-row items-center justify-between mt-4 mx-4 mb-2">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{
               fontSize: 11,
@@ -549,7 +549,7 @@ export default function TakeAttendanceTodayScreen() {
           >
             {`Alumnos (${students.length})`}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400"
             style={{ fontSize: 11 }}
           >
@@ -566,7 +566,7 @@ export default function TakeAttendanceTodayScreen() {
             style={{ elevation: 1 }}
           >
             <ActivityIndicator size="large" color="#0284C7" />
-            <Text className="text-slate-400 text-sm mt-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
               Cargando alumnos...
             </Text>
           </View>
@@ -577,7 +577,7 @@ export default function TakeAttendanceTodayScreen() {
             className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
             style={{ elevation: 1 }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-700 text-center"
               style={{ fontSize: 13, fontWeight: '600' }}
             >
@@ -589,7 +589,7 @@ export default function TakeAttendanceTodayScreen() {
               accessibilityLabel="Reintentar cargar la asistencia"
               className="mt-4 px-5 py-2.5 rounded-xl bg-sky-500"
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-white"
                 style={{ fontSize: 13, fontWeight: '700' }}
               >
@@ -604,7 +604,7 @@ export default function TakeAttendanceTodayScreen() {
             className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
             style={{ elevation: 1 }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-700 text-center"
               style={{ fontSize: 13, fontWeight: '600' }}
             >
@@ -619,7 +619,7 @@ export default function TakeAttendanceTodayScreen() {
             className="bg-white rounded-2xl mx-4 border border-slate-100 items-center px-5 py-6"
             style={{ elevation: 1 }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500 text-center"
               style={{ fontSize: 13 }}
             >
@@ -667,7 +667,7 @@ export default function TakeAttendanceTodayScreen() {
                   />
 
                   {/* Student name (prefijo = posición en la lista). */}
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="flex-1 text-slate-900 ml-3"
                     style={{ fontSize: 13, fontWeight: '700' }}
                     numberOfLines={1}
@@ -680,7 +680,7 @@ export default function TakeAttendanceTodayScreen() {
                     className="flex-row items-center pl-2.5 pr-1 py-1 rounded-full"
                     style={{ backgroundColor: status.soft }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 11,
                         fontWeight: '800',
@@ -757,7 +757,7 @@ export default function TakeAttendanceTodayScreen() {
           ) : (
             <Save size={16} color="#ffffff" strokeWidth={2.5} />
           )}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-white ml-1.5"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -805,7 +805,7 @@ const StatCard = ({
     style={{ backgroundColor: bgColor }}
   >
     <View className="flex-row items-center justify-between">
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 10,
           fontWeight: '700',
@@ -820,7 +820,7 @@ const StatCard = ({
         <Icon size={14} color={iconColor} strokeWidth={2.25} />
       ) : null}
     </View>
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="mt-1"
       style={{ fontSize: 24, fontWeight: '800', color: valueColor }}
     >

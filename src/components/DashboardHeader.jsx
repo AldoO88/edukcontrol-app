@@ -57,7 +57,7 @@ export default function DashboardHeader() {
             strokeWidth={2.25}
           />
         </View>
-        <Text className="text-xl font-bold text-sky-500 ml-2.5 tracking-tight">
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-sky-500 ml-2.5 tracking-tight">
           EdukControl
         </Text>
       </View>

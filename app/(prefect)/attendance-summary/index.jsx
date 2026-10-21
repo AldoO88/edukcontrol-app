@@ -141,11 +141,11 @@ export default function AttendanceSummaryScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#e11d48" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando faltas...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando faltas...</Text>
         </View>
       </View>
     );
@@ -169,16 +169,16 @@ export default function AttendanceSummaryScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-slate-900 text-lg font-bold">Error</Text>
-          <Text className="text-slate-500 text-sm text-center mt-2">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">Error</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">{error}</Text>
           <Pressable
             onPress={fetchAbsences}
             className="mt-4 bg-rose-500 px-6 py-2.5 rounded-xl"
           >
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -202,7 +202,7 @@ export default function AttendanceSummaryScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
       </Pressable>
 
       <ScrollView
@@ -227,7 +227,7 @@ export default function AttendanceSummaryScreen() {
             >
               <UserX size={20} color="#e11d48" strokeWidth={2} />
             </View>
-            <Text className="text-xl font-bold text-slate-900 ml-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900 ml-3">
               Faltas Escolares
             </Text>
           </View>
@@ -245,7 +245,7 @@ export default function AttendanceSummaryScreen() {
               }}
             >
               <Users size={14} color={selectedGroupId ? '#e11d48' : '#64748b'} strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-xs font-semibold"
                 style={{ color: selectedGroupId ? '#e11d48' : '#64748b' }}
               >
@@ -259,7 +259,7 @@ export default function AttendanceSummaryScreen() {
                 className="flex-row items-center bg-rose-50 rounded-xl px-3 py-2.5"
               >
                 <X size={14} color="#e11d48" strokeWidth={2} />
-                <Text className="ml-1 text-xs font-semibold text-rose-600">
+                <Text maxFontSizeMultiplier={1.3} className="ml-1 text-xs font-semibold text-rose-600">
                   Limpiar
                 </Text>
               </Pressable>
@@ -282,7 +282,7 @@ export default function AttendanceSummaryScreen() {
                         selectedGroupId === g._id ? '#FFF1F2' : 'transparent',
                     }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-sm font-medium"
                       style={{
                         color:
@@ -306,12 +306,12 @@ export default function AttendanceSummaryScreen() {
               style={{ elevation: 1 }}
             >
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">
                   Total Faltas
                 </Text>
                 <UserX size={14} color="#64748b" />
               </View>
-              <Text className="text-2xl font-extrabold text-rose-600 mt-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-rose-600 mt-1">
                 {summary.totalAbsences || 0}
               </Text>
             </View>
@@ -320,12 +320,12 @@ export default function AttendanceSummaryScreen() {
               style={{ elevation: 1 }}
             >
               <View className="flex-row items-center justify-between">
-                <Text className="text-[10px] font-bold text-slate-500 uppercase">
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500 uppercase">
                   Alumnos
                 </Text>
                 <Users size={14} color="#64748b" />
               </View>
-              <Text className="text-2xl font-extrabold text-slate-900 mt-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-extrabold text-slate-900 mt-1">
                 {summary.affectedStudents || 0}
               </Text>
             </View>
@@ -341,7 +341,7 @@ export default function AttendanceSummaryScreen() {
             >
               <UserX size={16} color="#e11d48" strokeWidth={2} />
             </View>
-            <Text className="text-sm font-bold text-slate-900 ml-2">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 ml-2">
               Mayor número de faltas
             </Text>
           </View>
@@ -350,7 +350,7 @@ export default function AttendanceSummaryScreen() {
               className="items-center py-8 bg-white rounded-2xl border border-slate-100"
               style={{ elevation: 1 }}
             >
-              <Text className="text-xs text-slate-400">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">
                 Sin inasistencias registradas
               </Text>
             </View>
@@ -379,7 +379,7 @@ export default function AttendanceSummaryScreen() {
                               : '#F1F5F9',
                     }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="font-bold"
                       style={{
                         fontSize: 12,
@@ -390,7 +390,7 @@ export default function AttendanceSummaryScreen() {
                     </Text>
                   </View>
                   <View className="flex-1">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-sm font-bold text-slate-900"
                       numberOfLines={1}
                     >
@@ -398,14 +398,14 @@ export default function AttendanceSummaryScreen() {
                     </Text>
                     <View className="flex-row items-center mt-0.5">
                       {student.group ? (
-                        <Text className="text-xs text-slate-500">
+                        <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500">
                           {student.group}
                         </Text>
                       ) : null}
                       {student.controlNumber ? (
                         <>
-                          <Text className="text-xs text-slate-300 mx-1">·</Text>
-                          <Text className="text-xs text-slate-400">
+                          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-300 mx-1">·</Text>
+                          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">
                             #{student.controlNumber}
                           </Text>
                         </>
@@ -416,7 +416,7 @@ export default function AttendanceSummaryScreen() {
                     className="px-2.5 py-1 rounded-full"
                     style={{ backgroundColor: '#FFF1F2' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="font-bold"
                       style={{ fontSize: 13, color: '#e11d48' }}
                     >

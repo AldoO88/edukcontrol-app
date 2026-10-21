@@ -181,7 +181,7 @@ export default function TeacherAttendanceSummaryScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -201,14 +201,14 @@ export default function TeacherAttendanceSummaryScreen() {
           <BarChart3 size={20} color="#0284C7" strokeWidth={2.25} />
         </View>
         <View className="flex-1 ml-3">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900"
             style={{ fontSize: 17, fontWeight: '700' }}
             numberOfLines={1}
           >
             Resumen de Asistencia
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{ fontSize: 12, fontWeight: '500' }}
             numberOfLines={1}
@@ -240,7 +240,7 @@ export default function TeacherAttendanceSummaryScreen() {
             backgroundColor: selectedGroupId === null ? '#0284C7' : '#F1F5F9',
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 12,
               fontWeight: '600',
@@ -264,7 +264,7 @@ export default function TeacherAttendanceSummaryScreen() {
                 backgroundColor: isActive ? '#0284C7' : '#F1F5F9',
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '600',
@@ -304,7 +304,7 @@ export default function TeacherAttendanceSummaryScreen() {
                   backgroundColor: isActive ? '#0284C7' : '#F1F5F9',
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 12,
                     fontWeight: '600',
@@ -333,7 +333,7 @@ export default function TeacherAttendanceSummaryScreen() {
         {loading && (
           <View className="items-center justify-center mt-12">
             <ActivityIndicator size="large" color="#0284C7" />
-            <Text className="text-slate-400 text-sm mt-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
               Cargando resumen...
             </Text>
           </View>
@@ -389,7 +389,7 @@ export default function TeacherAttendanceSummaryScreen() {
               }}
             >
               {analytics.topAbsentStudents.length === 0 && (
-                <Text className="text-slate-400 text-center text-sm py-6">
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-center text-sm py-6">
                   No hay inasistencias en este período.
                 </Text>
               )}
@@ -419,7 +419,7 @@ export default function TeacherAttendanceSummaryScreen() {
                         backgroundColor: index === 0 ? '#FEE2E2' : '#F1F5F9',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 11,
                           fontWeight: '800',
@@ -432,14 +432,14 @@ export default function TeacherAttendanceSummaryScreen() {
 
                     {/* Name + group. */}
                     <View className="flex-1 ml-3">
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-900"
                         style={{ fontSize: 13, fontWeight: '700' }}
                         numberOfLines={1}
                       >
                         {student.fullName}
                       </Text>
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-500 mt-0.5"
                         style={{ fontSize: 11, fontWeight: '500' }}
                         numberOfLines={1}
@@ -453,7 +453,7 @@ export default function TeacherAttendanceSummaryScreen() {
                       className="px-2.5 py-1 rounded-full"
                       style={{ backgroundColor: '#FEE2E2' }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 11,
                           fontWeight: '800',
@@ -487,7 +487,7 @@ export default function TeacherAttendanceSummaryScreen() {
               }}
             >
               {analytics.topRetardStudents.length === 0 && (
-                <Text className="text-slate-400 text-center text-sm py-6">
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-center text-sm py-6">
                   No hay retardos en este período.
                 </Text>
               )}
@@ -517,7 +517,7 @@ export default function TeacherAttendanceSummaryScreen() {
                         backgroundColor: index === 0 ? '#FEF3C7' : '#F1F5F9',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 11,
                           fontWeight: '800',
@@ -530,14 +530,14 @@ export default function TeacherAttendanceSummaryScreen() {
 
                     {/* Name + group. */}
                     <View className="flex-1 ml-3">
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-900"
                         style={{ fontSize: 13, fontWeight: '700' }}
                         numberOfLines={1}
                       >
                         {student.fullName}
                       </Text>
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-500 mt-0.5"
                         style={{ fontSize: 11, fontWeight: '500' }}
                         numberOfLines={1}
@@ -551,7 +551,7 @@ export default function TeacherAttendanceSummaryScreen() {
                       className="px-2.5 py-1 rounded-full"
                       style={{ backgroundColor: '#FEF3C7' }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 11,
                           fontWeight: '800',
@@ -590,7 +590,7 @@ const StatCard = ({
     style={{ backgroundColor: bgColor }}
   >
     <View className="flex-row items-center justify-between">
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 10,
           fontWeight: '700',
@@ -605,7 +605,7 @@ const StatCard = ({
         <Icon size={14} color={iconColor} strokeWidth={2.25} />
       ) : null}
     </View>
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="mt-1"
       style={{ fontSize: 24, fontWeight: '800', color: valueColor }}
     >
@@ -618,7 +618,7 @@ const StatCard = ({
 const SectionHeader = ({ icon: Icon, iconColor, title }) => (
   <View className="flex-row items-center mt-4 mx-4 mb-2">
     <Icon size={14} color={iconColor} strokeWidth={2.25} />
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="ml-1.5 text-slate-500"
       style={{
         fontSize: 11,

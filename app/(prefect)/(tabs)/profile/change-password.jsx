@@ -86,14 +86,14 @@ export default function PrefectChangePasswordScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* HEADER: título */}
       <View className="px-4 mt-4 mb-1">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-[22px] font-bold text-[#0F172A]"
           numberOfLines={1}
         >
@@ -113,23 +113,23 @@ export default function PrefectChangePasswordScreen() {
       >
         {/* Info */}
         <View className="bg-sky-50 rounded-2xl p-4 mb-8">
-          <Text className="text-sky-800 text-sm leading-5">
+          <Text maxFontSizeMultiplier={1.3} className="text-sky-800 text-sm leading-5">
             Para cambiar tu contraseña, verifica tu contraseña actual y establece una nueva. La nueva contraseña debe tener al menos 8 caracteres.
           </Text>
         </View>
 
         {errors.general && (
           <View className="bg-rose-50 rounded-2xl p-4 mb-6">
-            <Text className="text-rose-700 text-sm">{errors.general}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-rose-700 text-sm">{errors.general}</Text>
           </View>
         )}
 
         {/* Current password */}
         <View className="mb-5">
-          <Text className="text-sm font-medium text-slate-700 mb-2">Contraseña actual</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-medium text-slate-700 mb-2">Contraseña actual</Text>
           <View className={`flex-row items-center bg-white rounded-2xl px-4 py-3.5 ${errors.currentPassword ? 'border border-rose-500' : 'border border-slate-200'}`}>
             <Lock size={18} className="text-slate-400 mr-3" />
-            <TextInput
+            <TextInput maxFontSizeMultiplier={1.3}
               className="flex-1 text-slate-900 text-base"
               placeholder="Tu contraseña actual"
               placeholderTextColor="#94a3b8"
@@ -142,15 +142,15 @@ export default function PrefectChangePasswordScreen() {
               {showCurrent ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
             </TouchableOpacity>
           </View>
-          {errors.currentPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.currentPassword}</Text>}
+          {errors.currentPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.currentPassword}</Text>}
         </View>
 
         {/* New password */}
         <View className="mb-5">
-          <Text className="text-sm font-medium text-slate-700 mb-2">Nueva contraseña</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-medium text-slate-700 mb-2">Nueva contraseña</Text>
           <View className={`flex-row items-center bg-white rounded-2xl px-4 py-3.5 ${errors.newPassword ? 'border border-rose-500' : 'border border-slate-200'}`}>
             <Lock size={18} className="text-slate-400 mr-3" />
-            <TextInput
+            <TextInput maxFontSizeMultiplier={1.3}
               className="flex-1 text-slate-900 text-base"
               placeholder="Mínimo 8 caracteres"
               placeholderTextColor="#94a3b8"
@@ -163,15 +163,15 @@ export default function PrefectChangePasswordScreen() {
               {showNew ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
             </TouchableOpacity>
           </View>
-          {errors.newPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.newPassword}</Text>}
+          {errors.newPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.newPassword}</Text>}
         </View>
 
         {/* Confirm password */}
         <View className="mb-8">
-          <Text className="text-sm font-medium text-slate-700 mb-2">Confirmar nueva contraseña</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-medium text-slate-700 mb-2">Confirmar nueva contraseña</Text>
           <View className={`flex-row items-center bg-white rounded-2xl px-4 py-3.5 ${errors.confirmPassword ? 'border border-rose-500' : 'border border-slate-200'}`}>
             <Lock size={18} className="text-slate-400 mr-3" />
-            <TextInput
+            <TextInput maxFontSizeMultiplier={1.3}
               className="flex-1 text-slate-900 text-base"
               placeholder="Repite tu nueva contraseña"
               placeholderTextColor="#94a3b8"
@@ -184,7 +184,7 @@ export default function PrefectChangePasswordScreen() {
               {showConfirm ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
             </TouchableOpacity>
           </View>
-          {errors.confirmPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.confirmPassword}</Text>}
+          {errors.confirmPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.confirmPassword}</Text>}
         </View>
 
         {/* Submit */}
@@ -193,7 +193,7 @@ export default function PrefectChangePasswordScreen() {
           disabled={isSubmitting}
           className={`rounded-2xl py-4 ${isSubmitting ? 'bg-slate-400' : 'bg-slate-900'}`}
         >
-          <Text className="text-white text-center font-semibold text-base">
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-center font-semibold text-base">
             {isSubmitting ? 'Actualizando...' : 'Actualizar Contraseña'}
           </Text>
         </TouchableOpacity>

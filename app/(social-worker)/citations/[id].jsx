@@ -285,7 +285,7 @@ export default function SocialWorkerCitationDetail() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-sm text-[#64748B] mt-3 font-medium">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-[#64748B] mt-3 font-medium">
             Cargando citatorio...
           </Text>
         </View>
@@ -302,14 +302,14 @@ export default function SocialWorkerCitationDetail() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center px-6">
           <AlertCircle size={40} color="#F59E0B" strokeWidth={1.5} />
-          <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
             {error || 'Citatorio no encontrado'}
           </Text>
           <Pressable
             onPress={() => router.back()}
             className="mt-4 px-5 py-2 rounded-full bg-[#0284C7]"
           >
-            <Text className="text-white font-semibold text-[13px]">Volver</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold text-[13px]">Volver</Text>
           </Pressable>
         </View>
       </View>
@@ -350,14 +350,14 @@ export default function SocialWorkerCitationDetail() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
 
         {/* Título */}
         <View className="px-4 mt-2 mb-1">
-          <Text className="text-xl font-bold text-slate-900">Detalle del Citatorio</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Detalle del Citatorio</Text>
         </View>
 
         {/* ============================================================
@@ -381,7 +381,7 @@ export default function SocialWorkerCitationDetail() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: typeStyle.bg }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -400,7 +400,7 @@ export default function SocialWorkerCitationDetail() {
               style={{ backgroundColor: statusStyle.bg }}
             >
               <StatusIcon size={12} color={statusStyle.fg} strokeWidth={2.5} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1"
                 style={{
                   fontSize: 10,
@@ -415,7 +415,7 @@ export default function SocialWorkerCitationDetail() {
           </View>
 
           {/* Nombre del alumno. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-3 text-slate-900"
             style={{ fontSize: 18, fontWeight: '800' }}
             numberOfLines={2}
@@ -424,7 +424,7 @@ export default function SocialWorkerCitationDetail() {
           </Text>
 
           {/* Group + subject. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1 text-slate-500"
             style={{ fontSize: 13, fontWeight: '500' }}
             numberOfLines={1}
@@ -438,7 +438,7 @@ export default function SocialWorkerCitationDetail() {
           {citatorio.creatorName ? (
             <View className="flex-row items-center mt-2">
               <Users size={13} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{ fontSize: 12, fontWeight: '500' }}
               >
@@ -461,7 +461,7 @@ export default function SocialWorkerCitationDetail() {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 mb-2"
             style={{
               fontSize: 11,
@@ -476,7 +476,7 @@ export default function SocialWorkerCitationDetail() {
           {/* Date. */}
           <View className="flex-row items-center mt-2">
             <Calendar size={15} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2 text-slate-900"
               style={{ fontSize: 14, fontWeight: '700' }}
             >
@@ -487,7 +487,7 @@ export default function SocialWorkerCitationDetail() {
           {/* Time. */}
           <View className="flex-row items-center mt-1.5">
             <Clock size={15} color="#64748B" strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2 text-slate-900"
               style={{ fontSize: 14, fontWeight: '700' }}
             >
@@ -499,7 +499,7 @@ export default function SocialWorkerCitationDetail() {
           {citatorio.location ? (
             <View className="flex-row items-center mt-1.5">
               <MapPin size={15} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2 text-slate-900"
                 style={{ fontSize: 14, fontWeight: '700' }}
                 numberOfLines={1}
@@ -524,7 +524,7 @@ export default function SocialWorkerCitationDetail() {
           >
             <View className="flex-row items-center mb-2">
               <RefreshCw size={14} color="#92400E" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5"
                 style={{
                   fontSize: 12,
@@ -538,7 +538,7 @@ export default function SocialWorkerCitationDetail() {
               </Text>
             </View>
             {citatorio.rescheduleReason ? (
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 13,
                   fontWeight: '500',
@@ -568,7 +568,7 @@ export default function SocialWorkerCitationDetail() {
           >
             <View className="flex-row items-center mb-2">
               <FileText size={14} color="#0284C7" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{
                   fontSize: 11,
@@ -580,7 +580,7 @@ export default function SocialWorkerCitationDetail() {
                 Motivo / Notas
               </Text>
             </View>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-900"
               style={{ fontSize: 13, fontWeight: '500', lineHeight: 19 }}
             >
@@ -605,7 +605,7 @@ export default function SocialWorkerCitationDetail() {
           >
             <View className="flex-row items-center mb-3">
               <Activity size={14} color="#0284C7" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{
                   fontSize: 11,
@@ -649,7 +649,7 @@ export default function SocialWorkerCitationDetail() {
 
                   {/* Contenido: timestamp + actor + event + note. */}
                   <View className="flex-1 pb-3">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 12,
                         fontWeight: '700',
@@ -658,20 +658,20 @@ export default function SocialWorkerCitationDetail() {
                     >
                       {event.ts}
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="mt-0.5 text-slate-900"
                       style={{ fontSize: 13, fontWeight: '600' }}
                     >
                       {eventLabel}
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="mt-0.5 text-slate-500"
                       style={{ fontSize: 11, fontWeight: '500' }}
                     >
                       {event.actor}
                     </Text>
                     {event.note ? (
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="mt-1 text-slate-600 italic"
                         style={{ fontSize: 12, lineHeight: 17 }}
                       >
@@ -690,7 +690,7 @@ export default function SocialWorkerCitationDetail() {
             ============================================================ */}
         {canEdit && (
           <View className="mx-4 mt-4">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500 mb-2"
               style={{
                 fontSize: 11,
@@ -713,13 +713,13 @@ export default function SocialWorkerCitationDetail() {
                   elevation: 1,
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500"
                   style={{ fontSize: 13, fontWeight: '600' }}
                 >
                   Sin acciones disponibles
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-400 mt-1 text-center"
                   style={{ fontSize: 11 }}
                 >
@@ -729,7 +729,7 @@ export default function SocialWorkerCitationDetail() {
             ) : (
               <>
                 {actionError && (
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-rose-600 text-center mb-2"
                     style={{ fontSize: 12 }}
                   >
@@ -765,7 +765,7 @@ export default function SocialWorkerCitationDetail() {
                               color={style.fg}
                               strokeWidth={2.25}
                             />
-                            <Text
+                            <Text maxFontSizeMultiplier={1.3}
                               className="ml-1.5"
                               style={{
                                 fontSize: 13,

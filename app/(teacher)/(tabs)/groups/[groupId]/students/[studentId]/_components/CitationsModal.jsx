@@ -84,7 +84,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                 >
                   <FileText size={20} color="#D97706" strokeWidth={2.25} />
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-3 text-slate-900 flex-1"
                   style={{ fontSize: 17, fontWeight: '700' }}
                 >
@@ -95,7 +95,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                     className="px-2.5 py-1 rounded-full ml-2"
                     style={{ backgroundColor: '#FED7AA' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 10,
                         fontWeight: '800',
@@ -167,7 +167,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                           className="px-2 py-0.5 rounded-full ml-2"
                           style={{ backgroundColor: typeStyle.bg }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 9,
                               fontWeight: '700',
@@ -182,7 +182,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                           className="px-2 py-0.5 rounded-full ml-auto"
                           style={{ backgroundColor: statusStyle.bg }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 9,
                               fontWeight: '700',
@@ -194,7 +194,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                           </Text>
                         </View>
                       </View>
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-900 mt-2"
                         style={{ fontSize: 13, fontWeight: '600' }}
                         numberOfLines={2}
@@ -203,7 +203,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                       </Text>
                       <View className="flex-row items-center mt-1.5">
                         <Calendar size={11} color="#94A3B8" strokeWidth={2} />
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           className="text-slate-400 ml-1"
                           style={{ fontSize: 11, fontWeight: '500' }}
                         >
@@ -226,7 +226,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                 }}
               >
                 <FileText size={24} color="#CBD5E1" strokeWidth={1.5} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500 mt-2"
                   style={{ fontSize: 13, fontWeight: '500' }}
                 >
@@ -242,7 +242,7 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
               className="items-center justify-center rounded-xl mt-4"
               style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-white"
                 style={{ fontSize: 14, fontWeight: '700' }}
               >

@@ -254,7 +254,7 @@ export default function GroupDetailScreen() {
               color={isActive ? '#4F46E5' : '#64748B'}
               strokeWidth={2}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 12,
                 fontWeight: isActive ? '700' : '500',
@@ -302,10 +302,10 @@ export default function GroupDetailScreen() {
               />
             </View>
             <View className="flex-1">
-              <Text className="text-sm font-bold text-slate-900">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">
                 {index + 1}. {item.last_name}, {item.first_name}
               </Text>
-              <Text className="text-xs text-slate-500 mt-0.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                 {groupLabel}{groupLabel && item.controlNumber ? ' • ' : ''}{item.controlNumber || ''}
               </Text>
             </View>
@@ -349,22 +349,22 @@ export default function GroupDetailScreen() {
               />
             </View>
             <View className="flex-1">
-              <Text className="text-sm font-bold text-slate-900">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">
                 {index + 1}. {item.last_name}, {item.first_name}
               </Text>
-              <Text className="text-xs text-slate-500 mt-0.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                 No. Control {item.controlNumber || '—'}
               </Text>
             </View>
             {statusInfo ? (
               <View className={`px-2 py-1 rounded-full ${statusInfo.bg}`}>
-                <Text className={`text-[10px] font-bold ${statusInfo.text}`}>
+                <Text maxFontSizeMultiplier={1.3} className={`text-[10px] font-bold ${statusInfo.text}`}>
                   {statusInfo.label}
                 </Text>
               </View>
             ) : (
               <View className="px-2 py-1 rounded-full bg-slate-100">
-                <Text className="text-[10px] font-bold text-slate-400">Sin registro</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-400">Sin registro</Text>
               </View>
             )}
           </View>
@@ -379,7 +379,7 @@ export default function GroupDetailScreen() {
                 {isOverriding ? (
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
-                  <Text className="text-white text-[10px] font-bold">Marcar</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-white text-[10px] font-bold">Marcar</Text>
                 )}
               </Pressable>
             </View>
@@ -412,10 +412,10 @@ export default function GroupDetailScreen() {
             <Clock size={16} color="#94A3B8" strokeWidth={2.25} />
           </View>
           <View className="ml-3 flex-1">
-            <Text className="text-slate-400" style={{ fontSize: 13, fontWeight: '600' }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 13, fontWeight: '600' }}>
               Receso
             </Text>
-            <Text className="text-slate-400" style={{ fontSize: 11 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>
               {`${clase.start} – ${clase.end}`}
             </Text>
           </View>
@@ -456,13 +456,13 @@ export default function GroupDetailScreen() {
         </View>
         <View className="ml-3 flex-1">
           <View className="flex-row items-center">
-            <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }} numberOfLines={1}>
               {clase.subject || 'Sin materia'}
             </Text>
             {isTaller && (
               <View className="ml-2 px-1.5 py-0.5 rounded-full"
                 style={{ backgroundColor: tintWithAlpha(subjectColor, 0.15) }}>
-                <Text style={{ fontSize: 9, fontWeight: '700', color: subjectColor, textTransform: 'uppercase' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: subjectColor, textTransform: 'uppercase' }}>
                   Taller
                 </Text>
               </View>
@@ -470,14 +470,14 @@ export default function GroupDetailScreen() {
           </View>
           {clase.teacher && !isTaller && (
             <View className="flex-row items-center mt-0.5">
-              <Text className="text-slate-500" style={{ fontSize: 11, fontWeight: '500' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 11, fontWeight: '500' }}>
                 {clase.teacher}
               </Text>
             </View>
           )}
           <View className="flex-row items-center mt-0.5">
             <Clock size={11} color="#64748B" strokeWidth={2} />
-            <Text className="ml-1 text-slate-500" style={{ fontSize: 11 }}>
+            <Text maxFontSizeMultiplier={1.3} className="ml-1 text-slate-500" style={{ fontSize: 11 }}>
               {`${clase.start} – ${clase.end}`}
               {clase.block_count > 1 ? ` (${clase.block_count} módulos)` : ''}
             </Text>
@@ -485,7 +485,7 @@ export default function GroupDetailScreen() {
           {clase.classroom && (
             <View className="flex-row items-center mt-0.5">
               <MapPin size={11} color="#64748B" strokeWidth={2} />
-              <Text className="ml-1 text-slate-500" style={{ fontSize: 11 }} numberOfLines={1}>
+              <Text maxFontSizeMultiplier={1.3} className="ml-1 text-slate-500" style={{ fontSize: 11 }} numberOfLines={1}>
                 {clase.classroom}
               </Text>
             </View>
@@ -501,7 +501,7 @@ export default function GroupDetailScreen() {
       return (
         <View className="flex-1 items-center justify-center py-12">
           <ActivityIndicator size="large" color="#4F46E5" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando...</Text>
         </View>
       );
     }
@@ -517,7 +517,7 @@ export default function GroupDetailScreen() {
             ListEmptyComponent={
               <View className="items-center py-12">
                 <Users size={56} color="#CBD5E1" strokeWidth={1.5} />
-                <Text className="text-slate-400 text-sm mt-3">No hay alumnos en este grupo</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">No hay alumnos en este grupo</Text>
               </View>
             }
           />
@@ -536,9 +536,9 @@ export default function GroupDetailScreen() {
                 }}
                 className="px-3 py-2 rounded-lg bg-slate-100"
               >
-                <Text className="text-sm font-semibold text-slate-600">← Anterior</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-600">← Anterior</Text>
               </Pressable>
-              <Text className="text-sm font-bold text-slate-900">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">
                 {selectedDate.toLocaleDateString('es-MX', {
                   weekday: 'long',
                   day: 'numeric',
@@ -553,19 +553,19 @@ export default function GroupDetailScreen() {
                 }}
                 className="px-3 py-2 rounded-lg bg-slate-100"
               >
-                <Text className="text-sm font-semibold text-slate-600">Siguiente →</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-600">Siguiente →</Text>
               </Pressable>
             </View>
 
             {/* Stats */}
             <View className="flex-row mb-3 gap-2">
               <View className="flex-1 bg-emerald-50 rounded-xl p-3 items-center">
-                <Text className="text-lg font-bold text-emerald-700">{attendanceStats.present}</Text>
-                <Text className="text-[10px] text-emerald-600">Presentes</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-emerald-700">{attendanceStats.present}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-emerald-600">Presentes</Text>
               </View>
               <View className="flex-1 bg-rose-50 rounded-xl p-3 items-center">
-                <Text className="text-lg font-bold text-rose-700">{attendanceStats.absent}</Text>
-                <Text className="text-[10px] text-rose-600">Faltas</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-rose-700">{attendanceStats.absent}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-rose-600">Faltas</Text>
               </View>
             </View>
 
@@ -579,7 +579,7 @@ export default function GroupDetailScreen() {
               ListEmptyComponent={
                 <View className="items-center py-12">
                   <ClipboardCheck size={56} color="#CBD5E1" strokeWidth={1.5} />
-                  <Text className="text-slate-400 text-sm mt-3">No hay alumnos</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">No hay alumnos</Text>
                 </View>
               }
             />
@@ -593,7 +593,7 @@ export default function GroupDetailScreen() {
             {schedule?.shift_info && (
               <View className="mx-4 mt-3 bg-indigo-50 rounded-xl p-3 flex-row items-center">
                 <Calendar size={16} color="#4F46E5" strokeWidth={2} />
-                <Text className="ml-2 text-sm font-semibold text-indigo-700">
+                <Text maxFontSizeMultiplier={1.3} className="ml-2 text-sm font-semibold text-indigo-700">
                   {schedule.shift_info.name} • {schedule.shift_info.start} – {schedule.shift_info.end}
                 </Text>
               </View>
@@ -619,7 +619,7 @@ export default function GroupDetailScreen() {
                       borderColor: isSelected ? '#4F46E5' : '#E2E8F0',
                     }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 12,
                         fontWeight: isSelected ? '700' : '500',
@@ -640,7 +640,7 @@ export default function GroupDetailScreen() {
               ) : (
                 <View className="items-center py-12">
                   <Calendar size={56} color="#CBD5E1" strokeWidth={1.5} />
-                  <Text className="text-slate-400 text-sm mt-3">Sin clases este día</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Sin clases este día</Text>
                 </View>
               )}
             </View>
@@ -673,17 +673,17 @@ export default function GroupDetailScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* Título */}
       <View className="px-4 mt-2 mb-1">
-        <Text className="text-xl font-bold text-slate-900">
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">
           Grupo {students[0]?.current_group_id?.grade || ''}°{students[0]?.current_group_id?.section || ''}
         </Text>
-        <Text className="text-sm text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500">
           {students.length} alumno{students.length !== 1 ? 's' : ''}
         </Text>
       </View>

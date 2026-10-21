@@ -39,10 +39,10 @@ const ClassCard = ({ classItem, isLast, onPress }) => {
 
         {/* Nombre + horario. */}
         <View className="flex-1">
-          <Text className="text-slate-900 text-base font-semibold" numberOfLines={1}>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-base font-semibold" numberOfLines={1}>
             {name}
           </Text>
-          <Text className="text-slate-500 text-xs mt-0.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-xs mt-0.5">
             {time} · {room}
           </Text>
         </View>
@@ -50,7 +50,7 @@ const ClassCard = ({ classItem, isLast, onPress }) => {
         {/* Conteo de alumnos + chevron. */}
         <View className="flex-row items-center">
           <Users size={14} color="#94a3b8" />
-          <Text className="text-slate-500 text-xs ml-1 mr-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-xs ml-1 mr-2">
             {students}
           </Text>
           <ChevronRight size={20} color="#94a3b8" />

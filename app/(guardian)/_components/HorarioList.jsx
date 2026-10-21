@@ -90,7 +90,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
   if (schedule.length === 0) {
     return (
       <View className="bg-white rounded-2xl p-6 items-center">
-        <Text className="text-sm text-slate-500 text-center">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
           No hay clases programadas para este día.
         </Text>
       </View>
@@ -119,10 +119,10 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
           para separar del cuerpo.
           ------------------------------------------------------ */}
       <View className="flex-row items-center px-5 py-3 bg-slate-50 border-b border-slate-100">
-        <Text className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Hora
         </Text>
-        <Text className="w-32 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="w-32 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500">
           {day}
         </Text>
       </View>
@@ -138,7 +138,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
               key={`receso-${index}`}
               className="bg-sky-50 py-3 items-center"
             >
-              <Text className="text-sm font-bold uppercase tracking-wider text-sky-700">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold uppercase tracking-wider text-sky-700">
                 Receso ({slot.time})
               </Text>
             </View>
@@ -162,7 +162,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
                 w-24 fija (96px) para alinear las horas. */}
             <View className="w-24 flex-row items-center">
               <Clock size={14} color="#64748b" strokeWidth={2} />
-              <Text className="text-xs font-semibold text-slate-700 ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 ml-1.5">
                 {slot.time}
               </Text>
             </View>
@@ -186,7 +186,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
                   'bg-white',
                 )}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className={clsx(
                     'text-[11px] font-bold',
                     colorClasses.text,
@@ -199,7 +199,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
               {/* Textos: nombre completo + maestro + badge Taller. */}
               <View className="flex-1 min-w-0">
                 <View className="flex-row items-center">
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-sm font-bold text-slate-900 flex-1"
                     numberOfLines={1}
                   >
@@ -208,7 +208,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
                   {/* Badge "Taller" si es del grupo taller. */}
                   {slot.isTaller && (
                     <View className="ml-1 px-1.5 py-0.5 bg-purple-100 rounded">
-                      <Text className="text-[9px] font-bold text-purple-700">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[9px] font-bold text-purple-700">
                         Taller
                       </Text>
                     </View>
@@ -216,7 +216,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
                 </View>
                 <View className="flex-row items-center mt-0.5">
                   <User size={11} color="#64748b" strokeWidth={2} />
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-xs text-slate-600 ml-1 flex-1"
                     numberOfLines={1}
                   >
@@ -227,7 +227,7 @@ const HorarioList = ({ day = 'LUN', schedule = [], colorIndex = 0 }) => {
                 {slot.classroom && (
                   <View className="flex-row items-center mt-0.5">
                     <MapPin size={10} color="#94a3b8" strokeWidth={2} />
-                    <Text className="text-[10px] text-slate-400 ml-1">
+                    <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 ml-1">
                       {slot.classroom}
                     </Text>
                   </View>

@@ -80,7 +80,7 @@ const AttendanceButtonGroup = ({ currentStatus, onSelect }) => {
               color={isActive ? btn.activeIconColor : btn.iconColor}
               strokeWidth={2.25}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx(
                 'text-xs ml-1',
                 isActive ? 'text-white font-bold' : 'text-slate-700 font-semibold',

@@ -60,7 +60,7 @@ const TextField = ({
           puede sobreescribir estilos pasando labelClassName — útil
           para labels tipo "TELÉFONO" en mayúsculas con tracking. */}
       {label && (
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className={clsx(
             'text-slate-700 text-sm font-semibold mb-2',
             labelClassName,
@@ -87,7 +87,7 @@ const TextField = ({
         {Icon && <Icon size={iconSize} color={iconColor} strokeWidth={2} />}
 
         {/* Input de texto. flex-1 para ocupar el espacio restante. */}
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           // ml-3 solo si hay icono para no pegar el texto al borde.
           className={clsx(
             'flex-1 text-slate-900 text-base',
@@ -111,7 +111,7 @@ const TextField = ({
 
       {/* Mensaje de error opcional bajo el input. */}
       {hasError && (
-        <Text className="text-rose-600 text-xs mt-1.5 font-medium">
+        <Text maxFontSizeMultiplier={1.3} className="text-rose-600 text-xs mt-1.5 font-medium">
           {error}
         </Text>
       )}

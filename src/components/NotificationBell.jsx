@@ -113,7 +113,7 @@ const NotificationBell = () => {
               borderColor: '#F8FAFC',
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 color: '#FFFFFF',
                 fontSize: 10,
@@ -163,7 +163,7 @@ const NotificationBell = () => {
               className="flex-row items-center justify-between px-4 py-3"
               style={{ borderBottomWidth: 1, borderBottomColor: '#E2E8F0' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 16,
                   fontWeight: '700',
@@ -187,20 +187,20 @@ const NotificationBell = () => {
             {isLoading && notifications.length === 0 ? (
               <View className="items-center justify-center py-12">
                 <ActivityIndicator size="large" color="#0EA5E9" />
-                <Text className="text-slate-400 mt-2" style={{ fontSize: 13 }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 13 }}>
                   Cargando notificaciones...
                 </Text>
               </View>
             ) : notifications.length === 0 ? (
               <View className="items-center justify-center py-12 px-6">
                 <Bell size={36} color="#CBD5E1" strokeWidth={1.5} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500 mt-3 text-center"
                   style={{ fontSize: 13, fontWeight: '500' }}
                 >
                   No tienes notificaciones aún.
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-400 mt-1 text-center"
                   style={{ fontSize: 11 }}
                 >
@@ -236,7 +236,7 @@ const NotificationBell = () => {
                 }}
               >
                 <CheckCheck size={16} color="#0284C7" strokeWidth={2.25} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-2"
                   style={{
                     fontSize: 13,

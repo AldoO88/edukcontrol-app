@@ -109,7 +109,7 @@ export default function SocialWorkerTeacherDetailScreen() {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center">
         <ActivityIndicator size="large" color="#7C3AED" />
-        <Text className="text-slate-400 text-sm mt-3">Cargando horario...</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando horario...</Text>
       </View>
     );
   }
@@ -117,10 +117,10 @@ export default function SocialWorkerTeacherDetailScreen() {
   if (error || !teacher) {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center px-6">
-        <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-        <Text className="text-slate-500 text-sm mt-2 text-center">{error || 'No se encontró el maestro'}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error || 'No se encontró el maestro'}</Text>
         <Pressable onPress={() => router.back()} className="mt-4 px-6 py-2.5 rounded-xl bg-slate-900">
-          <Text className="text-white font-semibold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Volver</Text>
         </Pressable>
       </View>
     );
@@ -149,14 +149,14 @@ export default function SocialWorkerTeacherDetailScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* Título */}
       <View className="px-4 mt-2 mb-1">
-        <Text className="text-xl font-bold text-slate-900">Horario del Maestro</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Horario del Maestro</Text>
       </View>
 
       <ScrollView
@@ -178,28 +178,28 @@ export default function SocialWorkerTeacherDetailScreen() {
         >
           <View className="flex-row items-center">
             <View className="w-14 h-14 rounded-full bg-purple-100 items-center justify-center mr-4">
-              <Text className="text-lg font-bold text-purple-600">
+              <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-purple-600">
                 {`${teacher.name?.[0] || ''}${teacher.last_name?.[0] || ''}`.toUpperCase()}
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="text-lg font-bold text-slate-900">{teacherName}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">{teacherName}</Text>
               {teacher.phoneNumber && (
                 <View className="flex-row items-center mt-1">
                   <Phone size={12} color="#94A3B8" strokeWidth={2} />
-                  <Text className="text-xs text-slate-500 ml-1">{teacher.phoneNumber}</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1">{teacher.phoneNumber}</Text>
                 </View>
               )}
               {teacher.email && (
                 <View className="flex-row items-center mt-0.5">
                   <Mail size={12} color="#94A3B8" strokeWidth={2} />
-                  <Text className="text-xs text-slate-500 ml-1">{teacher.email}</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1">{teacher.email}</Text>
                 </View>
               )}
               {stats?.weeklyHours > 0 && (
                 <View className="flex-row items-center mt-0.5">
                   <Clock size={12} color="#94A3B8" strokeWidth={2} />
-                  <Text className="text-xs text-slate-500 ml-1">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1">
                     {stats.weeklyHours} hora{stats.weeklyHours !== 1 ? 's' : ''}/semana • {stats.groupsCount} grupo{stats.groupsCount !== 1 ? 's' : ''}
                   </Text>
                 </View>
@@ -220,7 +220,7 @@ export default function SocialWorkerTeacherDetailScreen() {
               shadowOffset: { width: 0, height: 2 },
             }}
           >
-            <Text className="text-sm font-bold text-slate-900 mb-2">Materias</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 mb-2">Materias</Text>
             <View className="flex-row flex-wrap gap-2">
               {subjects.map((sub) => {
                 const Icon = getSubjectIcon(sub.icon);
@@ -233,7 +233,7 @@ export default function SocialWorkerTeacherDetailScreen() {
                     className="flex-row items-center px-3 py-1.5 rounded-full"
                   >
                     <Icon size={12} color={hexColor} strokeWidth={2} />
-                    <Text style={{ color: hexColor }} className="text-xs font-semibold ml-1">{sub.name}</Text>
+                    <Text maxFontSizeMultiplier={1.3} style={{ color: hexColor }} className="text-xs font-semibold ml-1">{sub.name}</Text>
                   </View>
                 );
               })}
@@ -253,12 +253,12 @@ export default function SocialWorkerTeacherDetailScreen() {
               shadowOffset: { width: 0, height: 2 },
             }}
           >
-            <Text className="text-sm font-bold text-slate-900 mb-2">Grupos Asignados</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 mb-2">Grupos Asignados</Text>
             <View className="flex-row flex-wrap gap-2">
               {assignedGroups.map((group) => (
                 <View key={group._id} className="flex-row items-center bg-indigo-50 px-3 py-1.5 rounded-full">
                   <Users size={12} color="#4F46E5" strokeWidth={2} />
-                  <Text className="text-xs font-semibold text-indigo-700 ml-1">{group.label}</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-indigo-700 ml-1">{group.label}</Text>
                 </View>
               ))}
             </View>
@@ -276,11 +276,11 @@ export default function SocialWorkerTeacherDetailScreen() {
             shadowOffset: { width: 0, height: 2 },
           }}
         >
-          <Text className="text-sm font-bold text-slate-900 mb-3">Horario Semanal</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 mb-3">Horario Semanal</Text>
           {Object.entries(scheduleByDay).length > 0 ? (
             Object.entries(scheduleByDay).map(([day, slots]) => (
               <View key={day} className="mb-4">
-                <Text className="text-xs font-bold text-slate-600 mb-2">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-2">
                   {DAY_NAMES_FULL[day] || `Día ${day}`}
                 </Text>
                 {slots.map((slot, idx) => {
@@ -297,10 +297,10 @@ export default function SocialWorkerTeacherDetailScreen() {
                         <View className="flex-1 flex-row items-center">
                           <Icon size={14} color={hexColor} strokeWidth={2} />
                           <View className="ml-2 flex-1">
-                            <Text style={{ color: hexColor }} className="text-sm font-bold">
+                            <Text maxFontSizeMultiplier={1.3} style={{ color: hexColor }} className="text-sm font-bold">
                               {slot.subject?.name || slot.subject_name || 'Materia'}
                             </Text>
-                            <Text className="text-xs text-slate-500 mt-0.5">
+                            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                               Grupo {slot.group?.grade || ''}°{slot.group?.section || ''} • {slot.classroom || ''}
                             </Text>
                           </View>
@@ -308,7 +308,7 @@ export default function SocialWorkerTeacherDetailScreen() {
                         {(slot.startTime || slot.timeBlocks) && (
                           <View className="flex-row items-center">
                             <Clock size={10} color="#94A3B8" strokeWidth={2} />
-                            <Text className="text-[10px] text-slate-400 ml-1">
+                            <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 ml-1">
                               {slot.startTime && slot.endTime
                                 ? `${slot.startTime} - ${slot.endTime}`
                                 : slot.timeBlocks?.length > 0
@@ -327,7 +327,7 @@ export default function SocialWorkerTeacherDetailScreen() {
           ) : (
             <View className="items-center py-6">
               <Calendar size={24} color="#CBD5E1" strokeWidth={1.5} />
-              <Text className="text-slate-400 text-sm mt-2">No hay horario disponible</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-2">No hay horario disponible</Text>
             </View>
           )}
         </View>

@@ -35,17 +35,17 @@ const AttendanceRow = ({ entry }) => {
 
         {/* Nombre del hijo + fecha/hora. */}
         <View className="flex-1">
-          <Text className="text-slate-900 text-sm font-bold" numberOfLines={1}>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-sm font-bold" numberOfLines={1}>
             {entry.child}
           </Text>
-          <Text className="text-slate-500 text-xs mt-0.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-xs mt-0.5">
             {entry.date}
             {entry.time && ` · ${entry.time}`}
           </Text>
         </View>
 
         {/* Label del status (e.g. "A tiempo"). */}
-        <Text className={`${ui.textClass} text-xs font-bold`}>
+        <Text maxFontSizeMultiplier={1.3} className={`${ui.textClass} text-xs font-bold`}>
           {ui.label}
         </Text>
       </View>

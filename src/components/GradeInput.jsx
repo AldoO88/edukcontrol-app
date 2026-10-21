@@ -39,7 +39,7 @@ const GradeInput = ({ value, onChange, accessibilityLabel }) => {
       )}
       style={{ minWidth: 80 }}
     >
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         className="text-slate-900 text-base font-bold text-center"
         placeholder="0-10"
         placeholderTextColor="#94a3b8"

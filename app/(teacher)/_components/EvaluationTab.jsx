@@ -33,7 +33,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
   if (selectedPeriod === 'ALL') {
     return (
       <View className="mx-4 mt-3">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-500 mb-2"
           style={{
             fontSize: 11,
@@ -68,7 +68,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
                 className="px-3 py-1 rounded-full"
                 style={{ backgroundColor: '#F1F5F9' }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '800',
@@ -79,13 +79,13 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
                   {t}
                 </Text>
               </View>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-3 text-slate-700"
                 style={{ fontSize: 12, fontWeight: '600' }}
               >
                 Promedio
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 26,
                   fontWeight: '800',
@@ -124,13 +124,13 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 text-center"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
             {`Sin datos para ${selectedPeriod}`}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400 text-center mt-1"
             style={{ fontSize: 11 }}
           >
@@ -162,7 +162,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
           >
             {/* Left: nombre completo + badge. */}
             <View className="flex-1 mr-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 14, fontWeight: '700' }}
                 numberOfLines={1}
@@ -174,7 +174,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
                   className="self-start mt-1.5 px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: '#FEF3C7' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 10,
                       fontWeight: '700',
@@ -188,7 +188,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
             </View>
 
             {/* Right: score, color por threshold. */}
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 20,
                 fontWeight: '800',
@@ -213,7 +213,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 13,
               fontWeight: '700',
@@ -222,7 +222,7 @@ const EvaluationTab = ({ file, selectedPeriod = 'T1', evalNameMap = {} }) => {
           >
             Promedio del Trimestre
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 20,
               fontWeight: '800',

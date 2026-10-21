@@ -90,7 +90,7 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
 
           {/* Header. */}
           <View className="flex-row items-center justify-between mb-2">
-            <Text style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
               Regla de Cálculo del Promedio
             </Text>
             <Pressable
@@ -103,7 +103,7 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
             </Pressable>
           </View>
 
-          <Text className="text-xs text-slate-500 mb-4">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mb-4">
             Selecciona cómo se calcula el promedio base de las evaluaciones normales.
           </Text>
 
@@ -131,12 +131,12 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
                     style={{ marginTop: 2, marginRight: 10 }}
                   />
                   <View className="flex-1">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{ fontSize: 14, fontWeight: '700', color: '#0F172A' }}
                     >
                       {opt.title}
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 12,
                         color: '#64748B',
@@ -163,7 +163,7 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
               strokeWidth={2.25}
               style={{ marginTop: 2, marginRight: 8 }}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 12,
                 color: '#92400E',
@@ -171,7 +171,7 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
                 flex: 1,
               }}
             >
-              <Text style={{ fontWeight: '700' }}>Nota:</Text>{' '}
+              <Text maxFontSizeMultiplier={1.3} style={{ fontWeight: '700' }}>Nota:</Text>{' '}
               Los "Puntos Extra" siempre se suman directamente al promedio
               calculado, sin dividirse ni promediarse. El promedio final se
               limita a 10.0 como máximo.
@@ -192,7 +192,7 @@ const ConfigModal = ({ visible, gradingMode, onSelect, onClose }) => {
               marginTop: 16,
             }}
           >
-            <Text style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
               Listo
             </Text>
           </Pressable>

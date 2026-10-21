@@ -150,19 +150,19 @@ export default function PrefectGroupsScreen() {
                   <BookOpen size={18} color="#4F46E5" strokeWidth={2} />
                 </View>
                 <View>
-                  <Text className="text-lg font-bold text-slate-900">
+                  <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
                     {item.label}
                   </Text>
-                  <Text className="text-xs text-slate-500">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500">
                     {item.shift === 'matutino' ? 'Matutino' : 'Vespertino'}
                   </Text>
                 </View>
               </View>
               <View className="items-end">
-                <Text className="text-2xl font-bold text-slate-900">
+                <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">
                   {item.studentCount}
                 </Text>
-                <Text className="text-[10px] text-slate-400">
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400">
                   alumno{item.studentCount !== 1 ? 's' : ''}
                 </Text>
               </View>
@@ -173,38 +173,38 @@ export default function PrefectGroupsScreen() {
               {/* Niños */}
               <View className="flex-1 flex-row items-center bg-blue-50 rounded-xl px-3 py-2">
                 <User size={14} color="#2563EB" strokeWidth={2} />
-                <Text className="text-xs font-bold text-blue-700 ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-blue-700 ml-1.5">
                   {item.maleCount}
                 </Text>
-                <Text className="text-[10px] text-blue-500 ml-1">Niños</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-blue-500 ml-1">Niños</Text>
               </View>
 
               {/* Niñas */}
               <View className="flex-1 flex-row items-center bg-pink-50 rounded-xl px-3 py-2">
                 <User size={14} color="#DB2777" strokeWidth={2} />
-                <Text className="text-xs font-bold text-pink-700 ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-pink-700 ml-1.5">
                   {item.femaleCount}
                 </Text>
-                <Text className="text-[10px] text-pink-500 ml-1">Niñas</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-pink-500 ml-1">Niñas</Text>
               </View>
 
               {/* Reportes */}
               <View className="flex-1 flex-row items-center bg-amber-50 rounded-xl px-3 py-2">
                 <AlertTriangle size={14} color="#D97706" strokeWidth={2} />
-                <Text className="text-xs font-bold text-amber-700 ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-amber-700 ml-1.5">
                   {item.conductReportCount}
                 </Text>
-                <Text className="text-[10px] text-amber-500 ml-1">Reportes</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-amber-500 ml-1">Reportes</Text>
               </View>
             </View>
 
             {/* Barra de asistencia */}
             <View>
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-[10px] font-semibold text-slate-500">
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500">
                   Asistencia hoy
                 </Text>
-                <Text className="text-[10px] font-bold text-slate-700">
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-700">
                   {item.attendedToday}/{item.studentCount} • {item.attendanceRate}%
                 </Text>
               </View>
@@ -226,7 +226,7 @@ export default function PrefectGroupsScreen() {
                 {item.demeritCount > 0 && (
                   <View className="flex-row items-center">
                     <TrendingDown size={10} color="#E11D48" strokeWidth={2} />
-                    <Text className="text-[10px] font-semibold text-rose-600 ml-1">
+                    <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-rose-600 ml-1">
                       {item.demeritCount} demérito{item.demeritCount !== 1 ? 's' : ''}
                     </Text>
                   </View>
@@ -234,7 +234,7 @@ export default function PrefectGroupsScreen() {
                 {item.meritCount > 0 && (
                   <View className="flex-row items-center">
                     <TrendingUp size={10} color="#047857" strokeWidth={2} />
-                    <Text className="text-[10px] font-semibold text-emerald-600 ml-1">
+                    <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-emerald-600 ml-1">
                       {item.meritCount} mérito{item.meritCount !== 1 ? 's' : ''}
                     </Text>
                   </View>
@@ -265,7 +265,7 @@ export default function PrefectGroupsScreen() {
         />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#4F46E5" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando grupos...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando grupos...</Text>
         </View>
       </View>
     );
@@ -285,10 +285,10 @@ export default function PrefectGroupsScreen() {
         />
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 px-6 py-2.5 rounded-xl bg-indigo-600">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -316,8 +316,8 @@ export default function PrefectGroupsScreen() {
 
       {/* HEADER */}
       <View className="px-4 mt-4 mb-1">
-        <Text className="text-2xl font-bold text-slate-900">Grupos</Text>
-        <Text className="text-sm text-slate-500 mt-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">Grupos</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
           Selecciona un grupo para ver alumnos, asistencia y horario
         </Text>
       </View>
@@ -329,7 +329,7 @@ export default function PrefectGroupsScreen() {
           style={{ height: 44 }}
         >
           <Search size={16} color="#94A3B8" strokeWidth={2} />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchText}
             onChangeText={setSearchText}
             placeholder="Buscar grupo..."
@@ -357,7 +357,7 @@ export default function PrefectGroupsScreen() {
         ListEmptyComponent={
           <View className="items-center py-12">
             <Users size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-slate-400 text-sm mt-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
               {groups.length === 0 ? 'No hay grupos' : 'No hay grupos con estos filtros'}
             </Text>
           </View>

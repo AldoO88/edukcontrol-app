@@ -39,14 +39,14 @@ const EmergencyContactRow = ({ contact, index, onUpdate, onRemove, isPrimary }) 
     {isPrimary && (
       <View className="flex-row items-center mb-2">
         <Star size={12} color="#3B82F6" strokeWidth={2.5} fill="#3B82F6" />
-        <Text className="text-[10px] font-bold text-blue-600 ml-1">TUTOR / GUARDIAN</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-blue-600 ml-1">TUTOR / GUARDIAN</Text>
       </View>
     )}
 
     {/* Fila 1: Nombre */}
     <View className="mb-2">
-      <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Nombre completo</Text>
-      <TextInput
+      <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Nombre completo</Text>
+      <TextInput maxFontSizeMultiplier={1.3}
         value={contact.name || ''}
         onChangeText={(val) => onUpdate(index, 'name', val)}
         placeholder="Nombre del contacto"
@@ -60,8 +60,8 @@ const EmergencyContactRow = ({ contact, index, onUpdate, onRemove, isPrimary }) 
     {/* Fila 2: Teléfono + Parentesco */}
     <View className="flex-row gap-2">
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Teléfono</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Teléfono</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={contact.phone || ''}
           onChangeText={(val) => onUpdate(index, 'phone', val)}
           placeholder="55 1234 5678"
@@ -73,8 +73,8 @@ const EmergencyContactRow = ({ contact, index, onUpdate, onRemove, isPrimary }) 
         />
       </View>
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Parentesco</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Parentesco</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={contact.relationship || ''}
           onChangeText={(val) => onUpdate(index, 'relationship', val)}
           placeholder="Ej: Madre"
@@ -102,7 +102,7 @@ const EmergencyContactRow = ({ contact, index, onUpdate, onRemove, isPrimary }) 
         className="flex-row items-center mt-2 self-end"
       >
         <Trash2 size={12} color="#DC2626" strokeWidth={2} />
-        <Text className="text-[10px] font-semibold text-red-600 ml-1">Eliminar</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-red-600 ml-1">Eliminar</Text>
       </TouchableOpacity>
     )}
   </View>
@@ -160,7 +160,7 @@ export default function EmergencyContactsTab({ student, formData, updateField, o
       {/* ============================================= */}
       <View className="flex-row items-center mb-2">
         <Phone size={16} color="#3B82F6" strokeWidth={2} />
-        <Text className="text-sm font-bold text-slate-900 ml-2">Contacto Primario</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 ml-2">Contacto Primario</Text>
       </View>
 
       {primaryContact ? (
@@ -173,7 +173,7 @@ export default function EmergencyContactsTab({ student, formData, updateField, o
         />
       ) : (
         <View className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-100">
-          <Text className="text-xs text-blue-600 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-blue-600 text-center">
             No hay tutor/guardian registrado en el sistema para este alumno.
           </Text>
         </View>
@@ -185,21 +185,21 @@ export default function EmergencyContactsTab({ student, formData, updateField, o
       <View className="flex-row items-center justify-between mt-4 mb-2">
         <View className="flex-row items-center">
           <Phone size={16} color="#059669" strokeWidth={2} />
-          <Text className="text-sm font-bold text-slate-900 ml-2">Contactos Adicionales</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 ml-2">Contactos Adicionales</Text>
         </View>
         <TouchableOpacity
           onPress={handleAdd}
           className="flex-row items-center bg-emerald-500 rounded-lg px-2.5 py-1.5"
         >
           <Plus size={12} color="#FFFFFF" strokeWidth={2.5} />
-          <Text className="text-white text-xs font-semibold ml-1">Agregar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-semibold ml-1">Agregar</Text>
         </TouchableOpacity>
       </View>
 
       {secondaryContacts.length === 0 ? (
         <View className="bg-slate-50 rounded-xl p-6 items-center border border-slate-100">
           <Phone size={24} color="#CBD5E1" strokeWidth={1.5} />
-          <Text className="text-xs text-slate-400 mt-2 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-2 text-center">
             No hay contactos adicionales registrados.{'\n'}Puedes agregar números de emergencia extra.
           </Text>
         </View>
@@ -238,7 +238,7 @@ export default function EmergencyContactsTab({ student, formData, updateField, o
           ) : (
             <Save size={16} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 8 }} />
           )}
-          <Text className="text-white text-sm font-bold">
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-sm font-bold">
             {isSaving ? 'Guardando...' : 'Guardar Emergencia'}
           </Text>
         </TouchableOpacity>

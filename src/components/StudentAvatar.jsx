@@ -58,7 +58,7 @@ const StudentAvatar = ({
       }}
       accessibilityLabel={`Foto de ${name || 'alumno'}`}
     >
-      <Text style={{ fontSize, fontWeight: '800', color: textColor }}>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize, fontWeight: '800', color: textColor }}>
         {getInitials(name)}
       </Text>
     </View>

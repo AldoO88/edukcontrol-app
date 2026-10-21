@@ -149,11 +149,11 @@ export default function DirectorExitPassDetailScreen() {
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-4" teacher={dashboardData?.director} date={new Date().toISOString()} user={user} />
         <Pressable onPress={() => router.back()} className="flex-row items-center px-4 mt-4">
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#ea580c" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando detalle...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando detalle...</Text>
         </View>
       </View>
     );
@@ -167,13 +167,13 @@ export default function DirectorExitPassDetailScreen() {
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-4" teacher={dashboardData?.director} date={new Date().toISOString()} user={user} />
         <Pressable onPress={() => router.back()} className="flex-row items-center px-4 mt-4">
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-slate-900 text-lg font-bold">Error</Text>
-          <Text className="text-slate-500 text-sm text-center mt-2">{error || 'No se encontró el pase de salida.'}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">Error</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">{error || 'No se encontró el pase de salida.'}</Text>
           <Pressable onPress={() => router.back()} className="mt-4 bg-orange-500 px-6 py-2.5 rounded-xl">
-            <Text className="text-white font-semibold">Volver</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Volver</Text>
           </Pressable>
         </View>
       </View>
@@ -198,7 +198,7 @@ export default function DirectorExitPassDetailScreen() {
 
       <Pressable onPress={() => router.back()} className="flex-row items-center px-4 mt-4">
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
       </Pressable>
 
       <ScrollView
@@ -211,7 +211,7 @@ export default function DirectorExitPassDetailScreen() {
           <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: '#FFF7ED' }}>
             <LogOut size={20} color="#ea580c" strokeWidth={2} />
           </View>
-          <Text className="text-xl font-bold text-slate-900 ml-3">Detalle del Pase</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900 ml-3">Detalle del Pase</Text>
         </View>
 
         {/* STUDENT CARD */}
@@ -229,25 +229,25 @@ export default function DirectorExitPassDetailScreen() {
         >
           <View className="flex-row items-center">
             <View className="items-center justify-center rounded-full" style={{ width: 48, height: 48, backgroundColor: '#FFF7ED' }}>
-              <Text className="text-orange-700" style={{ fontSize: 17, fontWeight: '700' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 17, fontWeight: '700' }}>
                 {`${(student.last_name || '?')[0]}${(student.first_name || '?')[0]}`.toUpperCase()}
               </Text>
             </View>
             <View className="ml-3 flex-1">
-              <Text className="text-slate-900" style={{ fontSize: 16, fontWeight: '700' }} numberOfLines={1}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 16, fontWeight: '700' }} numberOfLines={1}>
                 {studentName || '—'}
               </Text>
               <View className="flex-row items-center mt-1">
                 {groupLabel ? (
                   <View className="flex-row items-center mr-3">
                     <Users size={12} color="#64748B" strokeWidth={2} />
-                    <Text className="text-slate-600 ml-1" style={{ fontSize: 12 }}>{groupLabel}</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-slate-600 ml-1" style={{ fontSize: 12 }}>{groupLabel}</Text>
                   </View>
                 ) : null}
                 {student.controlNumber ? (
                   <View className="flex-row items-center">
                     <Hash size={12} color="#64748B" strokeWidth={2} />
-                    <Text className="text-slate-600 ml-1" style={{ fontSize: 12 }}>{student.controlNumber}</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-slate-600 ml-1" style={{ fontSize: 12 }}>{student.controlNumber}</Text>
                   </View>
                 ) : null}
               </View>
@@ -264,16 +264,16 @@ export default function DirectorExitPassDetailScreen() {
             <View className="w-8 h-8 rounded-lg items-center justify-center" style={{ backgroundColor: '#FFF7ED' }}>
               <User size={16} color="#ea580c" strokeWidth={2} />
             </View>
-            <Text className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Persona que retira
             </Text>
           </View>
-          <Text className="text-slate-900" style={{ fontSize: 15, fontWeight: '600' }}>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 15, fontWeight: '600' }}>
             {exitPass.guardian_name || '—'}
           </Text>
           <View className="flex-row items-center mt-2">
             <View className="px-2 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED' }}>
-              <Text className="text-orange-700" style={{ fontSize: 11, fontWeight: '700' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 11, fontWeight: '700' }}>
                 {relationshipLabel}
               </Text>
             </View>
@@ -289,19 +289,19 @@ export default function DirectorExitPassDetailScreen() {
             <View className="w-8 h-8 rounded-lg items-center justify-center" style={{ backgroundColor: '#FFF7ED' }}>
               <FileText size={16} color="#ea580c" strokeWidth={2} />
             </View>
-            <Text className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Motivo
             </Text>
           </View>
           <View className="flex-row items-center">
             <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: '#FFF7ED' }}>
-              <Text className="text-orange-700" style={{ fontSize: 12, fontWeight: '700' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 12, fontWeight: '700' }}>
                 {reasonLabel}
               </Text>
             </View>
           </View>
           {exitPass.reason_detail ? (
-            <Text className="text-slate-600 mt-3" style={{ fontSize: 13, lineHeight: 20 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-600 mt-3" style={{ fontSize: 13, lineHeight: 20 }}>
               {exitPass.reason_detail}
             </Text>
           ) : null}
@@ -316,28 +316,28 @@ export default function DirectorExitPassDetailScreen() {
             <View className="w-8 h-8 rounded-lg items-center justify-center" style={{ backgroundColor: '#FFF7ED' }}>
               <Clock size={16} color="#ea580c" strokeWidth={2} />
             </View>
-            <Text className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 ml-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Registro
             </Text>
           </View>
           <View className="mb-2">
-            <Text className="text-slate-400" style={{ fontSize: 11 }}>Hora de salida</Text>
-            <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>{exitTimeStr}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>Hora de salida</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>{exitTimeStr}</Text>
           </View>
           {exitPass.createdAt && exitPass.createdAt !== exitPass.exit_time ? (
             <View className="mb-2" style={{ borderTopWidth: 1, borderTopColor: '#F1F5F9', paddingTop: 8, marginTop: 4 }}>
-              <Text className="text-slate-400" style={{ fontSize: 11 }}>Registrado el</Text>
-              <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>{createdAtStr}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>Registrado el</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>{createdAtStr}</Text>
             </View>
           ) : null}
           {creator.name ? (
             <View style={{ borderTopWidth: 1, borderTopColor: '#F1F5F9', paddingTop: 8, marginTop: 4 }}>
-              <Text className="text-slate-400" style={{ fontSize: 11 }}>Registrado por</Text>
-              <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>Registrado por</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '600' }}>
                 {creator.name} {creator.last_name || ''}
               </Text>
               {creator.role ? (
-                <Text className="text-slate-500" style={{ fontSize: 11, textTransform: 'capitalize' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 11, textTransform: 'capitalize' }}>
                   {creator.role === 'prefect' ? 'Prefecto' : creator.role}
                 </Text>
               ) : null}

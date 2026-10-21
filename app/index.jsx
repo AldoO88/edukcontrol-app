@@ -82,7 +82,7 @@ function RootSplash() {
   return (
     <View className="flex-1 items-center justify-center bg-slate-50">
       <ActivityIndicator size="large" color="#0f172a" />
-      <Text className="text-slate-500 text-sm mt-4 font-medium">
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-4 font-medium">
         Cargando EdukControl...
       </Text>
     </View>
@@ -121,12 +121,12 @@ function UnsupportedRoleView({ role }) {
           className="w-full max-w-sm bg-white rounded-2xl p-6 items-center"
           style={{ elevation: 3 }}
         >
-          <Text className="text-slate-900 text-lg font-bold text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold text-center">
             Tu cuenta aún no tiene acceso a la app
           </Text>
-          <Text className="text-slate-500 text-sm text-center mt-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">
             El rol{' '}
-            <Text className="font-bold text-slate-700">{role}</Text>{' '}
+            <Text maxFontSizeMultiplier={1.3} className="font-bold text-slate-700">{role}</Text>{' '}
             todavía no está habilitado para la aplicación móvil. Pide
             al administrador de tu escuela que te asigne un rol con
             acceso.
@@ -215,7 +215,7 @@ export default function LoginScreen() {
               tracking muy ancho (estilo "system status"). Color
               slate-400 para que NO compita con la card. */}
           <View className="items-center mt-6 mb-2">
-            <Text className="text-slate-300 text-[10px] font-semibold tracking-[0.2em]">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-300 text-[10px] font-semibold tracking-[0.2em]">
               VERSIÓN {APP_VERSION} · SISTEMA DE GESTIÓN ESCOLAR
             </Text>
           </View>

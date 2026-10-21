@@ -544,7 +544,7 @@ export default function DetalleAvisoScreen() {
             accessibilityLabel="Volver al listado de avisos"
           >
             <ChevronLeft size={20} color="#0284c7" strokeWidth={2.25} />
-            <Text className="text-sm font-bold text-sky-600 ml-1">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-sky-600 ml-1">
               Volver
             </Text>
           </Pressable>
@@ -562,7 +562,7 @@ export default function DetalleAvisoScreen() {
         {isLoading && !item && (
           <View className="flex-1 items-center justify-center py-20">
             <ActivityIndicator size="large" color="#0f172a" />
-            <Text className="text-sm text-slate-500 mt-3 font-medium">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-3 font-medium">
               Cargando aviso...
             </Text>
           </View>
@@ -572,10 +572,10 @@ export default function DetalleAvisoScreen() {
         {!isLoading && error && !item && (
           <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100 mx-4 mt-4">
             <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-            <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
               No se pudo cargar el aviso
             </Text>
-            <Text className="text-xs text-slate-500 mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
               {error}
             </Text>
             <Pressable
@@ -585,7 +585,7 @@ export default function DetalleAvisoScreen() {
               accessibilityLabel="Reintentar carga del aviso"
             >
               <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-              <Text className="text-sm font-semibold text-white ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                 Reintentar
               </Text>
             </Pressable>
@@ -666,14 +666,14 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
           ============================================================ */}
       <View className="flex-row items-center justify-between">
         <View className={clsx('px-3 py-1 rounded-full', visualConfig.badge.bg)}>
-          <Text className={clsx(
+          <Text maxFontSizeMultiplier={1.3} className={clsx(
             'text-[11px] font-bold uppercase tracking-wider',
             visualConfig.badge.text,
           )}>
             {visualConfig.badge.label}
           </Text>
         </View>
-        <Text className="text-xs font-medium text-slate-400">
+        <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-slate-400">
           {formatDateShort(item.eventDate)}
         </Text>
       </View>
@@ -711,10 +711,10 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
         )}
         style={{ elevation: 2 }}
       >
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Título
         </Text>
-        <Text className="text-lg font-bold text-slate-900 mt-1 leading-tight">
+        <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900 mt-1 leading-tight">
           {item.title || 'Sin título'}
         </Text>
       </View>
@@ -746,14 +746,14 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
           <User size={20} color="#0284c7" strokeWidth={2.25} />
         </View>
         <View className="flex-1">
-          <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             De
           </Text>
-          <Text className="text-base font-semibold text-slate-900 mt-0.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-slate-900 mt-0.5">
             {senderName || 'Remitente no especificado'}
           </Text>
           {roleLabel && (
-            <Text className="text-xs text-slate-500 mt-0.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
               {roleLabel}
             </Text>
           )}
@@ -793,10 +793,10 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
             <AudienceIcon audienceType={filteredItem.audience?.type} />
           </View>
           <View className="flex-1">
-            <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
               Para
             </Text>
-            <Text className="text-base font-semibold text-slate-900 mt-0.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-slate-900 mt-0.5">
               {audienceTargetTypeLabel(filteredItem)}
             </Text>
             {/* Ya no mostramos el subtítulo "Turno {shift}" porque
@@ -826,10 +826,10 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
         )}
         style={{ elevation: 1 }}
       >
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Mensaje
         </Text>
-        <Text className="text-base text-slate-700 mt-2 leading-relaxed">
+        <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-700 mt-2 leading-relaxed">
           {item.message || ''}
         </Text>
       </View>
@@ -848,7 +848,7 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
             {/* formatFullDateTime incluye fecha + hora
                 ("23 de octubre de 2025, 4:30 PM") — el usuario
                 pidió ver también la hora de publicación. */}
-            <Text className="text-xs text-slate-500 ml-1.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1.5">
               Publicado: {formatFullDateTime(createdAt)}
             </Text>
           </View>
@@ -856,7 +856,7 @@ function AnnouncementDetail({ item, filteredItem, visualConfig, senderName, role
         {expiresAt && (
           <View className="flex-row items-center mt-1.5">
             <Clock size={13} color="#94a3b8" strokeWidth={2} />
-            <Text className="text-xs text-slate-500 ml-1.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1.5">
               Expira: {formatFullDateTime(expiresAt)}
             </Text>
           </View>
@@ -997,7 +997,7 @@ function CitationDetail({
       <View className="flex-row items-center flex-wrap gap-2">
         {citatorioStatus && (
           <View className={clsx('px-3 py-1 rounded-full', citatorioStatus.bgClass)}>
-            <Text className={clsx(
+            <Text maxFontSizeMultiplier={1.3} className={clsx(
               'text-[11px] font-bold uppercase tracking-wider',
               citatorioStatus.textClass,
             )}>
@@ -1006,7 +1006,7 @@ function CitationDetail({
           </View>
         )}
 
-        <Text className="text-xs font-medium text-slate-400 ml-auto">
+        <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-slate-400 ml-auto">
           {formatDateShort(item.eventDate)}
         </Text>
       </View>
@@ -1032,10 +1032,10 @@ function CitationDetail({
         )}
         style={{ elevation: 2 }}
       >
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           CITATORIO
         </Text>
-        <Text className="text-lg font-bold text-slate-900 mt-1 leading-tight">
+        <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900 mt-1 leading-tight">
           {citationTypeConfig?.label || 'Sin tipo especificado'}
         </Text>
       </View>
@@ -1071,7 +1071,7 @@ function CitationDetail({
         style={{ elevation: 2 }}
       >
         {/* --- Bloque 1: el tutor destinatario --- */}
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Para el tutor
         </Text>
         <View className="flex-row items-center mt-2">
@@ -1079,11 +1079,11 @@ function CitationDetail({
             <User size={20} color="#0284c7" strokeWidth={2.25} />
           </View>
           <View className="flex-1">
-            <Text className="text-base font-bold text-slate-900">
+            <Text maxFontSizeMultiplier={1.3} className="text-base font-bold text-slate-900">
               {guardianName || 'Tutor no especificado'}
             </Text>
             {guardianRelationship && (
-              <Text className="text-xs text-slate-500 mt-0.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                 {guardianRelationship}
               </Text>
             )}
@@ -1092,7 +1092,7 @@ function CitationDetail({
 
         {/* --- Bloque 2: el alumno del citatorio --- */}
         <View className="border-t border-slate-100 mt-4 pt-3">
-          <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Alumno
           </Text>
           <View className="flex-row items-center mt-2">
@@ -1105,13 +1105,13 @@ function CitationDetail({
                   accessibilityLabel={`Foto de ${studentName}`}
                 />
               ) : (
-                <Text className="text-sm font-bold text-amber-700">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-amber-700">
                   {studentInitials}
                 </Text>
               )}
             </View>
             <View className="flex-1">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-sm font-semibold text-slate-700"
                 numberOfLines={1}
               >
@@ -1120,7 +1120,7 @@ function CitationDetail({
               {studentControlNumber && (
                 <View className="flex-row items-center mt-0.5">
                   <IdCard size={13} color="#94a3b8" strokeWidth={2} />
-                  <Text className="text-xs text-slate-500 ml-1">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1">
                     Matrícula: {studentControlNumber}
                   </Text>
                 </View>
@@ -1148,7 +1148,7 @@ function CitationDetail({
         )}
         style={{ elevation: 1 }}
       >
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Programado para
         </Text>
         <View className="flex-row items-center mt-2">
@@ -1156,7 +1156,7 @@ function CitationDetail({
                 <CalendarClock size={20} color="#0284c7" strokeWidth={2.25} />
             </View>
             <View className="flex-1">
-          <Text className="text-base font-semibold text-slate-900 mt-0.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-slate-900 mt-0.5">
             {scheduledValid ? formatScheduledDateTime(scheduledAt) : 'Fecha no disponible'}
           </Text>
         </View>
@@ -1181,7 +1181,7 @@ function CitationDetail({
           )}
           style={{ elevation: 1 }}
         >
-          <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
               Citado por
             </Text>
           <View className="flex-row items-center mt-2">  
@@ -1190,11 +1190,11 @@ function CitationDetail({
           </View>
           <View className="flex-1">
             
-            <Text className="text-base font-semibold text-slate-900 mt-0.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-slate-900 mt-0.5">
               {senderName}
             </Text>
             {roleLabel && (
-              <Text className="text-xs text-slate-500 mt-0.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                 {roleLabel}
               </Text>
             )}
@@ -1221,14 +1221,14 @@ function CitationDetail({
         )}
         style={{ elevation: 1 }}
       >
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
           Detalle de la cita
         </Text>
-        <Text className="text-base text-slate-900 mt-2 leading-relaxed">
+        <Text maxFontSizeMultiplier={1.3} className="text-base text-slate-900 mt-2 leading-relaxed">
             {item.reason || 'Sin motivo especificado'}
         </Text>
         {item.createdAt && (
-          <Text className="text-xs text-slate-500 mt-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-2">
             {formatFullDateTime(new Date(item.createdAt))}
           </Text>
         )}
@@ -1253,7 +1253,7 @@ function CitationDetail({
         >
           <View className="flex-row items-center mb-2">
             <RefreshCw size={14} color="#92400E" strokeWidth={2.25} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1.5"
               style={{
                 fontSize: 12,
@@ -1266,7 +1266,7 @@ function CitationDetail({
               Solicitud de Reagendación Enviada
             </Text>
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 13,
               fontWeight: '500',
@@ -1319,7 +1319,7 @@ function CitationDetail({
             ) : (
               <Check size={18} color="#ffffff" strokeWidth={2.5} />
             )}
-            <Text className="text-sm font-bold text-white ml-2">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-white ml-2">
               {isConfirming ? 'Confirmando...' : 'Confirmar asistencia'}
             </Text>
           </Pressable>
@@ -1337,7 +1337,7 @@ function CitationDetail({
               color={nonPendingBadge.textClass.includes('emerald') ? '#047857' : '#be123c'}
               strokeWidth={2.5}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx('text-sm font-bold ml-2', nonPendingBadge.textClass)}
             >
               {nonPendingBadge.label}
@@ -1376,7 +1376,7 @@ function CitationDetail({
             ) : (
               <RefreshCw size={16} color="#D97706" strokeWidth={2} />
             )}
-            <Text className={clsx(
+            <Text maxFontSizeMultiplier={1.3} className={clsx(
               'text-sm font-semibold ml-2',
               item.rescheduleRequested ? 'text-amber-600' : 'text-amber-700',
             )}>

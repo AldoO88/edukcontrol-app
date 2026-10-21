@@ -184,19 +184,19 @@ export default function GuardianDashboard() {
             idéntico al estilo de los labels de los inputs del login.
             ============================================================ */}
         <View className="px-4 mt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Hola, {userGreeting}
           </Text>
 
           {/* Pill "Padre de Familia". self-start para que ocupe solo
               el ancho de su contenido, no toda la línea. */}
           <View className="self-start mt-2 px-3 py-1 bg-sky-50 rounded-full">
-            <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold uppercase tracking-wide text-sky-700">
               Padre de Familia
             </Text>
           </View>
 
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             {data?.subtitle ||
               'Sigue el progreso académico de tus hijos en tiempo real.'}
           </Text>
@@ -213,10 +213,10 @@ export default function GuardianDashboard() {
         {stats && (stats.total_students > 0 || stats.active_students > 0) && (
           <View className="px-4 mt-1">
             <View className="bg-sky-50 rounded-2xl px-4 py-2 self-start flex-row items-center">
-              <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold uppercase tracking-wide text-sky-700">
                 {stats.active_students} {stats.active_students === 1 ? 'hijo activo' : 'hijos activos'}
                 {stats.inactive_students > 0 && (
-                  <Text className="text-sky-500 font-medium normal-case">
+                  <Text maxFontSizeMultiplier={1.3} className="text-sky-500 font-medium normal-case">
                     {' · '}{stats.inactive_students} {stats.inactive_students === 1 ? 'inactivo' : 'inactivos'}
                   </Text>
                 )}
@@ -241,10 +241,10 @@ export default function GuardianDashboard() {
           {!isLoading && error && !data && (
             <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
               <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-              <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
                 No se pudo cargar el dashboard
               </Text>
-              <Text className="text-xs text-slate-500 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
                 {error}
               </Text>
               <Pressable
@@ -254,7 +254,7 @@ export default function GuardianDashboard() {
                 accessibilityLabel="Reintentar carga del dashboard"
               >
                 <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-                <Text className="text-sm font-semibold text-white ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                   Reintentar
                 </Text>
               </Pressable>
@@ -277,10 +277,10 @@ export default function GuardianDashboard() {
           {/* Data OK pero students vacío: empty state. */}
           {!isLoading && data && students.length === 0 && (
             <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-slate-100">
-              <Text className="text-sm text-slate-500 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
                 Aún no tienes hijos registrados en tu cuenta.
               </Text>
-              <Text className="text-xs text-slate-400 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-1 text-center">
                 Contacta a tu institución para agregarlos.
               </Text>
             </View>
@@ -458,23 +458,23 @@ function StudentCard({ student, index = 0 }) {
           ) : (
             // Fallback: iniciales sobre fondo sky-100. Es mejor que
             // un ícono genérico porque personaliza la card.
-            <Text className="text-2xl font-bold text-sky-700">
+            <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-sky-700">
               {getInitials(fullName)}
             </Text>
           )}
         </View>
         <View className="ml-4 flex-1">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-xl font-bold text-slate-900"
             numberOfLines={1}
           >
             {fullName}
           </Text>
-          <Text className="text-sm text-slate-500 mt-1" numberOfLines={1}>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1" numberOfLines={1}>
             {groupLabel}
           </Text>
           {student.controlNumber && (
-            <Text className="text-sm text-slate-400 mt-0.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-400 mt-0.5">
               No. Control: {student.controlNumber}
             </Text>
           )}
@@ -490,7 +490,7 @@ function StudentCard({ student, index = 0 }) {
           )}
         >
           <View className={clsx('w-2.5 h-2.5 rounded-full mr-2', pillColors.dot)} />
-          <Text className={clsx('text-sm font-semibold', pillColors.text)}>
+          <Text maxFontSizeMultiplier={1.3} className={clsx('text-sm font-semibold', pillColors.text)}>
             {statusLabel}
             {institutionLabel ? ` · ${institutionLabel}` : ''}
           </Text>
@@ -501,7 +501,7 @@ function StudentCard({ student, index = 0 }) {
           backend todavía no tiene ningún registro para este alumno). */}
       <View className="flex-row items-center mt-3">
         <LastEventIcon size={15} color="#64748b" strokeWidth={2} />
-        <Text className="text-sm text-slate-500 ml-1.5">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 ml-1.5">
           {lastEventText}
         </Text>
       </View>
@@ -657,7 +657,7 @@ function KpiCell({
       </View>
 
       {/* Valor principal. text-lg (18px) bold, slate-900. */}
-      <Text className="text-lg font-bold text-slate-900 mt-2">
+      <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900 mt-2">
         {value}
       </Text>
 
@@ -667,14 +667,14 @@ function KpiCell({
           varios hijos y uno tiene KPIs y otro no).
           leading-tight evita separación excesiva entre sub-valor y
           label cuando ambos están presentes. */}
-      <Text className="text-xs text-slate-500 mt-0.5 leading-tight min-h-[16px]">
+      <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5 leading-tight min-h-[16px]">
         {subValue}
       </Text>
 
       {/* Label: UPPERCASE + tracking-wide + font-bold, slate-500.
           Mismo patrón que los labels del login → coherencia
           visual entre pantallas. */}
-      <Text className="text-[10px] font-bold uppercase tracking-wide text-slate-500 mt-1">
+      <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wide text-slate-500 mt-1">
         {label}
       </Text>
     </View>

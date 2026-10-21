@@ -126,7 +126,7 @@ const StudentPill = ({ student, isActive, onPress }) => {
             // (12px) bold para que case con el cuerpo del texto
             // de la pill. Color: blanco en activo, sky-700 en
             // inactivo.
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx(
                 'text-xs font-bold',
                 isActive ? 'text-white' : 'text-sky-700',
@@ -140,7 +140,7 @@ const StudentPill = ({ student, isActive, onPress }) => {
 
       {/* Nombre del alumno. ml-2 solo si hay avatar (para
           separar del círculo). */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className={clsx(
           'text-sm font-bold',
           hasAvatar && 'ml-2',

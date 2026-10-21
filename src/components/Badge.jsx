@@ -40,7 +40,7 @@ const Badge = ({
 
   return (
     <View className={clsx('px-2 py-0.5 rounded self-start', colors.bg, className)}>
-      <Text className={clsx('text-xs font-bold', colors.text)}>
+      <Text maxFontSizeMultiplier={1.3} className={clsx('text-xs font-bold', colors.text)}>
         {uppercase ? label.toUpperCase() : label}
       </Text>
     </View>

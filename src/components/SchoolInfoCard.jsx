@@ -175,17 +175,17 @@ const SchoolInfoCard = ({
         <View className="flex-1">
           {/* Nombre de la escuela. text-lg (18px) en vez de text-base
               (16px) → ~12.5% más grande. font-bold para jerarquía. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-lg font-bold text-slate-900"
             numberOfLines={1}
           >
             {schoolName || (
-              <Text className="text-slate-300">—</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-300">—</Text>
             )}
           </Text>
           {/* Ciclo escolar. text-sm (14px) en vez de text-xs (12px)
               → ~17% más grande. mt-1 separa del nombre. */}
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             {schoolCycle
               ? `Ciclo Escolar ${schoolCycle}`
               : 'Cargando…'}
@@ -224,7 +224,7 @@ const SchoolInfoCard = ({
                   numberOfLines={1} el nombre completo ("Prof. ALDO OMAR
                   GONZÁLEZ JUÁREZ") se cortaba con "…". flexShrink: 1 le
                   permite envolver dentro del espacio que deja la fecha. */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="font-bold"
                 style={{
                   fontSize: 15,
@@ -248,7 +248,7 @@ const SchoolInfoCard = ({
                   borderRadius: 8,
                 }}
               >
-                <Text style={{ color: '#0284C7', fontSize: 11, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ color: '#0284C7', fontSize: 11, fontWeight: '700' }}>
                   {resolvedRoleLabel}
                 </Text>
               </View>
@@ -256,7 +256,7 @@ const SchoolInfoCard = ({
 
             {/* Fecha a la derecha. */}
             {date ? (
-              <Text style={{ color: '#64748B', fontSize: 12, alignSelf: 'flex-end' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ color: '#64748B', fontSize: 12, alignSelf: 'flex-end' }}>
                 {date}
               </Text>
             ) : null}

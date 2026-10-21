@@ -78,7 +78,7 @@ export default function DirectorChangePasswordScreen() {
           >
             <ChevronLeft size={22} color="#0F172A" strokeWidth={2.25} />
           </Pressable>
-          <Text className="flex-1 ml-1 text-slate-900" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={1}>
+          <Text maxFontSizeMultiplier={1.3} className="flex-1 ml-1 text-slate-900" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={1}>
             Cambiar Contraseña
           </Text>
         </View>
@@ -95,10 +95,10 @@ export default function DirectorChangePasswordScreen() {
         >
           {/* Current Password */}
           <View className="mb-5">
-            <Text className="text-slate-700 text-sm font-semibold mb-2">Contraseña actual</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-700 text-sm font-semibold mb-2">Contraseña actual</Text>
             <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-4 py-3">
               <Lock size={18} color="#94a3b8" />
-              <TextInput
+              <TextInput maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-3 text-slate-900"
                 placeholder="Tu contraseña actual"
                 placeholderTextColor="#94a3b8"
@@ -111,15 +111,15 @@ export default function DirectorChangePasswordScreen() {
                 {showCurrent ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
               </TouchableOpacity>
             </View>
-            {errors.currentPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.currentPassword}</Text>}
+            {errors.currentPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.currentPassword}</Text>}
           </View>
 
           {/* New Password */}
           <View className="mb-5">
-            <Text className="text-slate-700 text-sm font-semibold mb-2">Nueva contraseña</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-700 text-sm font-semibold mb-2">Nueva contraseña</Text>
             <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-4 py-3">
               <Lock size={18} color="#94a3b8" />
-              <TextInput
+              <TextInput maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-3 text-slate-900"
                 placeholder="Tu nueva contraseña"
                 placeholderTextColor="#94a3b8"
@@ -132,15 +132,15 @@ export default function DirectorChangePasswordScreen() {
                 {showNew ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
               </TouchableOpacity>
             </View>
-            {errors.newPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.newPassword}</Text>}
+            {errors.newPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.newPassword}</Text>}
           </View>
 
           {/* Confirm Password */}
           <View className="mb-6">
-            <Text className="text-slate-700 text-sm font-semibold mb-2">Repetir nueva contraseña</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-700 text-sm font-semibold mb-2">Repetir nueva contraseña</Text>
             <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-4 py-3">
               <Lock size={18} color="#94a3b8" />
-              <TextInput
+              <TextInput maxFontSizeMultiplier={1.3}
                 className="flex-1 ml-3 text-slate-900"
                 placeholder="Repite tu nueva contraseña"
                 placeholderTextColor="#94a3b8"
@@ -153,7 +153,7 @@ export default function DirectorChangePasswordScreen() {
                 {showConfirm ? <EyeOff size={18} className="text-slate-400" /> : <Eye size={18} className="text-slate-400" />}
               </TouchableOpacity>
             </View>
-            {errors.confirmPassword && <Text className="text-rose-500 text-xs mt-1.5">{errors.confirmPassword}</Text>}
+            {errors.confirmPassword && <Text maxFontSizeMultiplier={1.3} className="text-rose-500 text-xs mt-1.5">{errors.confirmPassword}</Text>}
           </View>
 
           {/* Submit */}
@@ -162,7 +162,7 @@ export default function DirectorChangePasswordScreen() {
             disabled={isSubmitting}
             className={`rounded-2xl py-4 ${isSubmitting ? 'bg-slate-400' : 'bg-slate-900'}`}
           >
-            <Text className="text-white text-center font-semibold text-base">
+            <Text maxFontSizeMultiplier={1.3} className="text-white text-center font-semibold text-base">
               {isSubmitting ? 'Actualizando...' : 'Actualizar Contraseña'}
             </Text>
           </TouchableOpacity>

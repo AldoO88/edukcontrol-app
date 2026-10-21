@@ -196,7 +196,7 @@ const EditCitationModal = ({
           >
             {/* HEADER */}
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 16, fontWeight: '700' }}
               >
@@ -218,7 +218,7 @@ const EditCitationModal = ({
               contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8 }}
             >
               {/* TIPO DE CITATORIO */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mb-2"
                 style={{
                   fontSize: 11,
@@ -246,7 +246,7 @@ const EditCitationModal = ({
                         borderColor: isActive ? '#DC2626' : '#E2E8F0',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 12,
                           fontWeight: '700',
@@ -263,7 +263,7 @@ const EditCitationModal = ({
               {/* MATERIA — solo para tipo academic */}
               {selectedType === 'academic' && groupSubjects.length > 0 && (
                 <>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-500 mt-4 mb-2"
                     style={{
                       fontSize: 11,
@@ -283,7 +283,7 @@ const EditCitationModal = ({
                         borderColor: '#0284C7',
                       }}
                     >
-                      <Text style={{ fontSize: 12, fontWeight: '700', color: '#FFFFFF' }}>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#FFFFFF' }}>
                         {groupSubjects[0].name}
                       </Text>
                     </View>
@@ -304,7 +304,7 @@ const EditCitationModal = ({
                               borderColor: isActive ? '#0284C7' : '#E2E8F0',
                             }}
                           >
-                            <Text
+                            <Text maxFontSizeMultiplier={1.3}
                               style={{
                                 fontSize: 12,
                                 fontWeight: '700',
@@ -322,7 +322,7 @@ const EditCitationModal = ({
               )}
 
               {/* LUGAR */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-4 mb-2"
                 style={{
                   fontSize: 11,
@@ -353,7 +353,7 @@ const EditCitationModal = ({
                         borderColor: isActive ? '#0284C7' : 'transparent',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 12,
                           fontWeight: '700',
@@ -380,7 +380,7 @@ const EditCitationModal = ({
                     borderColor: isCustomLocation ? '#0284C7' : 'transparent',
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 12,
                       fontWeight: '700',
@@ -394,7 +394,7 @@ const EditCitationModal = ({
 
               {/* Input de lugar personalizado — solo visible cuando "Otro lugar" está activo */}
               {isCustomLocation && (
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   value={customLocation}
                   onChangeText={(text) => {
                     setCustomLocation(text);
@@ -414,7 +414,7 @@ const EditCitationModal = ({
               )}
 
               {/* RAZÓN / MOTIVO */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-4 mb-2"
                 style={{
                   fontSize: 11,
@@ -425,7 +425,7 @@ const EditCitationModal = ({
               >
                 Motivo
               </Text>
-              <TextInput
+              <TextInput maxFontSizeMultiplier={1.3}
                 value={reason}
                 onChangeText={setReason}
                 placeholder="Describe el motivo del citatorio..."
@@ -446,7 +446,7 @@ const EditCitationModal = ({
 
               {/* ERROR */}
               {submitError && (
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-rose-600 text-center mt-3"
                   style={{ fontSize: 12 }}
                 >
@@ -468,7 +468,7 @@ const EditCitationModal = ({
                 {isSubmitting ? (
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-white"
                     style={{ fontSize: 14, fontWeight: '700' }}
                   >

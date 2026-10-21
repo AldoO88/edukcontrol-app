@@ -40,7 +40,7 @@ const GroupInfoBanner = ({ title, tagLabel, period, studentCount }) => {
       }}
     >
       {/* Título + tag del grupo. */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 16,
           fontWeight: '700',
@@ -56,13 +56,13 @@ const GroupInfoBanner = ({ title, tagLabel, period, studentCount }) => {
         className="self-start mt-2 px-2.5 py-1 rounded-full"
         style={{ backgroundColor: '#E0F2FE' }}
       >
-        <Text style={{ fontSize: 12, fontWeight: '600', color: '#0284C7' }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '600', color: '#0284C7' }}>
           {period}
         </Text>
       </View>
 
       {/* Subtexto: total de alumnos. */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="mt-2"
         style={{ fontSize: 13, color: '#64748B' }}
       >

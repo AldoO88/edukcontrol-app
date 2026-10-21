@@ -330,7 +330,7 @@ export default function GenerateConductReportModal({
             style={{ opacity: selectedStudent === null ? 0.4 : 1 }}
           >
             <Check size={22} color="#02C79E" strokeWidth={2.5} />
-            <Text style={{ fontSize: 20, fontWeight: '700', color: '#02C79E', marginLeft: 4 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 20, fontWeight: '700', color: '#02C79E', marginLeft: 4 }}>
               Listo
             </Text>
           </Pressable>
@@ -357,7 +357,7 @@ export default function GenerateConductReportModal({
           >
             <Shield size={20} color="#E11D48" strokeWidth={2.25} />
           </View>
-          <Text className="ml-3 text-slate-900" style={{ fontSize: 18, fontWeight: '700' }}>
+          <Text maxFontSizeMultiplier={1.3} className="ml-3 text-slate-900" style={{ fontSize: 18, fontWeight: '700' }}>
             Nuevo Reporte
           </Text>
         </View>
@@ -385,10 +385,10 @@ export default function GenerateConductReportModal({
     return (
       <View>
         <View className="items-center px-5 pb-3 border-b border-[#E2E8F0]">
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>
             {studentModalGroup.label}
           </Text>
-          <Text style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
             {students.length} alumno{students.length !== 1 ? 's' : ''}
             {selectedStudent && <> — 1 seleccionado</>}
           </Text>
@@ -397,7 +397,7 @@ export default function GenerateConductReportModal({
         {students.length === 0 ? (
           <View className="flex-1 items-center justify-center px-6 py-8">
             <User size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-[14px] text-[#64748B] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[14px] text-[#64748B] mt-3 text-center">
               No hay alumnos registrados en este grupo.
             </Text>
           </View>
@@ -423,7 +423,7 @@ export default function GenerateConductReportModal({
                     accessibilityState={{ selected: isSelected }}
                   >
                     {renderAvatar(stu, 56)}
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         flex: 1,
                         marginLeft: 12,
@@ -469,25 +469,25 @@ export default function GenerateConductReportModal({
         {/* Student card */}
         {!isDirectMode && selectedStudent && (
           <>
-            <Text className="uppercase mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="uppercase mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
               Alumno seleccionado
             </Text>
             <View className="flex-row items-center px-4 py-3 rounded-xl mb-1" style={{ backgroundColor: '#FFF1F2', borderWidth: 1, borderColor: '#FECDD3' }}>
               {renderAvatar(selectedStudent, 40)}
               <View className="flex-1 ml-3">
-                <Text style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }} numberOfLines={1}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }} numberOfLines={1}>
                   {selectedStudent.fullName || `${selectedStudent.last_name || ''} ${selectedStudent.first_name || ''}`.trim()}
                 </Text>
               </View>
               <Pressable onPress={handleBackToGroups} hitSlop={8}>
-                <Text style={{ fontSize: 12, fontWeight: '600', color: '#E11D48' }}>Cambiar</Text>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '600', color: '#E11D48' }}>Cambiar</Text>
               </Pressable>
             </View>
           </>
         )}
 
         {/* Event type */}
-        <Text className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+        <Text maxFontSizeMultiplier={1.3} className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
           Tipo de reporte
         </Text>
         <View className="flex-row" style={{ backgroundColor: '#F1F5F9', borderRadius: 12, padding: 4 }}>
@@ -504,7 +504,7 @@ export default function GenerateConductReportModal({
                 accessibilityState={{ selected: isActive }}
               >
                 <EventIcon size={16} color={isActive ? '#ffffff' : '#64748B'} strokeWidth={2} />
-                <Text style={{ fontSize: 14, fontWeight: isActive ? '700' : '400', color: isActive ? '#ffffff' : '#64748B', marginLeft: 6 }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: isActive ? '700' : '400', color: isActive ? '#ffffff' : '#64748B', marginLeft: 6 }}>
                   {opt.label}
                 </Text>
               </Pressable>
@@ -515,7 +515,7 @@ export default function GenerateConductReportModal({
         {/* Severity (only for demerit) */}
         {eventType === 'demerit' && (
           <>
-            <Text className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
               Gravedad
             </Text>
             <View className="flex-row" style={{ backgroundColor: '#F1F5F9', borderRadius: 12, padding: 4 }}>
@@ -530,7 +530,7 @@ export default function GenerateConductReportModal({
                     accessibilityRole="button"
                     accessibilityState={{ selected: isActive }}
                   >
-                    <Text style={{ fontSize: 14, fontWeight: isActive ? '700' : '400', color: isActive ? '#ffffff' : '#64748B' }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: isActive ? '700' : '400', color: isActive ? '#ffffff' : '#64748B' }}>
                       {opt.label}
                     </Text>
                   </Pressable>
@@ -542,7 +542,7 @@ export default function GenerateConductReportModal({
 
         {/* Points editor */}
         <View className="mt-4 mb-2">
-          <Text className="uppercase mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+          <Text maxFontSizeMultiplier={1.3} className="uppercase mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
             Puntos a asignar
           </Text>
           <View
@@ -574,7 +574,7 @@ export default function GenerateConductReportModal({
 
             {/* Points value */}
             <View className="items-center mx-4">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 28,
                   fontWeight: '800',
@@ -583,7 +583,7 @@ export default function GenerateConductReportModal({
               >
                 {eventType === 'demerit' ? '-' : '+'}{currentPoints}
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 11,
                   fontWeight: '500',
@@ -616,7 +616,7 @@ export default function GenerateConductReportModal({
           </View>
 
           {/* Impact description */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center mt-2"
             style={{
               fontSize: 12,
@@ -632,10 +632,10 @@ export default function GenerateConductReportModal({
         </View>
 
         {/* Description */}
-        <Text className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+        <Text maxFontSizeMultiplier={1.3} className="uppercase mt-4 mb-2" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
           Descripción
         </Text>
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={description}
           onChangeText={setDescription}
           placeholder="Describe la incidencia..."
@@ -670,7 +670,7 @@ export default function GenerateConductReportModal({
           accessibilityLabel="Crear reporte"
         >
           <Shield size={18} color="#ffffff" strokeWidth={2.25} style={{ marginRight: 8 }} />
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
             {isSubmitting ? 'Enviando...' : 'Crear Reporte'}
           </Text>
         </Pressable>
@@ -723,7 +723,7 @@ export default function GenerateConductReportModal({
             {isLoadingGroups && !isDirectMode ? (
               <View className="py-10 items-center">
                 <ActivityIndicator size="large" color="#E11D48" />
-                <Text className="text-slate-400 text-sm mt-3">Cargando grupos...</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando grupos...</Text>
               </View>
             ) : isStudentPickerOpen ? (
               renderStudentPickerContent()
@@ -732,12 +732,12 @@ export default function GenerateConductReportModal({
             ) : (
               /* GROUP GRID */
               <View>
-                <Text className="uppercase mb-3" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
+                <Text maxFontSizeMultiplier={1.3} className="uppercase mb-3" style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}>
                   Seleccionar grupo
                 </Text>
                 {groups.length === 0 ? (
                   <View className="py-8 items-center">
-                    <Text className="text-slate-400 text-sm">No hay grupos disponibles.</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm">No hay grupos disponibles.</Text>
                   </View>
                 ) : (
                   <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 400 }}>
@@ -754,13 +754,13 @@ export default function GenerateConductReportModal({
                         accessibilityLabel={`Grupo ${group.label}`}
                       >
                         <View className="w-10 h-10 rounded-full items-center justify-center" style={{ backgroundColor: '#FEE2E2' }}>
-                          <Text style={{ color: '#E11D48', fontSize: 14, fontWeight: '700' }}>
+                          <Text maxFontSizeMultiplier={1.3} style={{ color: '#E11D48', fontSize: 14, fontWeight: '700' }}>
                             {group.label}
                           </Text>
                         </View>
                         <View className="flex-1 ml-3">
-                          <Text className="text-sm font-semibold text-slate-900">{group.label}</Text>
-                          <Text className="text-xs text-slate-400">
+                          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-900">{group.label}</Text>
+                          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">
                             {group.students?.length || 0} alumno{(group.students?.length || 0) !== 1 ? 's' : ''}
                           </Text>
                         </View>

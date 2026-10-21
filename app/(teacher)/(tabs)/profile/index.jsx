@@ -191,7 +191,7 @@ export default function TeacherProfileScreen() {
                 borderColor: '#BFDBFE',
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 32,
                   fontWeight: '800',
@@ -208,7 +208,7 @@ export default function TeacherProfileScreen() {
           </View>
 
           {/* Nombre. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-4"
             style={{ fontSize: 20, fontWeight: '800', color: '#0F172A' }}
           >
@@ -216,7 +216,7 @@ export default function TeacherProfileScreen() {
           </Text>
 
           {/* Rol + escuela. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-4 mt-1"
             style={{ fontSize: 13, fontWeight: '500', color: '#64748B' }}
           >
@@ -231,7 +231,7 @@ export default function TeacherProfileScreen() {
             {/* Teléfono. */}
             <View className="flex-row items-center py-1.5">
               <Phone size={16} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-3"
                 style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}
               >
@@ -243,7 +243,7 @@ export default function TeacherProfileScreen() {
             {/* Email. */}
             <View className="flex-row items-center py-1.5">
               <Mail size={16} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-3"
                 style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}
               >
@@ -253,7 +253,7 @@ export default function TeacherProfileScreen() {
           </View>
 
           {/* Nota de administración. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-6 mt-4 pb-5"
             style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8', fontStyle: 'italic', lineHeight: 18 }}
           >
@@ -264,7 +264,7 @@ export default function TeacherProfileScreen() {
         {/* ============================================================
             SEGURIDAD Y CUENTA
             ============================================================ */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{
             fontSize: 11,
@@ -299,7 +299,7 @@ export default function TeacherProfileScreen() {
         {/* ============================================================
             PREFERENCIAS
             ============================================================ */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{
             fontSize: 11,
@@ -356,7 +356,7 @@ export default function TeacherProfileScreen() {
         {/* ============================================================
             SOPORTE
             ============================================================ */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{
             fontSize: 11,
@@ -411,7 +411,7 @@ export default function TeacherProfileScreen() {
         {/* ============================================================
             VERSIÓN
             ============================================================ */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-center mt-5"
           style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8' }}
         >
@@ -435,7 +435,7 @@ export default function TeacherProfileScreen() {
         >
           <View className="flex-row items-center justify-center py-3.5">
             <LogOut size={18} color="#DC2626" strokeWidth={2.25} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2"
               style={{ fontSize: 15, fontWeight: '700', color: '#DC2626' }}
             >
@@ -475,7 +475,7 @@ const ProfileRow = ({ icon: Icon, iconBg, iconColor, label, trailing, onPress })
     </View>
 
     {/* Label. */}
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="flex-1"
       style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }}
     >
@@ -484,7 +484,7 @@ const ProfileRow = ({ icon: Icon, iconBg, iconColor, label, trailing, onPress })
 
     {/* Trailing (toggle o chevron). */}
     {trailing || (
-      <Text style={{ fontSize: 16, color: '#CBD5E1' }}>›</Text>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, color: '#CBD5E1' }}>›</Text>
     )}
   </Pressable>
 );

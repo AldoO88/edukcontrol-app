@@ -62,8 +62,8 @@ const FamilyMemberRow = ({ member, index, onUpdate, onRemove }) => (
     {/* Fila 1: Nombre + Parentesco */}
     <View className="flex-row gap-2 mb-2">
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Nombre</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Nombre</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={member.name || ''}
           onChangeText={(val) => onUpdate(index, 'name', val)}
           placeholder="Nombre"
@@ -73,8 +73,8 @@ const FamilyMemberRow = ({ member, index, onUpdate, onRemove }) => (
         />
       </View>
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Parentesco</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Parentesco</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={member.relationship || ''}
           onChangeText={(val) => onUpdate(index, 'relationship', val)}
           placeholder="Ej: Padre"
@@ -88,8 +88,8 @@ const FamilyMemberRow = ({ member, index, onUpdate, onRemove }) => (
     {/* Fila 2: Edad + Ocupación + Escolaridad */}
     <View className="flex-row gap-2 mb-2">
       <View style={{ width: 60 }}>
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Edad</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Edad</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={member.age ? String(member.age) : ''}
           onChangeText={(val) => onUpdate(index, 'age', val ? parseInt(val, 10) || '' : '')}
           placeholder="—"
@@ -100,8 +100,8 @@ const FamilyMemberRow = ({ member, index, onUpdate, onRemove }) => (
         />
       </View>
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Ocupación</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Ocupación</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={member.occupation || ''}
           onChangeText={(val) => onUpdate(index, 'occupation', val)}
           placeholder="Ocupación"
@@ -115,8 +115,8 @@ const FamilyMemberRow = ({ member, index, onUpdate, onRemove }) => (
     {/* Fila 3: Nivel de escolaridad + Botón eliminar */}
     <View className="flex-row items-end gap-2">
       <View className="flex-1">
-        <Text className="text-[10px] font-semibold text-slate-500 mb-0.5">Escolaridad</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-0.5">Escolaridad</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={member.education_level || ''}
           onChangeText={(val) => onUpdate(index, 'education_level', val)}
           placeholder="Ej: Secundaria"
@@ -175,21 +175,21 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center">
           <Users size={16} color="#4F46E5" strokeWidth={2} />
-          <Text className="text-sm font-bold text-slate-900 ml-2">Estructura Familiar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 ml-2">Estructura Familiar</Text>
         </View>
         <TouchableOpacity
           onPress={handleAddMember}
           className="flex-row items-center bg-indigo-500 rounded-lg px-2.5 py-1.5"
         >
           <Plus size={12} color="#FFFFFF" strokeWidth={2.5} />
-          <Text className="text-white text-xs font-semibold ml-1">Agregar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-semibold ml-1">Agregar</Text>
         </TouchableOpacity>
       </View>
 
       {members.length === 0 ? (
         <View className="bg-slate-50 rounded-xl p-6 items-center border border-slate-100 mb-4">
           <Users size={24} color="#CBD5E1" strokeWidth={1.5} />
-          <Text className="text-xs text-slate-400 mt-2 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-2 text-center">
             No hay miembros registrados.{'\n'}Toca "Agregar" para comenzar.
           </Text>
         </View>
@@ -213,9 +213,9 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
       <View className="mb-4">
         <View className="flex-row items-center mb-2">
           <FileText size={14} color="#64748B" strokeWidth={2} />
-          <Text className="text-xs font-semibold text-slate-600 ml-1.5">Dinámica Familiar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-600 ml-1.5">Dinámica Familiar</Text>
         </View>
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.family_dynamics || ''}
           onChangeText={(val) => updateFamilyField('family_dynamics', val)}
           placeholder="Describe la dinámica del hogar: relación entre miembros, roles, ambiente familiar..."
@@ -233,11 +233,11 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
       <View className="mb-4">
         <View className="flex-row items-center mb-2">
           <DollarSign size={14} color="#059669" strokeWidth={2} />
-          <Text className="text-xs font-semibold text-slate-600 ml-1.5">Situación Económica</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-600 ml-1.5">Situación Económica</Text>
         </View>
 
-        <Text className="text-[10px] font-semibold text-slate-500 mb-1">Ingreso mensual aproximado</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Ingreso mensual aproximado</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.monthly_income || ''}
           onChangeText={(val) => updateFamilyField('monthly_income', val)}
           placeholder="Ej: $5,000 - $10,000"
@@ -246,8 +246,8 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
           style={{ height: 40 }}
         />
 
-        <Text className="text-[10px] font-semibold text-slate-500 mb-1">Fuentes de ingreso</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Fuentes de ingreso</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.income_sources || ''}
           onChangeText={(val) => updateFamilyField('income_sources', val)}
           placeholder="Ej: Salario fijo, comercio, apoyo gubernamental..."
@@ -265,11 +265,11 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
       <View className="mb-4">
         <View className="flex-row items-center mb-2">
           <Home size={14} color="#D97706" strokeWidth={2} />
-          <Text className="text-xs font-semibold text-slate-600 ml-1.5">Vivienda</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-600 ml-1.5">Vivienda</Text>
         </View>
 
-        <Text className="text-[10px] font-semibold text-slate-500 mb-1">Tipo de tenencia</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Tipo de tenencia</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.housing_type || ''}
           onChangeText={(val) => updateFamilyField('housing_type', val)}
           placeholder="Ej: Propia, rentada, prestada..."
@@ -278,8 +278,8 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
           style={{ height: 40 }}
         />
 
-        <Text className="text-[10px] font-semibold text-slate-500 mb-1">Materiales de construcción</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Materiales de construcción</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.housing_materials || ''}
           onChangeText={(val) => updateFamilyField('housing_materials', val)}
           placeholder="Ej: Block, lámina, concreto..."
@@ -288,8 +288,8 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
           style={{ height: 40 }}
         />
 
-        <Text className="text-[10px] font-semibold text-slate-500 mb-1">Servicios básicos</Text>
-        <TextInput
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-slate-500 mb-1">Servicios básicos</Text>
+        <TextInput maxFontSizeMultiplier={1.3}
           value={familyData.basic_services || ''}
           onChangeText={(val) => updateFamilyField('basic_services', val)}
           placeholder="Ej: Agua potable, electricidad, drenaje, internet..."
@@ -323,7 +323,7 @@ export default function FamilyTab({ formData, updateField, onSave, isSaving }) {
           ) : (
             <Save size={16} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 8 }} />
           )}
-          <Text className="text-white text-sm font-bold">
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-sm font-bold">
             {isSaving ? 'Guardando...' : 'Guardar Familia'}
           </Text>
         </TouchableOpacity>

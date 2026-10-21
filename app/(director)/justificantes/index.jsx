@@ -218,12 +218,12 @@ export default function JustificantesScreen() {
               className="items-center justify-center rounded-full mr-3"
               style={{ width: 44, height: 44, backgroundColor: '#FFF1F2' }}
             >
-              <Text className="text-rose-700" style={{ fontSize: 15, fontWeight: '700' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-rose-700" style={{ fontSize: 15, fontWeight: '700' }}>
                 {(student.first_name || '?')[0]}{(student.last_name || '?')[0]}
               </Text>
             </View>
             <View className="flex-1">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 14, fontWeight: '700' }}
                 numberOfLines={1}
@@ -231,11 +231,11 @@ export default function JustificantesScreen() {
                 {studentName || 'Alumno desconocido'}
               </Text>
               {groupLabel ? (
-                <Text className="text-slate-500" style={{ fontSize: 12 }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 12 }}>
                   {groupLabel}
                 </Text>
               ) : null}
-              <Text className="text-slate-400" style={{ fontSize: 11 }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>
                 {dateStr}
               </Text>
             </View>
@@ -257,7 +257,7 @@ export default function JustificantesScreen() {
               }}
             >
               <FileCheck size={14} color="#ffffff" strokeWidth={2} />
-              <Text className="text-white font-semibold ml-1.5" style={{ fontSize: 12 }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold ml-1.5" style={{ fontSize: 12 }}>
                 Justificar
               </Text>
             </Pressable>
@@ -296,12 +296,12 @@ export default function JustificantesScreen() {
             className="items-center justify-center rounded-full mr-3"
             style={{ width: 44, height: 44, backgroundColor: '#F0FDF4' }}
           >
-            <Text className="text-emerald-700" style={{ fontSize: 15, fontWeight: '700' }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-emerald-700" style={{ fontSize: 15, fontWeight: '700' }}>
               {(student.first_name || '?')[0]}{(student.last_name || '?')[0]}
             </Text>
           </View>
           <View className="flex-1">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-900"
               style={{ fontSize: 14, fontWeight: '700' }}
               numberOfLines={1}
@@ -309,11 +309,11 @@ export default function JustificantesScreen() {
               {studentName || 'Alumno desconocido'}
             </Text>
             {groupLabel ? (
-              <Text className="text-slate-500" style={{ fontSize: 12 }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 12 }}>
                 {groupLabel}
               </Text>
             ) : null}
-            <Text className="text-slate-400" style={{ fontSize: 11 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>
               {dateStr}
             </Text>
           </View>
@@ -330,12 +330,12 @@ export default function JustificantesScreen() {
             className="mt-3 pt-3"
             style={{ borderTopWidth: 1, borderTopColor: '#F1F5F9' }}
           >
-            <Text className="text-xs font-bold text-slate-500 uppercase mb-1">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-500 uppercase mb-1">
               Motivo
             </Text>
-            <Text className="text-sm text-slate-700">{item.justified_reason}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-700">{item.justified_reason}</Text>
             {justifiedDateStr ? (
-              <Text className="text-xs text-slate-400 mt-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-1">
                 Justificada el {justifiedDateStr}
               </Text>
             ) : null}
@@ -361,10 +361,10 @@ export default function JustificantesScreen() {
             <Clock size={28} color="#94A3B8" strokeWidth={1.5} />
           )}
         </View>
-        <Text className="text-slate-900 text-lg font-bold">
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">
           {isPending ? 'Sin inasistencias pendientes' : 'Sin justificantes'}
         </Text>
-        <Text className="text-slate-500 text-sm text-center mt-2">
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">
           {isPending
             ? 'No hay inasistencias injustificadas por justificar.'
             : 'No hay inasistencias justificadas aún.'}
@@ -391,11 +391,11 @@ export default function JustificantesScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#e11d48" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando inasistencias...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando inasistencias...</Text>
         </View>
       </View>
     );
@@ -418,7 +418,7 @@ export default function JustificantesScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
       </Pressable>
 
       {/* HEADER */}
@@ -430,7 +430,7 @@ export default function JustificantesScreen() {
           >
             <FileCheck size={20} color="#e11d48" strokeWidth={2} />
           </View>
-          <Text className="text-xl font-bold text-slate-900 ml-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900 ml-3">
             Justificantes
           </Text>
         </View>
@@ -459,7 +459,7 @@ export default function JustificantesScreen() {
               color={activeTab === 'pending' ? '#e11d48' : '#94A3B8'}
               strokeWidth={2}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1.5 text-xs font-semibold"
               style={{ color: activeTab === 'pending' ? '#e11d48' : '#94A3B8' }}
             >
@@ -473,7 +473,7 @@ export default function JustificantesScreen() {
                     activeTab === 'pending' ? '#FFF1F2' : '#E2E8F0',
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-xs font-bold"
                   style={{
                     color: activeTab === 'pending' ? '#e11d48' : '#94A3B8',
@@ -503,7 +503,7 @@ export default function JustificantesScreen() {
               color={activeTab === 'justified' ? '#22c55e' : '#94A3B8'}
               strokeWidth={2}
             />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1.5 text-xs font-semibold"
               style={{ color: activeTab === 'justified' ? '#22c55e' : '#94A3B8' }}
             >
@@ -517,7 +517,7 @@ export default function JustificantesScreen() {
                     activeTab === 'justified' ? '#F0FDF4' : '#E2E8F0',
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-xs font-bold"
                   style={{
                     color: activeTab === 'justified' ? '#22c55e' : '#94A3B8',
@@ -544,7 +544,7 @@ export default function JustificantesScreen() {
             }}
           >
             <Users size={14} color={selectedGroupId ? '#e11d48' : '#64748b'} strokeWidth={2} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1.5 text-xs font-semibold"
               style={{ color: selectedGroupId ? '#e11d48' : '#64748b' }}
             >
@@ -558,7 +558,7 @@ export default function JustificantesScreen() {
               className="flex-row items-center bg-rose-50 rounded-xl px-3 py-2.5"
             >
               <X size={14} color="#e11d48" strokeWidth={2} />
-              <Text className="ml-1 text-xs font-semibold text-rose-600">
+              <Text maxFontSizeMultiplier={1.3} className="ml-1 text-xs font-semibold text-rose-600">
                 Limpiar
               </Text>
             </Pressable>
@@ -581,7 +581,7 @@ export default function JustificantesScreen() {
                       selectedGroupId === g._id ? '#FFF1F2' : 'transparent',
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-sm font-medium"
                     style={{
                       color:
@@ -600,13 +600,13 @@ export default function JustificantesScreen() {
       {/* ERROR */}
       {error && allAbsences.length === 0 && (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-slate-900 text-lg font-bold">Error</Text>
-          <Text className="text-slate-500 text-sm text-center mt-2">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">Error</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">{error}</Text>
           <Pressable
             onPress={fetchAbsences}
             className="mt-4 bg-rose-500 px-6 py-2.5 rounded-xl"
           >
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       )}

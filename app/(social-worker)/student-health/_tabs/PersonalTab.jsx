@@ -42,7 +42,7 @@ const calcularEdad = (dateOfBirth) => {
 // ---------------------------------------------------------------------
 const FormField = ({ label, icon: Icon, value, editable, onChangeText, placeholder, multiline, keyboardType }) => (
   <View className="mb-3">
-    <Text className="text-xs font-semibold text-slate-500 mb-1">{label}</Text>
+    <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-500 mb-1">{label}</Text>
     {editable ? (
       <View
         className="flex-row items-start bg-slate-50 rounded-xl border border-slate-200 px-3"
@@ -51,7 +51,7 @@ const FormField = ({ label, icon: Icon, value, editable, onChangeText, placehold
         {Icon && (
           <Icon size={14} color="#94A3B8" strokeWidth={2} style={{ marginTop: multiline ? 4 : 12, marginRight: 8 }} />
         )}
-        <TextInput
+        <TextInput maxFontSizeMultiplier={1.3}
           value={value || ''}
           onChangeText={onChangeText}
           placeholder={placeholder}
@@ -68,7 +68,7 @@ const FormField = ({ label, icon: Icon, value, editable, onChangeText, placehold
         {Icon && (
           <Icon size={14} color="#94A3B8" strokeWidth={2} style={{ marginRight: 8 }} />
         )}
-        <Text className="text-sm text-slate-700 flex-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-700 flex-1">
           {value || '—'}
         </Text>
       </View>
@@ -106,10 +106,10 @@ export default function PersonalTab({ student, formData, updateField }) {
           />
         </View>
         <View className="flex-1">
-          <Text className="text-lg font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
             {student?.first_name} {student?.last_name}
           </Text>
-          <Text className="text-sm text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500">
             {grupoLabel !== '—' ? `Grupo: ${grupoLabel}` : 'Sin grupo asignado'}
           </Text>
         </View>

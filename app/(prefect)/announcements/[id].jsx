@@ -347,14 +347,14 @@ export default function PrefectAnnouncementDetail() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
       {/* Título */}
       <View className="px-4 mt-2 mb-1">
-        <Text className="text-xl font-bold text-slate-900">Detalle del Aviso</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Detalle del Aviso</Text>
       </View>
 
       {/* ============================================================
@@ -369,7 +369,7 @@ export default function PrefectAnnouncementDetail() {
         {isLoading && !item && (
           <View className="flex-1 items-center justify-center py-20">
             <ActivityIndicator size="large" color="#0284C7" />
-            <Text className="text-sm text-[#64748B] mt-3 font-medium">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-[#64748B] mt-3 font-medium">
               Cargando aviso...
             </Text>
           </View>
@@ -382,10 +382,10 @@ export default function PrefectAnnouncementDetail() {
             style={{ elevation: 2 }}
           >
             <AlertCircle size={32} color="#C76F02" strokeWidth={2} />
-            <Text className="text-sm font-semibold text-[#0F172A] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-[#0F172A] mt-3 text-center">
               No se pudo cargar el aviso
             </Text>
-            <Text className="text-xs text-[#64748B] mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-[#64748B] mt-1 text-center">
               {error}
             </Text>
             <Pressable
@@ -395,7 +395,7 @@ export default function PrefectAnnouncementDetail() {
               accessibilityLabel="Reintentar carga del aviso"
             >
               <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-              <Text className="text-sm font-semibold text-white ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                 Reintentar
               </Text>
             </Pressable>
@@ -415,14 +415,14 @@ export default function PrefectAnnouncementDetail() {
                 className="px-3 py-1 rounded-full"
                 style={{ backgroundColor: visualConfig.badgeBg }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-[11px] font-bold uppercase tracking-wider"
                   style={{ color: visualConfig.badgeText }}
                 >
                   {formatPriorityLabel(item.priority)}
                 </Text>
               </View>
-              <Text className="text-xs font-medium text-[#94A3B8]">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs font-medium text-[#94A3B8]">
                 {formatDateShort(item.createdAt)}
               </Text>
             </View>
@@ -439,10 +439,10 @@ export default function PrefectAnnouncementDetail() {
               )}
               style={{ elevation: 2 }}
             >
-              <Text className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
                 Título
               </Text>
-              <Text className="text-lg font-bold text-[#0F172A] mt-1 leading-tight">
+              <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-[#0F172A] mt-1 leading-tight">
                 {item.title || 'Sin título'}
               </Text>
             </View>
@@ -464,14 +464,14 @@ export default function PrefectAnnouncementDetail() {
                   <User size={20} color="#0284C7" strokeWidth={2.25} />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
                     De
                   </Text>
-                  <Text className="text-base font-semibold text-[#0F172A] mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-[#0F172A] mt-0.5">
                     {senderName || 'Remitente no especificado'}
                   </Text>
                   {roleLabel && (
-                    <Text className="text-xs text-[#64748B] mt-0.5">
+                    <Text maxFontSizeMultiplier={1.3} className="text-xs text-[#64748B] mt-0.5">
                       {roleLabel}
                     </Text>
                   )}
@@ -502,7 +502,7 @@ export default function PrefectAnnouncementDetail() {
                       <User size={20} color="#275972" strokeWidth={2.25} />
                     )}
                   </View>
-                  <Text className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
                     Para
                   </Text>
                 </View>
@@ -511,7 +511,7 @@ export default function PrefectAnnouncementDetail() {
                   {isStudentTarget && targetStudents.length > 0 ? (
                     <>
                       {targetStudents.map((s, idx) => (
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           key={s._id || idx}
                           className="text-base font-semibold text-[#0F172A]"
                           style={{ lineHeight: 24 }}
@@ -519,12 +519,12 @@ export default function PrefectAnnouncementDetail() {
                           {s.first_name} {s.last_name}
                         </Text>
                       ))}
-                      <Text className="text-xs text-[#64748B] mt-1">
+                      <Text maxFontSizeMultiplier={1.3} className="text-xs text-[#64748B] mt-1">
                         {targetStudents.length} alumno{targetStudents.length !== 1 ? 's' : ''}
                       </Text>
                     </>
                   ) : (
-                    <Text className="text-base font-semibold text-[#0F172A]">
+                    <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-[#0F172A]">
                       {isGeneral
                         ? 'General (toda la escuela)'
                         : isGroupTarget
@@ -548,10 +548,10 @@ export default function PrefectAnnouncementDetail() {
               )}
               style={{ elevation: 1 }}
             >
-              <Text className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
                 Mensaje
               </Text>
-              <Text className="text-[15px] text-[#334155] mt-2 leading-relaxed">
+              <Text maxFontSizeMultiplier={1.3} className="text-[15px] text-[#334155] mt-2 leading-relaxed">
                 {item.message || ''}
               </Text>
             </View>
@@ -574,10 +574,10 @@ export default function PrefectAnnouncementDetail() {
                   <CheckCircle2 size={20} color="#16A34A" strokeWidth={2.25} />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-[#275972]">
                     Lecturas
                   </Text>
-                  <Text className="text-base font-semibold text-[#0F172A] mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-base font-semibold text-[#0F172A] mt-0.5">
                     {item.readCount != null
                       ? `${item.readCount} / ${item.totalRecipients}`
                       : `${item.totalRecipients} destinatarios`}
@@ -593,7 +593,7 @@ export default function PrefectAnnouncementDetail() {
               {createdAt && (
                 <View className="flex-row items-center">
                   <Calendar size={13} color="#94A3B8" strokeWidth={2} />
-                  <Text className="text-xs text-[#94A3B8] ml-1.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-[#94A3B8] ml-1.5">
                     Publicado: {formatFullDateTime(createdAt)}
                   </Text>
                 </View>
@@ -601,7 +601,7 @@ export default function PrefectAnnouncementDetail() {
               {expiresAt && (
                 <View className="flex-row items-center mt-1.5">
                   <Clock size={13} color="#94A3B8" strokeWidth={2} />
-                  <Text className="text-xs text-[#94A3B8] ml-1.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-[#94A3B8] ml-1.5">
                     Expira: {formatFullDateTime(expiresAt)}
                   </Text>
                 </View>
@@ -621,7 +621,7 @@ export default function PrefectAnnouncementDetail() {
                   accessibilityLabel="Editar aviso"
                 >
                   <Pencil size={16} color="#ffffff" strokeWidth={2.5} />
-                  <Text className="text-[15px] font-bold text-white ml-2">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[15px] font-bold text-white ml-2">
                     Editar Aviso
                   </Text>
                 </Pressable>
@@ -634,7 +634,7 @@ export default function PrefectAnnouncementDetail() {
                   accessibilityLabel="Eliminar aviso"
                 >
                   <Trash2 size={16} color="#DC2626" strokeWidth={2.5} />
-                  <Text className="text-[15px] font-bold text-[#DC2626] ml-2">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[15px] font-bold text-[#DC2626] ml-2">
                     {isDeleting ? 'Eliminando...' : 'Eliminar Aviso'}
                   </Text>
                 </Pressable>
@@ -685,7 +685,7 @@ export default function PrefectAnnouncementDetail() {
 
               {/* Header del modal */}
               <View className="flex-row items-center justify-between mb-5">
-                <Text style={{ fontSize: 20, fontWeight: '700', color: '#0F172A' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 20, fontWeight: '700', color: '#0F172A' }}>
                   Editar Aviso
                 </Text>
                 <Pressable
@@ -702,13 +702,13 @@ export default function PrefectAnnouncementDetail() {
 
               <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                 {/* TÍTULO */}
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="uppercase mb-2"
                   style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
                 >
                   Título del aviso
                 </Text>
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   value={editTitle}
                   onChangeText={setEditTitle}
                   placeholder="Título del aviso"
@@ -726,7 +726,7 @@ export default function PrefectAnnouncementDetail() {
                 />
 
                 {/* PRIORIDAD */}
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="uppercase mt-5 mb-2"
                   style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
                 >
@@ -753,7 +753,7 @@ export default function PrefectAnnouncementDetail() {
                         accessibilityState={{ selected: isActive }}
                         accessibilityLabel={option.label}
                       >
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           style={{
                             fontSize: 14,
                             fontWeight: isActive ? '700' : '400',
@@ -770,13 +770,13 @@ export default function PrefectAnnouncementDetail() {
                 </View>
 
                 {/* MENSAJE */}
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="uppercase mt-5 mb-2"
                   style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
                 >
                   Mensaje
                 </Text>
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   value={editMessage}
                   onChangeText={setEditMessage}
                   placeholder="Escribe el mensaje del aviso..."
@@ -816,7 +816,7 @@ export default function PrefectAnnouncementDetail() {
                     strokeWidth={2.25}
                     style={{ transform: [{ rotate: '-15deg' }], marginRight: 8 }}
                   />
-                  <Text style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
+                  <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
                     {isSaving ? 'Guardando...' : 'Guardar Cambios'}
                   </Text>
                 </Pressable>

@@ -134,7 +134,7 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                 >
                   <FileCheck size={20} color="#e11d48" strokeWidth={2} />
                 </View>
-                <Text className="text-lg font-bold text-slate-900">
+                <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
                   Justificar inasistencia
                 </Text>
               </View>
@@ -155,19 +155,19 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                 className="bg-slate-50 rounded-xl p-4 mb-4"
                 style={{ borderWidth: 1, borderColor: '#E2E8F0' }}
               >
-                <Text className="text-xs font-bold text-slate-500 uppercase mb-1">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-500 uppercase mb-1">
                   Alumno
                 </Text>
-                <Text className="text-sm font-bold text-slate-900">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">
                   {studentName || 'Desconocido'}
                 </Text>
                 {groupLabel ? (
-                  <Text className="text-xs text-slate-500 mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                     Grupo: {groupLabel}
                   </Text>
                 ) : null}
                 {dateStr ? (
-                  <Text className="text-xs text-slate-500 mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                     Fecha: {dateStr}
                   </Text>
                 ) : null}
@@ -182,10 +182,10 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                   >
                     <CheckCircle size={32} color="#22c55e" strokeWidth={2} />
                   </View>
-                  <Text className="text-emerald-700 font-bold text-base">
+                  <Text maxFontSizeMultiplier={1.3} className="text-emerald-700 font-bold text-base">
                     Justificada correctamente
                   </Text>
-                  <Text className="text-slate-500 text-sm mt-1">
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-1">
                     La inasistencia fue justificada.
                   </Text>
                 </View>
@@ -193,10 +193,10 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                 <>
                   {/* Input de motivo */}
                   <View className="mb-4">
-                    <Text className="text-xs font-bold text-slate-500 uppercase mb-2">
+                    <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-500 uppercase mb-2">
                       Motivo del justificante
                     </Text>
-                    <TextInput
+                    <TextInput maxFontSizeMultiplier={1.3}
                       value={reason}
                       onChangeText={setReason}
                       placeholder="Motivo del justificante..."
@@ -213,7 +213,7 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                       editable={!isLoading}
                     />
                     {error ? (
-                      <Text className="text-rose-600 text-xs mt-1">{error}</Text>
+                      <Text maxFontSizeMultiplier={1.3} className="text-rose-600 text-xs mt-1">{error}</Text>
                     ) : null}
                   </View>
 
@@ -224,7 +224,7 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                       disabled={isLoading}
                       className="flex-1 bg-slate-100 py-3 rounded-xl items-center"
                     >
-                      <Text className="text-slate-700 font-semibold text-sm">
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-700 font-semibold text-sm">
                         Cancelar
                       </Text>
                     </Pressable>
@@ -246,7 +246,7 @@ export default function JustifyAbsenceModal({ visible, onClose, absence, onJusti
                       ) : (
                         <>
                           <FileCheck size={16} color="#ffffff" strokeWidth={2} />
-                          <Text className="text-white font-semibold text-sm ml-1.5">
+                          <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold text-sm ml-1.5">
                             Justificar
                           </Text>
                         </>

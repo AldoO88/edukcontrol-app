@@ -69,12 +69,12 @@ const AttendanceStatCard = ({
       style={{ elevation: 1 }}
     >
       {/* Número grande: text-2xl bold con el color saturado. */}
-      <Text className={clsx('text-2xl font-bold', colors.number)}>
+      <Text maxFontSizeMultiplier={1.3} className={clsx('text-2xl font-bold', colors.number)}>
         {value}
       </Text>
       {/* Label: UPPERCASE tracking-wide, un poco más claro que
           el número (labelClass) para jerarquía visual. */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className={clsx(
           'text-[10px] font-bold uppercase tracking-wider mt-1 text-center',
           colors.label,

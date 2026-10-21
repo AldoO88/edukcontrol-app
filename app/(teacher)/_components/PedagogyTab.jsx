@@ -65,7 +65,7 @@ const PedagogyTab = ({ file }) => {
         {/* Header: Brain icon + label. */}
         <View className="flex-row items-center">
           <Brain size={16} color="#D97706" strokeWidth={2.25} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-2 text-slate-500"
             style={{
               fontSize: 10,
@@ -79,7 +79,7 @@ const PedagogyTab = ({ file }) => {
         </View>
 
         {/* Título con el estilo (puede incluir "/"). */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mt-2 text-slate-900"
           style={{ fontSize: 18, fontWeight: '800' }}
           numberOfLines={2}
@@ -88,7 +88,7 @@ const PedagogyTab = ({ file }) => {
         </Text>
 
         {/* Hint descriptivo. */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mt-2 text-slate-700"
           style={{ fontSize: 13, fontWeight: '500' }}
         >
@@ -102,7 +102,7 @@ const PedagogyTab = ({ file }) => {
           Sección title + lista de alerts. Cada alert tiene icon bg
           tintado + título bold + subtitle pequeño.
           ============================================================ */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="text-slate-500 mt-5 mb-2"
         style={{
           fontSize: 11,
@@ -156,13 +156,13 @@ const PedagogyTab = ({ file }) => {
 
                 {/* Título + subtitle en stack vertical. */}
                 <View className="flex-1 ml-3">
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-900"
                     style={{ fontSize: 13, fontWeight: '700' }}
                   >
                     {alert.title}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-500 mt-0.5"
                     style={{ fontSize: 12, fontWeight: '500' }}
                   >
@@ -184,7 +184,7 @@ const PedagogyTab = ({ file }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
@@ -198,7 +198,7 @@ const PedagogyTab = ({ file }) => {
           ============================================================ */}
       {ped.allergies ? (
         <>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 mt-5 mb-2"
             style={{
               fontSize: 11,
@@ -218,7 +218,7 @@ const PedagogyTab = ({ file }) => {
             }}
           >
             <AlertTriangle size={18} color="#DC2626" strokeWidth={2.25} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="flex-1 ml-3 text-rose-900"
               style={{ fontSize: 13, fontWeight: '600' }}
             >

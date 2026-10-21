@@ -210,7 +210,7 @@ export default function ForgotPasswordVerifyScreen() {
               ) : (
                 <RefreshCw size={14} color="#64748b" strokeWidth={2.25} />
               )}
-              <Text className="text-sm text-slate-500 ml-1.5 font-medium">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 ml-1.5 font-medium">
                 {isResending
                   ? 'Reenviando…'
                   : '¿No recibiste el código? Reenviar'}
@@ -226,7 +226,7 @@ export default function ForgotPasswordVerifyScreen() {
               accessibilityLabel="Volver a la pantalla anterior"
             >
               <ChevronLeft size={14} color="#94a3b8" strokeWidth={2.25} />
-              <Text className="text-sm text-slate-400 ml-1">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-400 ml-1">
                 Volver
               </Text>
             </Pressable>

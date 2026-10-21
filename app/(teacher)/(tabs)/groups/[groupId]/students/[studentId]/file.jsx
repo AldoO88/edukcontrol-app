@@ -258,7 +258,7 @@ export default function StudentFileScreen() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text className="text-slate-500" style={{ fontSize: 14 }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 14 }}>
           Cargando expediente...
         </Text>
       </View>
@@ -271,7 +271,7 @@ export default function StudentFileScreen() {
   if (error || !studentData) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 16, fontWeight: '700' }}
         >
@@ -284,7 +284,7 @@ export default function StudentFileScreen() {
           accessibilityLabel="Volver a alumnos"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
@@ -323,13 +323,13 @@ export default function StudentFileScreen() {
         accessibilityLabel="Volver a mis grupos"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
 
         <View className="mt-2">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900"
             style={{ fontSize: 17, fontWeight: '700' }}
             numberOfLines={1}
@@ -367,7 +367,7 @@ export default function StudentFileScreen() {
             className="px-3 py-1 rounded-full"
             style={{ backgroundColor: '#0284C7' }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-white"
               style={{
                 fontSize: 11,
@@ -391,7 +391,7 @@ export default function StudentFileScreen() {
           </View>
 
           {/* Nombre completo. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-3 text-slate-900 text-center"
             style={{ fontSize: 19, fontWeight: '800' }}
             numberOfLines={2}
@@ -400,7 +400,7 @@ export default function StudentFileScreen() {
           </Text>
 
           {/* Subtitle: Grupo X  •  No. Control: Y. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1 text-slate-500 text-center"
             style={{ fontSize: 12, fontWeight: '500' }}
           >
@@ -443,7 +443,7 @@ export default function StudentFileScreen() {
           </View>
 
           {/* Titulo. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -456,7 +456,7 @@ export default function StudentFileScreen() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: '#FED7AA' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -488,14 +488,14 @@ export default function StudentFileScreen() {
               elevation: 1,
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500"
               style={{ fontSize: 11, fontWeight: '600' }}
             >
               Promedio General
             </Text>
             <View className="flex-row items-end mt-2">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 26,
                   fontWeight: '800',
@@ -526,14 +526,14 @@ export default function StudentFileScreen() {
               elevation: 1,
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500"
               style={{ fontSize: 11, fontWeight: '600' }}
             >
               Asistencia General
             </Text>
             <View className="flex-row items-end mt-2">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 26,
                   fontWeight: '800',
@@ -548,7 +548,7 @@ export default function StudentFileScreen() {
                   className="ml-2 mb-1 px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: '#FED7AA' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 10,
                       fontWeight: '800',
@@ -591,7 +591,7 @@ export default function StudentFileScreen() {
                   elevation: isActive ? 2 : 0,
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '700',
@@ -634,7 +634,7 @@ export default function StudentFileScreen() {
                   elevation: isActive ? 2 : 0,
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '700',

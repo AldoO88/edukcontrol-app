@@ -204,7 +204,7 @@ function MatrixCell({ status, onPress }) {
           backgroundColor: style.soft,
         }}
       >
-        <Text style={{ fontSize: 14, fontWeight: '800', color: style.color }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '800', color: style.color }}>
           {status}
         </Text>
       </View>
@@ -479,7 +479,7 @@ export default function TeacherMatrixScreen() {
         accessibilityLabel="Volver al detalle del grupo"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -488,7 +488,7 @@ export default function TeacherMatrixScreen() {
           B) TÍTULO + PILL DEL PERIODO + GRUPO
           ============================================================ */}
       <View className="px-4 mt-5">
-        <Text className="text-[22px] font-bold text-[#0F172A]">
+        <Text maxFontSizeMultiplier={1.3} className="text-[22px] font-bold text-[#0F172A]">
           Control de Asistencias
         </Text>
         <View className="mt-2 flex-row items-center justify-between">
@@ -498,7 +498,7 @@ export default function TeacherMatrixScreen() {
             accessibilityRole="button"
             accessibilityLabel="Seleccionar periodo"
           >
-            <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
               {selectedPeriod?.name || (periodsLoading ? 'Cargando...' : 'Sin períodos')}
             </Text>
             <ChevronDown
@@ -530,7 +530,7 @@ export default function TeacherMatrixScreen() {
                     accessibilityLabel={`Seleccionar ${period.name}`}
                     accessibilityState={{ selected: isActive }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 13,
                         fontWeight: isActive ? '700' : '500',
@@ -545,7 +545,7 @@ export default function TeacherMatrixScreen() {
             </View>
           )}
 
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="font-bold text-[#0F172A] ml-3"
             style={{ fontSize: 13 }}
             numberOfLines={1}
@@ -573,14 +573,14 @@ export default function TeacherMatrixScreen() {
           }}
         >
           <Plus size={16} color="#ffffff" strokeWidth={2.5} />
-          <Text style={{ fontSize: 13, fontWeight: '700', color: '#ffffff' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '700', color: '#ffffff' }}>
             Nueva Fecha
           </Text>
         </Pressable>
 
         <View className="flex-row items-center">
           <Users size={15} color="#64748B" strokeWidth={2} />
-          <Text className="text-[13px] text-[#475569] ml-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
             {matrix.length} Alumnos
           </Text>
         </View>
@@ -607,11 +607,11 @@ export default function TeacherMatrixScreen() {
                     backgroundColor: style.soft,
                   }}
                 >
-                  <Text style={{ fontSize: 11, fontWeight: '800', color: style.color }}>
+                  <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '800', color: style.color }}>
                     {code}
                   </Text>
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     color: '#64748B',
@@ -638,7 +638,7 @@ export default function TeacherMatrixScreen() {
           {loadingSessions && (
             <View className="flex-1 items-center justify-center py-10">
               <ActivityIndicator size="large" color="#0284C7" />
-              <Text className="text-slate-400 text-sm mt-3">
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
                 Cargando asistencia...
               </Text>
             </View>
@@ -658,7 +658,7 @@ export default function TeacherMatrixScreen() {
                   className="border-r border-b border-[#F1F5F9]"
                   style={{ height: 48, justifyContent: 'center', paddingLeft: 14 }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 11,
                       fontWeight: '700',
@@ -689,7 +689,7 @@ export default function TeacherMatrixScreen() {
                           ("1. ALMERALLA BLANCAS MOISES DANIEL") se cortaban
                           con 2 líneas; fontSize 15 (antes 16) ayuda a que
                           quepan en el mismo ancho de columna. */}
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         numberOfLines={3}
                         ellipsizeMode="tail"
                         style={{ fontSize: 15, fontWeight: '500', color: '#64748B' }}
@@ -736,7 +736,7 @@ export default function TeacherMatrixScreen() {
                             paddingVertical: 3,
                           }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 10,
                               fontWeight: '800',

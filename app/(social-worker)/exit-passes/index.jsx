@@ -226,31 +226,31 @@ export default function SocialWorkerExitPassesScreen() {
       >
         <View className="flex-row items-start">
           <View className="items-center justify-center rounded-full" style={{ width: 44, height: 44, backgroundColor: '#FFF7ED' }}>
-            <Text className="text-orange-700" style={{ fontSize: 15, fontWeight: '700' }}>{initials}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 15, fontWeight: '700' }}>{initials}</Text>
           </View>
           <View className="flex-1 ml-3">
-            <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }} numberOfLines={1}>{studentName}</Text>
-            {groupLabel ? <Text className="text-slate-500" style={{ fontSize: 12 }}>{groupLabel}</Text> : null}
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }} numberOfLines={1}>{studentName}</Text>
+            {groupLabel ? <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 12 }}>{groupLabel}</Text> : null}
           </View>
           <View className="items-end">
-            <Text className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>{timeStr}</Text>
-            <Text className="text-slate-400" style={{ fontSize: 11 }}>{dateStr}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>{timeStr}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 11 }}>{dateStr}</Text>
           </View>
         </View>
         <View className="flex-row items-center mt-3 pt-3" style={{ borderTopWidth: 1, borderTopColor: '#F1F5F9' }}>
           <View className="flex-row items-center flex-1">
             <User size={12} color="#94A3B8" strokeWidth={2} />
-            <Text className="text-slate-500 ml-1" style={{ fontSize: 12 }}>{item.guardian_name || '—'}</Text>
-            <Text className="text-slate-300 mx-1" style={{ fontSize: 12 }}>·</Text>
-            <Text className="text-orange-600" style={{ fontSize: 12, fontWeight: '600' }}>{relationshipLabel}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 ml-1" style={{ fontSize: 12 }}>{item.guardian_name || '—'}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-300 mx-1" style={{ fontSize: 12 }}>·</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-orange-600" style={{ fontSize: 12, fontWeight: '600' }}>{relationshipLabel}</Text>
           </View>
           <View className="px-2 py-0.5 rounded-full" style={{ backgroundColor: '#FFF7ED' }}>
-            <Text className="text-orange-700" style={{ fontSize: 10, fontWeight: '700' }}>{reasonLabel}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 10, fontWeight: '700' }}>{reasonLabel}</Text>
           </View>
         </View>
         {creator.name ? (
           <View className="flex-row items-center mt-2">
-            <Text className="text-slate-400" style={{ fontSize: 10 }}>Registrado por: {creator.name} {creator.last_name || ''}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 10 }}>Registrado por: {creator.name} {creator.last_name || ''}</Text>
           </View>
         ) : null}
       </Pressable>
@@ -264,8 +264,8 @@ export default function SocialWorkerExitPassesScreen() {
         <View className="w-16 h-16 rounded-full items-center justify-center mb-4" style={{ backgroundColor: '#FFF7ED' }}>
           <LogOut size={28} color="#ea580c" strokeWidth={1.5} />
         </View>
-        <Text className="text-slate-900 text-lg font-bold">Sin pases de salida</Text>
-        <Text className="text-slate-500 text-sm text-center mt-2">
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">Sin pases de salida</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">
           No se han registrado pases de salida aún. Toca el botón + para crear uno.
         </Text>
       </View>
@@ -288,11 +288,11 @@ export default function SocialWorkerExitPassesScreen() {
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-4" teacher={dashboardData?.socialWorker} date={new Date().toISOString()} user={user} />
         <Pressable onPress={() => router.back()} className="flex-row items-center px-4 mt-4">
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#ea580c" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando pases de salida...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando pases de salida...</Text>
         </View>
       </View>
     );
@@ -305,7 +305,7 @@ export default function SocialWorkerExitPassesScreen() {
 
       <Pressable onPress={() => router.back()} className="flex-row items-center px-4 mt-4">
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
       </Pressable>
 
       <View className="flex-row items-center justify-between px-5 mt-4 mb-2">
@@ -313,10 +313,10 @@ export default function SocialWorkerExitPassesScreen() {
           <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: '#FFF7ED' }}>
             <LogOut size={20} color="#ea580c" strokeWidth={2} />
           </View>
-          <Text className="text-xl font-bold text-slate-900 ml-3">Pase de Salida</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900 ml-3">Pase de Salida</Text>
         </View>
         <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: '#FFF7ED' }}>
-          <Text className="text-orange-700" style={{ fontSize: 12, fontWeight: '700' }}>
+          <Text maxFontSizeMultiplier={1.3} className="text-orange-700" style={{ fontSize: 12, fontWeight: '700' }}>
             {items.length} registro{items.length !== 1 ? 's' : ''}
           </Text>
         </View>
@@ -326,7 +326,7 @@ export default function SocialWorkerExitPassesScreen() {
       <View className="mx-4 mt-3 mb-1">
         <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ elevation: 1 }}>
           <Search size={16} color="#94A3B8" strokeWidth={2} />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Buscar por alumno o tutor..."
@@ -344,10 +344,10 @@ export default function SocialWorkerExitPassesScreen() {
 
       {error && items.length === 0 && (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-slate-900 text-lg font-bold">Error</Text>
-          <Text className="text-slate-500 text-sm text-center mt-2">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold">Error</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm text-center mt-2">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 bg-orange-500 px-6 py-2.5 rounded-xl">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       )}

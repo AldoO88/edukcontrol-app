@@ -91,11 +91,11 @@ const QuickActionCard = ({
 
       {/* Textos. En wide, flex-1 para ocupar el espacio. */}
       <View className={layout === 'wide' ? 'flex-1' : ''}>
-        <Text className="text-slate-900 text-sm font-bold" numberOfLines={1}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-sm font-bold" numberOfLines={1}>
           {title}
         </Text>
         {subtitle && (
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className={clsx(
               'text-slate-500 text-xs mt-0.5',
               layout === 'wide' ? 'mt-0.5' : 'mt-1',

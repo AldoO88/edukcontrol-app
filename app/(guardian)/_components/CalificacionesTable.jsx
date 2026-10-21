@@ -89,7 +89,7 @@ const GradesRow = ({ grades, accent = false }) => {
   return (
     <View className="flex-row">
       {grades.map((grade, i) => (
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           key={i}
           className={clsx(
             'w-12 text-center text-sm font-bold',
@@ -142,12 +142,12 @@ const CalificacionesTable = ({
           HEADER DE COLUMNAS
           ------------------------------------------------------ */}
       <View className="flex-row items-center px-5 py-3 bg-slate-50">
-        <Text className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <Text maxFontSizeMultiplier={1.3} className="flex-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
           Materia
         </Text>
         <View className="flex-row">
           {columnLabels.map((label, i) => (
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               key={i}
               className="w-12 text-center text-[11px] font-bold uppercase tracking-wider text-slate-500"
             >
@@ -175,7 +175,7 @@ const CalificacionesTable = ({
               <View className={clsx('w-9 h-9 rounded-xl items-center justify-center mr-3', color.bg)}>
                 {Icon && <Icon size={18} color={color.iconColor} strokeWidth={2.25} />}
               </View>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-sm font-semibold text-slate-900 flex-1"
                 numberOfLines={1}
               >
@@ -195,9 +195,9 @@ const CalificacionesTable = ({
       <View className="flex-row items-center px-5 py-4 bg-sky-50 border-t border-slate-200">
         <View className="flex-1 flex-row items-center">
           <View className="w-9 h-9 rounded-xl bg-white items-center justify-center mr-3">
-            <Text className="text-base font-bold text-sky-700">Σ</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-base font-bold text-sky-700">Σ</Text>
           </View>
-          <Text className="text-sm font-bold text-slate-900 flex-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1">
             Promedio
           </Text>
         </View>

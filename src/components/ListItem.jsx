@@ -63,11 +63,11 @@ const ListItem = ({
 
       {/* Textos. flex-1 para ocupar espacio y empujar rightSlot. */}
       <View className="flex-1">
-        <Text className="text-slate-900 text-base font-semibold" numberOfLines={1}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-base font-semibold" numberOfLines={1}>
           {title}
         </Text>
         {subtitle && (
-          <Text className="text-slate-500 text-xs mt-0.5" numberOfLines={1}>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-xs mt-0.5" numberOfLines={1}>
             {subtitle}
           </Text>
         )}

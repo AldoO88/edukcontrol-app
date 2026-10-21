@@ -151,7 +151,7 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
       >
         <View className="flex-row items-center flex-1">
           <SubjectIcon size={16} color={subjectColor} strokeWidth={2} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-2 text-slate-900 flex-1"
             style={{ fontSize: 14, fontWeight: '700' }}
             numberOfLines={1}
@@ -163,7 +163,7 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
               className="px-2 py-0.5 rounded-full ml-2"
               style={{ backgroundColor: '#F3E8FF' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 9,
                   fontWeight: '700',
@@ -179,7 +179,7 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
         </View>
 
         <View className="flex-row items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 16,
               fontWeight: '800',
@@ -217,20 +217,20 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
                     borderBottomColor: '#F1F5F9',
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="flex-1 text-slate-700"
                     style={{ fontSize: 12, fontWeight: '500' }}
                     numberOfLines={1}
                   >
                     {activity.name}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-400 mx-3"
                     style={{ fontSize: 11, fontWeight: '500' }}
                   >
                     {activity.date}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 13,
                       fontWeight: '700',
@@ -243,7 +243,7 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
               );
             })
           ) : (
-            <Text className="text-slate-400 py-2" style={{ fontSize: 12 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 py-2" style={{ fontSize: 12 }}>
               Sin actividades registradas
             </Text>
           )}
@@ -257,40 +257,40 @@ function SubjectCard({ subject, tallerName, isExpanded, onToggle }) {
               {/* Presentes */}
               <View className="items-center">
                 <CheckCircle size={16} color="#10B981" strokeWidth={2.5} />
-                <Text className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
                   {subject.attendance.present}
                 </Text>
-                <Text className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
                   Presentes
                 </Text>
               </View>
               {/* Faltas */}
               <View className="items-center">
                 <XCircle size={16} color="#EF4444" strokeWidth={2.5} />
-                <Text className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
                   {subject.attendance.absences}
                 </Text>
-                <Text className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
                   Faltas
                 </Text>
               </View>
               {/* Justificadas */}
               <View className="items-center">
                 <ShieldCheck size={16} color="#10B981" strokeWidth={2.5} />
-                <Text className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
                   {subject.attendance.justified || 0}
                 </Text>
-                <Text className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
                   Justificadas
                 </Text>
               </View>
               {/* Retardos */}
               <View className="items-center">
                 <Clock size={16} color="#F97316" strokeWidth={2.5} />
-                <Text className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-900 mt-1" style={{ fontSize: 14, fontWeight: '700' }}>
                   {subject.attendance.tardies}
                 </Text>
-                <Text className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 9, fontWeight: '600' }}>
                   Retardos
                 </Text>
               </View>
@@ -442,7 +442,7 @@ export default function TutoriaFileScreen() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text className="text-slate-500" style={{ fontSize: 14 }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 14 }}>
           Cargando expediente...
         </Text>
       </View>
@@ -455,7 +455,7 @@ export default function TutoriaFileScreen() {
   if (error || !studentData) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F8FAFC]">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-900"
           style={{ fontSize: 16, fontWeight: '700' }}
         >
@@ -468,7 +468,7 @@ export default function TutoriaFileScreen() {
           accessibilityLabel="Volver a alumnos"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
@@ -504,13 +504,13 @@ export default function TutoriaFileScreen() {
           accessibilityLabel="Volver a mis grupos"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
 
         <View className="mt-2">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-900"
             style={{ fontSize: 17, fontWeight: '700' }}
             numberOfLines={1}
@@ -553,7 +553,7 @@ export default function TutoriaFileScreen() {
             style={{ backgroundColor: '#FEF3C7' }}
           >
             <AlertTriangle size={12} color="#D97706" strokeWidth={2.5} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-1.5"
               style={{
                 fontSize: 11,
@@ -578,7 +578,7 @@ export default function TutoriaFileScreen() {
           </View>
 
           {/* Nombre completo. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-3 text-slate-900 text-center"
             style={{ fontSize: 19, fontWeight: '800' }}
             numberOfLines={2}
@@ -587,7 +587,7 @@ export default function TutoriaFileScreen() {
           </Text>
 
           {/* Subtitle: Group X  •  No. Control: Y. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1 text-slate-500 text-center"
             style={{ fontSize: 12, fontWeight: '500' }}
           >
@@ -682,7 +682,7 @@ export default function TutoriaFileScreen() {
           >
             <Eye size={20} color="#059669" strokeWidth={2.25} />
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -721,7 +721,7 @@ export default function TutoriaFileScreen() {
                   opacity: hasData ? 1 : 0.4,
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '700',
@@ -744,7 +744,7 @@ export default function TutoriaFileScreen() {
             ============================================================ */}
         <View className="mx-4 mt-5">
           <View className="flex-row items-center justify-between mb-3">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-900 flex-1"
               style={{ fontSize: 15, fontWeight: '700' }}
             >
@@ -754,7 +754,7 @@ export default function TutoriaFileScreen() {
               className="px-2.5 py-1 rounded-lg"
               style={{ backgroundColor: '#F1F5F9' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500"
                 style={{ fontSize: 10, fontWeight: '600' }}
               >
@@ -766,7 +766,7 @@ export default function TutoriaFileScreen() {
           {/* Sin datos del trimestre seleccionado. */}
           {!currentTrimesterData && (
             <View className="items-center py-8">
-              <Text className="text-slate-400" style={{ fontSize: 13 }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 13 }}>
                 Sin datos para este trimestre
               </Text>
             </View>
@@ -817,7 +817,7 @@ export default function TutoriaFileScreen() {
           >
             <FileText size={20} color="#D97706" strokeWidth={2.25} />
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -828,7 +828,7 @@ export default function TutoriaFileScreen() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: '#FED7AA' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -879,7 +879,7 @@ export default function TutoriaFileScreen() {
           >
             <Megaphone size={20} color="#0284C7" strokeWidth={2.25} />
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -890,7 +890,7 @@ export default function TutoriaFileScreen() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: '#BAE6FD' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -941,7 +941,7 @@ export default function TutoriaFileScreen() {
           >
             <TrendingUp size={20} color="#E11D48" strokeWidth={2.25} />
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="flex-1 ml-3 text-slate-900"
             style={{ fontSize: 14, fontWeight: '700' }}
           >
@@ -952,7 +952,7 @@ export default function TutoriaFileScreen() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: '#FECDD3' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',

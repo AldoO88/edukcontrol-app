@@ -54,7 +54,7 @@ export default function TabSelector({ tabs, activeTab, onTabChange }) {
                   style={{ marginRight: 6 }}
                 />
               )}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-xs font-semibold"
                 style={{ color: isActive ? '#4F46E5' : '#64748B' }}
               >

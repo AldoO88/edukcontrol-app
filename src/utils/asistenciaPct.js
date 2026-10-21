@@ -31,7 +31,7 @@
 const MIN_PCT_DE_MATRICULA = 0.5;
 
 // Recibe el objeto `stats` del dashboard y devuelve un string YA
-// formateado para pintarlo directo en el <Text> ("87%" o "—").
+// formateado para pintarlo directo en el <Text maxFontSizeMultiplier={1.3}> ("87%" o "—").
 export const formatAsistPct = (stats) => {
   const dayPresent = stats?.dayPresent ?? 0;
   const dayTotal = stats?.dayTotal ?? 0;

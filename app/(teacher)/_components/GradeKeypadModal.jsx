@@ -205,7 +205,7 @@ const GradeKeypadModal = ({
               {isExtra && (
                 <Star size={12} color="#6B21A8" fill="#6B21A8" strokeWidth={2.25} />
               )}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 numberOfLines={1}
                 style={{
                   fontSize: 12,
@@ -237,13 +237,13 @@ const GradeKeypadModal = ({
               textColor="#0284C7"
             />
             <View className="flex-1 ml-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 numberOfLines={1}
                 style={{ fontSize: 15, fontWeight: '700', color: '#0F172A' }}
               >
                 {student.name}
               </Text>
-              <Text style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
                 {!singleStudentMode && (
                   <>
                     N.L. {studentIndex + 1}
@@ -265,7 +265,7 @@ const GradeKeypadModal = ({
               borderColor: '#0284C7',
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 32,
                 fontWeight: '800',
@@ -276,7 +276,7 @@ const GradeKeypadModal = ({
               {display === '' ? '0.0' : display}
             </Text>
           </View>
-          <Text className="text-xs text-slate-500 text-center mt-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 text-center mt-2">
             Escala: {MIN_VAL.toFixed(1)} - {MAX_VAL.toFixed(1)}
           </Text>
 
@@ -301,7 +301,7 @@ const GradeKeypadModal = ({
                   borderColor: '#BAE6FD',
                 }}
               >
-                <Text style={{ fontSize: 12, fontWeight: '800', color: '#0369A1' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '800', color: '#0369A1' }}>
                   {v}
                 </Text>
               </Pressable>
@@ -344,7 +344,7 @@ const GradeKeypadModal = ({
                   }}
                 >
                   <Check size={16} color="#ffffff" strokeWidth={2.5} />
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: '#ffffff' }}>
+                  <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#ffffff' }}>
                     Guardar
                   </Text>
                 </Pressable>
@@ -398,7 +398,7 @@ function KeypadKey({ label, onPress }) {
       {isBack ? (
         <BackspaceIcon size={20} color="#DC2626" strokeWidth={2.25} />
       ) : (
-        <Text style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
           {label}
         </Text>
       )}
@@ -431,7 +431,7 @@ function PrevButton({ disabled, onPress }) {
         color={disabled ? '#94A3B8' : '#0284C7'}
         strokeWidth={2.5}
       />
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         style={{
           fontSize: 12,
           fontWeight: '700',
@@ -461,7 +461,7 @@ function SaveAndNextButton({ hasNext, onPress }) {
         gap: 4,
       }}
     >
-      <Text style={{ fontSize: 12, fontWeight: '700', color: '#ffffff' }}>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#ffffff' }}>
         Guardar y Siguiente
       </Text>
       {hasNext ? (
@@ -487,7 +487,7 @@ function DoneButton({ onPress }) {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
         Listo
       </Text>
     </Pressable>

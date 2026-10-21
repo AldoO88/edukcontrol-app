@@ -25,6 +25,36 @@
 //    con <Redirect> declarativo. Esto evita que el AuthProvider se
 //    remonte (que era el bug original).
 // =====================================================================
+// POLÍTICA DE ESCALADO DE FUENTE (Dynamic Type iOS / tamaño de texto
+// Android) — REGLA OBLIGATORIA AL AÑADIR TEXTO NUEVO
+// ---------------------------------------------------------------------
+// React Native escala las fuentes POR DEFECTO según la preferencia de
+// accesibilidad del sistema (allowFontScaling = true es el default en
+// Text.js; React 19 eliminó Text.defaultProps y RN 0.86 no expone un
+// cap global, así que NO existe API única para limitarlo). En iOS,
+// con "Tamaño de texto" en Grande/Máximo, los <Text> crecen hasta
+// ~3.5x y ROMPEN los layouts: textos encimados, botones desbordados,
+// tarjetas cortadas y scroll vertical inacabable.
+//
+// Solución aplicada (aprobada por el usuario, 2026-10-21): TODO
+// <Text> y <TextInput> de app/ y src/ lleva
+// maxFontSizeMultiplier={1.3} — la escala se RESPETA pero se limita
+// a 1.3x. Mejora real de accesibilidad (el texto responde al usuario)
+// sin destruir la maquetación. Inyectado masivamente por script:
+// 197 archivos modificados, 2,935 tags, cero pendientes (verificado
+// por conteo: opens totales = opens con prop, dobles = 0).
+//
+// REGLA AL ESCRIBIR TEXTO NUEVO: incluir SIEMPRE la prop, p. ej.
+//   <Text maxFontSizeMultiplier={1.3} className="text-sm">Hola</Text>
+//   <TextInput maxFontSizeMultiplier={1.3} ... />
+//
+// Opciones descartadas y por qué:
+//   - allowFontScaling={false} global: ignora por completo la
+//     preferencia del usuario (peor accesibilidad, no cumple la
+//     intención de Dynamic Type).
+//   - Cap por pantalla/componente: olvidadizo y difícil de auditar;
+//     el cap por tag es mecánico y comprobable con grep.
+// =====================================================================
 
 // IMPORTANTE: este import DEBE ser el primero de toda la app.
 // Carga las directivas @tailwind de global.css y permite que

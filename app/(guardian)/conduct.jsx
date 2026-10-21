@@ -245,10 +245,10 @@ export default function ConductScreen() {
             card de puntaje de abajo.
             ============================================================ */}
         <View className="px-4 pt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Conducta Escolar
           </Text>
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             Seguimiento de comportamiento y valores.
           </Text>
         </View>
@@ -260,7 +260,7 @@ export default function ConductScreen() {
             nombre. Misma implementación que avisos, diferente
             conjunto de students (sin "Todos" aquí).
             ============================================================ */}
-        <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-5 mb-3 px-5">
+        <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-5 mb-3 px-5">
           Filtrar por estudiante
         </Text>
 
@@ -291,7 +291,7 @@ export default function ConductScreen() {
           style={{ elevation: 3 }}
         >
           {/* Label */}
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Puntaje actual
           </Text>
 
@@ -300,7 +300,7 @@ export default function ConductScreen() {
               "—" (aún no calculado). text-4xl (36px) para que sea
               el protagonista visual de la card. */}
           <View className="flex-row items-baseline mt-1">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx(
                 'text-4xl font-bold',
                 typeof currentScore === 'number' ? 'text-sky-500' : 'text-slate-300',
@@ -308,7 +308,7 @@ export default function ConductScreen() {
             >
               {typeof currentScore === 'number' ? currentScore : '—'}
             </Text>
-            <Text className="text-xl font-semibold text-slate-400 ml-1.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-xl font-semibold text-slate-400 ml-1.5">
               / {maxScore}
             </Text>
           </View>
@@ -339,10 +339,10 @@ export default function ConductScreen() {
           {/* Header de "Progreso del Ciclo Escolar" + status label.
               flex-row justify-between para alinear extremos. */}
           <View className="flex-row items-center justify-between mt-3">
-            <Text className="text-xs font-semibold text-slate-500">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-500">
               Progreso del Ciclo Escolar
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className={clsx(
                 'text-xs font-bold',
                 // Color del status: verde / ámbar / rojo, en
@@ -360,7 +360,7 @@ export default function ConductScreen() {
 
           {/* Texto explicativo. mt-3 separa del header.
               leading-relaxed para que respire en multi-línea. */}
-          <Text className="text-xs text-slate-500 mt-2 leading-relaxed">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-2 leading-relaxed">
             El puntaje base inicia en {maxScore} puntos cada trimestre. Las
             faltas restan puntos según su gravedad, mientras que los
             méritos otorgan puntos adicionales por conducta ejemplar.
@@ -368,7 +368,7 @@ export default function ConductScreen() {
 
           {/* Error de carga (si falló el summary). */}
           {conductError && !showScoreLoading && (
-            <Text className="text-xs text-rose-600 mt-2 leading-relaxed">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-rose-600 mt-2 leading-relaxed">
               {conductError}
             </Text>
           )}
@@ -382,10 +382,10 @@ export default function ConductScreen() {
               periodo filtrado (futuro: selector dropdown).
             ============================================================ */}
         <View className="flex-row items-center justify-between mt-7 px-5 mb-3">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Historial de reportes
           </Text>
-          <Text className="text-xs font-bold text-sky-600">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-sky-600">
             Este Trimestre
           </Text>
         </View>
@@ -426,10 +426,10 @@ export default function ConductScreen() {
               reportes). */}
           {!isLoadingConduct && reports.length === 0 && currentScore !== null && (
             <View className="bg-white rounded-2xl p-8 items-center">
-              <Text className="text-sm text-slate-500 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
                 {activeStudentName} no tiene reportes en este trimestre.
               </Text>
-              <Text className="text-xs text-slate-400 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-1 text-center">
                 ¡Puntaje perfecto de {maxScore} puntos!
               </Text>
             </View>

@@ -60,7 +60,7 @@ const Chip = ({
           strokeWidth={2.5}
         />
       )}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className={clsx(
           'text-xs',
           Icon ? 'ml-1.5' : '',

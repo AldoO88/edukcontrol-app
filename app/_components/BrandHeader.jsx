@@ -68,7 +68,7 @@ export default function BrandHeader() {
             que el isotipo) para máxima coherencia de marca.
             ml-3 separa del cuadrado. tracking-tight reduce un
             pelín el interletraje para que se vea más "marca". */}
-        <Text className="text-3xl font-bold text-sky-500 ml-3 tracking-tight">
+        <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-sky-500 ml-3 tracking-tight">
           EdukControl
         </Text>
       </View>

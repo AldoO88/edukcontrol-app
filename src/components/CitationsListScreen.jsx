@@ -223,30 +223,30 @@ const CitationsListScreen = ({
         {hasSearch ? (
           <>
             <Search size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
               No hay citatorios con estos filtros
             </Text>
-            <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
               Intenta ajustar la búsqueda.
             </Text>
           </>
         ) : isMine ? (
           <>
             <AlertCircle size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
               No has creado citatorios
             </Text>
-            <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
               Crea tu primer citatorio usando el botón de abajo.
             </Text>
           </>
         ) : (
           <>
             <AlertCircle size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
               No hay citatorios
             </Text>
-            <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
               Los citatorios aparecerán cuando se creen.
             </Text>
           </>
@@ -293,7 +293,7 @@ const CitationsListScreen = ({
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
@@ -305,19 +305,19 @@ const CitationsListScreen = ({
       <View className="px-4 mt-4 mb-1">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center">
-            <Text className="text-[22px] font-bold text-[#0F172A]">
+            <Text maxFontSizeMultiplier={1.3} className="text-[22px] font-bold text-[#0F172A]">
               Citatorios
             </Text>
             {hasSearch && (
               <View className="ml-2 rounded-full px-2 py-0.5" style={{ backgroundColor: primaryColor + '20' }}>
-                <Text className="text-[10px] font-bold" style={{ color: primaryColor }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold" style={{ color: primaryColor }}>
                   Filtrado
                 </Text>
               </View>
             )}
           </View>
         </View>
-        <Text className="text-sm text-slate-500 mt-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
           {pagination.total} citatorio{pagination.total !== 1 ? 's' : ''}
         </Text>
       </View>
@@ -338,7 +338,7 @@ const CitationsListScreen = ({
                 accessibilityState={{ selected: isActive }}
                 accessibilityLabel={scope.label}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 13,
                     fontWeight: isActive ? '700' : '500',
@@ -381,7 +381,7 @@ const CitationsListScreen = ({
               accessibilityState={{ selected: isActive }}
               accessibilityLabel={status}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '700',
@@ -425,7 +425,7 @@ const CitationsListScreen = ({
       <View className="px-4 mt-3 mb-1">
         <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3 py-2">
           <Search size={16} color="#94A3B8" />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchText}
             onChangeText={setSearchText}
             placeholder="Buscar por alumno, grupo o materia..."
@@ -442,11 +442,11 @@ const CitationsListScreen = ({
 
         {hasSearch && (
           <View className="flex-row items-center justify-between mt-1 mb-1">
-            <Text className="text-[11px] text-slate-400">
+            <Text maxFontSizeMultiplier={1.3} className="text-[11px] text-slate-400">
               Mostrando {filteredItems.length} de {scopeFilteredItems.length} citatorios
             </Text>
             <Pressable onPress={clearSearch}>
-              <Text className="text-[11px] font-semibold" style={{ color: primaryColor }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-semibold" style={{ color: primaryColor }}>
                 Limpiar
               </Text>
             </Pressable>
@@ -458,7 +458,7 @@ const CitationsListScreen = ({
       {isLoading && items.length === 0 && (
         <View className="py-8 items-center">
           <ActivityIndicator size="large" color={primaryColor} />
-          <Text className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
             Cargando citatorios...
           </Text>
         </View>
@@ -468,7 +468,7 @@ const CitationsListScreen = ({
       {error && !isLoading && (
         <View className="bg-white rounded-2xl p-6 mx-4 mt-3 items-center border border-rose-100">
           <AlertCircle size={24} color="#DC2626" strokeWidth={2} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-rose-600 mt-2 text-center"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
@@ -479,7 +479,7 @@ const CitationsListScreen = ({
             className="mt-3 px-4 py-2 rounded-xl"
             style={{ backgroundColor: primaryColor }}
           >
-            <Text className="text-white font-bold" style={{ fontSize: 12 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-bold" style={{ fontSize: 12 }}>
               Reintentar
             </Text>
           </Pressable>

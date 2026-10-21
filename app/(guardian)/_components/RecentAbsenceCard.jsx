@@ -66,10 +66,10 @@ const RecentAbsenceCard = ({ absence, onPress }) => {
           y mes se vean cómodos. rounded-2xl para look "stamp". */}
       <View className="w-14 h-14 rounded-2xl bg-sky-50 items-center justify-center mr-4">
         {/* Mes en UPPERCASE pequeño + día en grande. */}
-        <Text className="text-[10px] font-bold uppercase tracking-wider text-sky-600">
+        <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold uppercase tracking-wider text-sky-600">
           {month}
         </Text>
-        <Text className="text-xl font-bold text-sky-700 leading-none mt-0.5">
+        <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-sky-700 leading-none mt-0.5">
           {day}
         </Text>
       </View>
@@ -77,13 +77,13 @@ const RecentAbsenceCard = ({ absence, onPress }) => {
       {/* Textos (centro, flex-1 para que ocupe el espacio
           restante y empuje el icono derecho). */}
       <View className="flex-1">
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-sm font-bold text-slate-900"
           numberOfLines={1}
         >
           {title || 'Falta'}
         </Text>
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-xs text-slate-500 mt-0.5"
           numberOfLines={2}
         >

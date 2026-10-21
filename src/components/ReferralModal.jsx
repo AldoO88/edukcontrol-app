@@ -117,7 +117,7 @@ export default function ReferralModal({
         <View className="flex-1 bg-white">
           {/* HEADER */}
           <View className="flex-row items-center justify-between px-4 py-3 border-b border-slate-200">
-            <Text className="text-lg font-bold text-slate-900">
+            <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
               {referral ? 'Editar Referencia' : 'Nueva Referencia'}
             </Text>
             <Pressable onPress={onClose} hitSlop={8}>
@@ -127,8 +127,8 @@ export default function ReferralModal({
 
           <ScrollView className="flex-1 px-4 py-4" keyboardShouldPersistTaps="handled">
             {/* INSTITUTION NAME */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Nombre de la Institución *</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Nombre de la Institución *</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={institutionName}
               onChangeText={setInstitutionName}
               placeholder="Ej: Hospital General..."
@@ -137,7 +137,7 @@ export default function ReferralModal({
             />
 
             {/* INSTITUTION TYPE */}
-            <Text className="text-xs font-bold text-slate-600 mb-2">Tipo de Institución</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-2">Tipo de Institución</Text>
             <View className="flex-row flex-wrap gap-2 mb-4">
               {INSTITUTION_TYPES.map((t) => (
                 <Pressable
@@ -149,7 +149,7 @@ export default function ReferralModal({
                       : 'bg-white border-slate-200'
                   }`}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className={`text-xs font-semibold ${
                       institutionType === t.value ? 'text-white' : 'text-slate-600'
                     }`}
@@ -161,8 +161,8 @@ export default function ReferralModal({
             </View>
 
             {/* CONTACT INFO */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Información de Contacto</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Información de Contacto</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={contactInfo}
               onChangeText={setContactInfo}
               placeholder="Teléfono, email, dirección..."
@@ -171,8 +171,8 @@ export default function ReferralModal({
             />
 
             {/* REASON */}
-            <Text className="text-xs font-bold text-slate-600 mb-1">Motivo de la Referencia *</Text>
-            <TextInput
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Motivo de la Referencia *</Text>
+            <TextInput maxFontSizeMultiplier={1.3}
               value={reason}
               onChangeText={setReason}
               placeholder="Describe el motivo..."
@@ -186,7 +186,7 @@ export default function ReferralModal({
             {/* STATUS (only when editing) */}
             {referral && (
               <>
-                <Text className="text-xs font-bold text-slate-600 mb-2">Estado</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-2">Estado</Text>
                 <View className="flex-row flex-wrap gap-2 mb-4">
                   {STATUS_OPTIONS.map((s) => {
                     const colorMap = {
@@ -204,7 +204,7 @@ export default function ReferralModal({
                           status === s.value ? colorMap[s.value] : 'bg-white border-slate-200'
                         }`}
                       >
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           className={`text-xs font-semibold ${
                             status === s.value ? 'text-white' : 'text-slate-600'
                           }`}
@@ -217,8 +217,8 @@ export default function ReferralModal({
                 </View>
 
                 {/* RESPONSE NOTES */}
-                <Text className="text-xs font-bold text-slate-600 mb-1">Notas de Respuesta</Text>
-                <TextInput
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Notas de Respuesta</Text>
+                <TextInput maxFontSizeMultiplier={1.3}
                   value={responseNotes}
                   onChangeText={setResponseNotes}
                   placeholder="Respuesta de la institución..."
@@ -230,13 +230,13 @@ export default function ReferralModal({
                 />
 
                 {/* RESPONSE DATE */}
-                <Text className="text-xs font-bold text-slate-600 mb-1">Fecha de Respuesta</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Fecha de Respuesta</Text>
                 <Pressable
                   onPress={() => setShowDatePicker(true)}
                   className="bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-200 mb-4 flex-row items-center"
                 >
                   <Calendar size={16} color="#64748B" strokeWidth={2} style={{ marginRight: 8 }} />
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className={`text-sm flex-1 ${responseDate ? 'text-slate-900' : 'text-slate-400'}`}
                   >
                     {responseDate ? formatDate(responseDate) : 'Seleccionar fecha...'}
@@ -267,7 +267,7 @@ export default function ReferralModal({
               onPress={onClose}
               className="flex-1 bg-slate-100 rounded-xl py-3 items-center"
             >
-              <Text className="text-sm font-semibold text-slate-600">Cancelar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-600">Cancelar</Text>
             </Pressable>
             <Pressable
               onPress={handleSave}
@@ -281,7 +281,7 @@ export default function ReferralModal({
               ) : (
                 <>
                   <Check size={16} color="#FFF" strokeWidth={2.5} />
-                  <Text className="text-sm font-semibold text-white ml-1.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                     {referral ? 'Guardar' : 'Crear'}
                   </Text>
                 </>

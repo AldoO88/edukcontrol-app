@@ -213,7 +213,7 @@ const ConductReportCard = ({ report, onPress }) => {
                 config.badge.bg,
               )}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className={clsx(
                   'text-[11px] font-bold uppercase tracking-wider',
                   config.badge.text,
@@ -226,7 +226,7 @@ const ConductReportCard = ({ report, onPress }) => {
 
           {/* Puntaje a la derecha. text-sm font-bold. El color
               depende del signo (verde = mérito, rojo = falta). */}
-          <Text className={clsx('text-sm font-bold ml-2', pointsClass)}>
+          <Text maxFontSizeMultiplier={1.3} className={clsx('text-sm font-bold ml-2', pointsClass)}>
             {pointsLabel}
           </Text>
         </View>
@@ -237,14 +237,14 @@ const ConductReportCard = ({ report, onPress }) => {
             numberOfLines={2} en la descripción para truncar a
             2 líneas con "..." (consistente con AnnouncementCard).
             ---------------------------------------------------- */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-base font-bold text-slate-900 mt-3 leading-snug"
           numberOfLines={2}
         >
           {title}
         </Text>
 
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-sm text-slate-500 mt-1.5 leading-relaxed"
           numberOfLines={3}
         >
@@ -258,7 +258,7 @@ const ConductReportCard = ({ report, onPress }) => {
             ---------------------------------------------------- */}
         <View className="border-t border-slate-100 mt-3 pt-3 flex-row items-center">
           <Calendar size={13} color="#94a3b8" strokeWidth={2} />
-          <Text className="text-xs text-slate-500 ml-1.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 ml-1.5">
             {formatReportDate(date)}
           </Text>
         </View>

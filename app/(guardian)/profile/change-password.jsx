@@ -58,7 +58,7 @@ export default function GuardianChangePasswordScreen() {
           >
             <ChevronLeft size={20} color="#0F172A" strokeWidth={2.5} />
           </Pressable>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-3"
             style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}
           >
@@ -81,7 +81,7 @@ export default function GuardianChangePasswordScreen() {
               className="rounded-2xl p-4 mb-6"
               style={{ backgroundColor: '#FEF2F2', borderWidth: 1, borderColor: '#FECACA' }}
             >
-              <Text style={{ fontSize: 13, fontWeight: '500', color: '#DC2626' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '500', color: '#DC2626' }}>
                 {errors.general}
               </Text>
             </View>
@@ -99,7 +99,7 @@ export default function GuardianChangePasswordScreen() {
             }}
           >
             <View className="mb-4">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{ fontSize: 13, fontWeight: '600', color: '#334155', marginBottom: 6 }}
               >
                 Contraseña Actual
@@ -113,7 +113,7 @@ export default function GuardianChangePasswordScreen() {
                 }}
               >
                 <Lock size={18} color="#94A3B8" strokeWidth={2} />
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   className="flex-1 ml-2"
                   style={{ paddingVertical: 14, fontSize: 14, color: '#0F172A' }}
                   placeholder="Ingresa tu contraseña actual"
@@ -132,14 +132,14 @@ export default function GuardianChangePasswordScreen() {
                 </Pressable>
               </View>
               {errors.currentPassword && (
-                <Text className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
+                <Text maxFontSizeMultiplier={1.3} className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
                   {errors.currentPassword}
                 </Text>
               )}
             </View>
 
             <View className="mb-4">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{ fontSize: 13, fontWeight: '600', color: '#334155', marginBottom: 6 }}
               >
                 Nueva Contraseña
@@ -153,7 +153,7 @@ export default function GuardianChangePasswordScreen() {
                 }}
               >
                 <Lock size={18} color="#94A3B8" strokeWidth={2} />
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   className="flex-1 ml-2"
                   style={{ paddingVertical: 14, fontSize: 14, color: '#0F172A' }}
                   placeholder="Mínimo 8 caracteres"
@@ -172,14 +172,14 @@ export default function GuardianChangePasswordScreen() {
                 </Pressable>
               </View>
               {errors.newPassword && (
-                <Text className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
+                <Text maxFontSizeMultiplier={1.3} className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
                   {errors.newPassword}
                 </Text>
               )}
             </View>
 
             <View className="mb-2">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{ fontSize: 13, fontWeight: '600', color: '#334155', marginBottom: 6 }}
               >
                 Confirmar Contraseña
@@ -193,7 +193,7 @@ export default function GuardianChangePasswordScreen() {
                 }}
               >
                 <Lock size={18} color="#94A3B8" strokeWidth={2} />
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   className="flex-1 ml-2"
                   style={{ paddingVertical: 14, fontSize: 14, color: '#0F172A' }}
                   placeholder="Repite la nueva contraseña"
@@ -212,7 +212,7 @@ export default function GuardianChangePasswordScreen() {
                 </Pressable>
               </View>
               {errors.confirmPassword && (
-                <Text className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
+                <Text maxFontSizeMultiplier={1.3} className="mt-1.5 ml-1" style={{ fontSize: 12, fontWeight: '500', color: '#DC2626' }}>
                   {errors.confirmPassword}
                 </Text>
               )}
@@ -234,7 +234,7 @@ export default function GuardianChangePasswordScreen() {
           >
             <View className="flex-row items-center justify-center py-4">
               <Lock size={18} color="#FFFFFF" strokeWidth={2.5} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2"
                 style={{ fontSize: 15, fontWeight: '700', color: '#FFFFFF' }}
               >

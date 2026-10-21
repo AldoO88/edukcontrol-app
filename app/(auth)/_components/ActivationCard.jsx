@@ -46,14 +46,14 @@ const ActivationCard = ({
       {/* Título: text-3xl (30px) bold, slate-900, centrado.
           Mismo tamaño que el "Bienvenido" del login → coherencia
           visual entre el entry point y el flow de activación. */}
-      <Text className="text-3xl font-bold text-slate-900 text-center">
+      <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900 text-center">
         {title}
       </Text>
 
       {/* Subtítulo: text-sm slate-500, centrado, leading-relaxed
           para que respire en multi-línea. mb-8 separa del primer
           input (mismo spacing que LoginForm). */}
-      <Text className="text-slate-500 text-sm mt-2 mb-8 text-center leading-relaxed">
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 mb-8 text-center leading-relaxed">
         {subtitle}
       </Text>
 

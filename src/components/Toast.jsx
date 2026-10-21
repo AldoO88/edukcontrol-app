@@ -135,7 +135,7 @@ const Toast = ({
         }}
       >
         <Check size={16} color={iconColor} strokeWidth={3} />
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           style={{
             fontSize: 13,
             fontWeight: '700',

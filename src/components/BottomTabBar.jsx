@@ -87,7 +87,7 @@ const BottomTabBar = ({ tabs = GUARDIAN_TABS }) => {
                   strokeWidth={isActive ? 2.5 : 2}
                 />
               </View>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 numberOfLines={1}
                 style={{ fontSize: 10 }}
                 className={clsx(

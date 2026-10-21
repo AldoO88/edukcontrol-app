@@ -204,15 +204,15 @@ export default function ExpedienteScreen() {
               </View>
 
               <View className="flex-1">
-                <Text className="text-sm font-bold text-slate-900">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">
                   {item.last_name}, {item.first_name}
                 </Text>
                 {groupName ? (
-                  <Text className="text-xs text-slate-500 mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                     {groupName} • {item.controlNumber || ''}
                   </Text>
                 ) : (
-                  <Text className="text-xs text-slate-500 mt-0.5">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
                     {item.controlNumber || ''}
                   </Text>
                 )}
@@ -223,7 +223,7 @@ export default function ExpedienteScreen() {
                 style={{ backgroundColor: badge.bg }}
               >
                 <BadgeIcon size={10} color={badge.fg} strokeWidth={2.5} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-1"
                   style={{ fontSize: 9, fontWeight: '700', color: badge.fg }}
                 >
@@ -255,7 +255,7 @@ export default function ExpedienteScreen() {
         />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#4F46E5" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando expedientes...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando expedientes...</Text>
         </View>
       </View>
     );
@@ -277,8 +277,8 @@ export default function ExpedienteScreen() {
       <View className="px-4 mt-4 mb-1 flex-row items-center">
         <FolderOpen size={20} color="#4F46E5" strokeWidth={2} />
         <View className="ml-2">
-          <Text className="text-2xl font-bold text-slate-900">Expediente</Text>
-          <Text className="text-sm text-slate-500 mt-0.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">Expediente</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-0.5">
             Salud, inclusión y acuerdos de los alumnos
           </Text>
         </View>
@@ -288,7 +288,7 @@ export default function ExpedienteScreen() {
       <View className="px-4 mt-3 mb-3 flex-row items-center gap-2">
         <View className="flex-1 flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
           <Search size={16} color="#94A3B8" strokeWidth={2} />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchText}
             onChangeText={setSearchText}
             placeholder="Buscar por nombre o no. control..."
@@ -309,7 +309,7 @@ export default function ExpedienteScreen() {
           style={{ height: 40 }}
         >
           <Filter size={14} color="#64748B" strokeWidth={2} />
-          <Text className="text-xs font-semibold text-slate-700 ml-1.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 ml-1.5">
             {selectedGroup ? groups.find((g) => g._id === selectedGroup)?.label || 'Grupo' : 'Todos'}
           </Text>
           <ChevronDown size={14} color="#64748B" strokeWidth={2} style={{ marginLeft: 4 }} />
@@ -330,7 +330,7 @@ export default function ExpedienteScreen() {
         ListEmptyComponent={
           <View className="bg-white rounded-2xl p-8 items-center mt-4">
             <FolderOpen size={32} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-sm text-slate-500 mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-3 text-center">
               {searchText || selectedGroup
                 ? 'No se encontraron alumnos con estos filtros.'
                 : 'No hay alumnos registrados.'}
@@ -362,10 +362,10 @@ export default function ExpedienteScreen() {
             onPress={(e) => e.stopPropagation()}
           >
             <View className="px-4 py-3 border-b border-slate-100 flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-slate-900">Filtrar por grupo</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Filtrar por grupo</Text>
               {selectedGroup && (
                 <Pressable onPress={() => { setSelectedGroup(null); setShowGroupDropdown(false); }}>
-                  <Text className="text-xs text-rose-500 font-semibold">Limpiar</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-rose-500 font-semibold">Limpiar</Text>
                 </Pressable>
               )}
             </View>
@@ -379,7 +379,7 @@ export default function ExpedienteScreen() {
                 className="px-4 py-3 flex-row items-center justify-between"
                 style={{ backgroundColor: !selectedGroup ? '#EEF2FF' : 'transparent' }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 14,
                     fontWeight: !selectedGroup ? '700' : '500',
@@ -390,7 +390,7 @@ export default function ExpedienteScreen() {
                 </Text>
                 {!selectedGroup && (
                   <View className="w-5 h-5 rounded-full bg-indigo-500 items-center justify-center">
-                    <Text className="text-white text-[10px] font-bold">✓</Text>
+                    <Text maxFontSizeMultiplier={1.3} className="text-white text-[10px] font-bold">✓</Text>
                   </View>
                 )}
               </Pressable>
@@ -407,7 +407,7 @@ export default function ExpedienteScreen() {
                     className="px-4 py-3 flex-row items-center justify-between"
                     style={{ backgroundColor: isActive ? '#EEF2FF' : 'transparent' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 14,
                         fontWeight: isActive ? '700' : '500',
@@ -418,7 +418,7 @@ export default function ExpedienteScreen() {
                     </Text>
                     {isActive && (
                       <View className="w-5 h-5 rounded-full bg-indigo-500 items-center justify-center">
-                        <Text className="text-white text-[10px] font-bold">✓</Text>
+                        <Text maxFontSizeMultiplier={1.3} className="text-white text-[10px] font-bold">✓</Text>
                       </View>
                     )}
                   </Pressable>

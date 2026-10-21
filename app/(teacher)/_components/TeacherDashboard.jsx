@@ -230,10 +230,10 @@ export default function TeacherDashboard() {
           <View className="px-4 mt-6">
             <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
               <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-              <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
                 No se pudo cargar el dashboard
               </Text>
-              <Text className="text-xs text-slate-500 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
                 {error}
               </Text>
               <Pressable
@@ -243,7 +243,7 @@ export default function TeacherDashboard() {
                 accessibilityLabel="Reintentar carga del dashboard"
               >
                 <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-                <Text className="text-sm font-semibold text-white ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                   Reintentar
                 </Text>
               </Pressable>
@@ -264,17 +264,17 @@ export default function TeacherDashboard() {
             que es maestro).
             ============================================================ */}
         <View className="px-4 mt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Hola, {teacherName}
           </Text>
 
           <View className="self-start mt-2 px-3 py-1 bg-sky-50 rounded-full">
-            <Text className="text-xs font-bold uppercase tracking-wide text-sky-700">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold uppercase tracking-wide text-sky-700">
               Docente
             </Text>
           </View>
 
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             {currentDate || 'Hoy'}
           </Text>
         </View>
@@ -288,7 +288,7 @@ export default function TeacherDashboard() {
             ============================================================ */}
         {completedClasses.length > 0 && (
           <View className="px-4 mt-4">
-            <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 px-1">
+            <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 px-1">
               Clases de hoy
             </Text>
             <View className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" style={{ elevation: 1 }}>
@@ -300,13 +300,13 @@ export default function TeacherDashboard() {
                     index > 0 && 'border-t border-slate-100',
                   )}
                 >
-                  <Text className="text-[11px] font-medium text-slate-500 w-24">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-medium text-slate-500 w-24">
                     {cls.startTime} - {cls.endTime}
                   </Text>
-                  <Text className="text-xs font-semibold text-slate-700 flex-1 text-left" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 flex-1 text-left" numberOfLines={1}>
                     {cls.subject?.name}
                   </Text>
-                  <Text className="text-[11px] text-slate-500 w-24 text-left">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] text-slate-500 w-24 text-left">
                     {cls.group?.label}
                   </Text>
                   {/*<Pressable
@@ -321,7 +321,7 @@ export default function TeacherDashboard() {
                     accessibilityRole="button"
                     accessibilityLabel={`Corregir asistencia de ${cls.subject?.name}`}
                   >
-                    <Text className="text-[9px] font-bold text-white">
+                    <Text maxFontSizeMultiplier={1.3} className="text-[9px] font-bold text-white">
                       Corregir
                     </Text>
                   </Pressable>*/}
@@ -346,25 +346,25 @@ export default function TeacherDashboard() {
             >
               <View className="flex-row items-center">
                 <View className="w-3 h-3 rounded-full bg-rose-500 mr-2" />
-                <Text className="text-xs font-bold uppercase tracking-wider text-rose-600">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold uppercase tracking-wider text-rose-600">
                   Clase en curso
                 </Text>
               </View>
 
-              <Text className="text-2xl font-bold text-slate-900 mt-3">
+              <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900 mt-3">
                 {currentClass.subject?.name}
               </Text>
 
               <View className="flex-row items-center mt-3">
                 <UsersRound size={16} color="#64748b" strokeWidth={2} />
-                <Text className="text-sm text-slate-600 ml-2">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-600 ml-2">
                   {currentClass.group?.label}
                 </Text>
               </View>
 
               <View className="flex-row items-center mt-2">
                 <Clock size={16} color="#64748b" strokeWidth={2} />
-                <Text className="text-sm text-slate-600 ml-2">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-600 ml-2">
                   {currentClass.startTime} - {currentClass.endTime}
                 </Text>
               </View>
@@ -379,7 +379,7 @@ export default function TeacherDashboard() {
                 accessibilityLabel="Tomar asistencia de esta clase"
               >
                 <CheckCircle size={20} color="#ffffff" strokeWidth={2.25} />
-                <Text className="text-white font-bold text-base ml-2">
+                <Text maxFontSizeMultiplier={1.3} className="text-white font-bold text-base ml-2">
                   Tomar Asistencia
                 </Text>
               </Pressable>
@@ -405,13 +405,13 @@ export default function TeacherDashboard() {
                     index > 0 && 'border-t border-slate-100',
                   )}
                 >
-                  <Text className="text-[11px] font-medium text-slate-500 w-24">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-medium text-slate-500 w-24">
                     {cls.startTime} - {cls.endTime}
                   </Text>
-                  <Text className="text-xs font-semibold text-slate-700 flex-1" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 flex-1" numberOfLines={1}>
                     {cls.subject?.name}
                   </Text>
-                  <Text className="text-[11px] text-slate-500 w-22 text-left">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] text-slate-500 w-22 text-left">
                     {cls.group?.label}
                   </Text>
                 </View>
@@ -427,7 +427,7 @@ export default function TeacherDashboard() {
             a su ruta correspondiente. Mismo estilo de cards que el
             guardian (rounded-2xl, sombra sutil).
             ============================================================ */}
-        <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
+        <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
           Accesos rápidos
         </Text>
 
@@ -470,7 +470,7 @@ export default function TeacherDashboard() {
                 <View className={clsx('w-14 h-14 rounded-2xl items-center justify-center', action.iconBg)}>
                   <Icon size={24} color={action.iconColor} strokeWidth={2} />
                 </View>
-                <Text className="text-sm font-semibold text-slate-700 mt-3">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-700 mt-3">
                   {action.label}
                 </Text>
               </Pressable>

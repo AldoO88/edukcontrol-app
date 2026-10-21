@@ -249,7 +249,7 @@ export default function GradesScreen() {
         {/* ============================================================
             TÍTULO
             ============================================================ */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-4"
           style={{ fontSize: 22, fontWeight: '800', color: '#0F172A' }}
         >
@@ -268,7 +268,7 @@ export default function GradesScreen() {
               accessibilityRole="button"
               accessibilityLabel="Seleccionar periodo"
             >
-              <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
                 {selectedPeriod?.name || (periodsLoading ? 'Cargando...' : 'Sin períodos')}
               </Text>
               <ChevronDown
@@ -300,7 +300,7 @@ export default function GradesScreen() {
                       accessibilityLabel={`Seleccionar ${period.name}`}
                       accessibilityState={{ selected: isActive }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 13,
                           fontWeight: isActive ? '700' : '500',
@@ -323,7 +323,7 @@ export default function GradesScreen() {
         {(periodsLoading || validationLoading) && (
           <View className="mx-4 mt-6 items-center py-8">
             <ActivityIndicator size="large" color="#0284C7" />
-            <Text className="text-slate-400 text-sm mt-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
               {periodsLoading
                 ? 'Cargando períodos...'
                 : 'Cargando validación...'}
@@ -345,14 +345,14 @@ export default function GradesScreen() {
           >
             <View className="flex-row items-center">
               <AlertCircle size={18} color="#DC2626" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2"
                 style={{ fontSize: 13, fontWeight: '700', color: '#DC2626' }}
               >
                 Error al cargar
               </Text>
             </View>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="mt-1"
               style={{ fontSize: 12, color: '#991B1B' }}
             >
@@ -365,7 +365,7 @@ export default function GradesScreen() {
               accessibilityRole="button"
               accessibilityLabel="Reintentar"
             >
-              <Text className="text-white font-bold text-xs">Reintentar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white font-bold text-xs">Reintentar</Text>
             </Pressable>
           </View>
         )}
@@ -389,7 +389,7 @@ export default function GradesScreen() {
             >
               {/* Header: label + percentage. */}
               <View className="flex-row items-center justify-between">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '700',
@@ -400,7 +400,7 @@ export default function GradesScreen() {
                 >
                   Progreso de Cierre
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{ fontSize: 14, fontWeight: '800', color: '#0284C7' }}
                 >
                   {progress.percentage}%
@@ -409,12 +409,12 @@ export default function GradesScreen() {
 
               {/* Count: "2/5 Grupos Cerrados". */}
               <View className="flex-row items-baseline mt-2">
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{ fontSize: 28, fontWeight: '800', color: '#0F172A' }}
                 >
                   {progress.closedGroups}
                 </Text>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-1"
                   style={{ fontSize: 14, fontWeight: '600', color: '#64748B' }}
                 >
@@ -442,7 +442,7 @@ export default function GradesScreen() {
             <View className="mx-4 mt-4" style={{ gap: 12 }}>
               {groups.length === 0 ? (
                 <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
-                  <Text className="text-sm text-slate-500 text-center">
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
                     No tienes grupos asignados en este período.
                   </Text>
                 </View>
@@ -488,7 +488,7 @@ export default function GradesScreen() {
             >
               <View className="flex-row items-center justify-center py-4 px-6">
                 <FileSpreadsheet size={20} color="#FFFFFF" strokeWidth={2.25} />
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-2"
                   style={{
                     fontSize: 15,
@@ -575,7 +575,7 @@ const GradeGroupCard = ({ group, onPressReview, onUnlock }) => {
             >
               <SubjectIcon size={14} color={subjectColor} strokeWidth={2.25} />
             </View>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{ fontSize: 15, fontWeight: '700', color: '#0F172A' }}
               numberOfLines={1}
             >
@@ -587,7 +587,7 @@ const GradeGroupCard = ({ group, onPressReview, onUnlock }) => {
             className="px-2.5 py-1 rounded-lg"
             style={{ backgroundColor: '#F1F5F9' }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 12,
                 fontWeight: '800',
@@ -607,7 +607,7 @@ const GradeGroupCard = ({ group, onPressReview, onUnlock }) => {
           style={{ backgroundColor: statusConfig.bg }}
         >
           <StatusIcon size={13} color={statusConfig.color} strokeWidth={2.5} />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="ml-1.5"
             style={{
               fontSize: 11,
@@ -692,7 +692,7 @@ const GradeGroupCard = ({ group, onPressReview, onUnlock }) => {
               accessibilityLabel={`Desbloquear trimestre de ${groupLabel}`}
             >
               <Lock size={15} color="#64748B" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5"
                 style={{ fontSize: 12, fontWeight: '700', color: '#64748B' }}
               >
@@ -723,7 +723,7 @@ const GradeGroupCard = ({ group, onPressReview, onUnlock }) => {
               accessibilityLabel={`Revisar y cerrar trimestre de ${groupLabel}`}
             >
               <CheckCircle2 size={15} color="#FFFFFF" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5"
                 style={{ fontSize: 12, fontWeight: '700', color: '#FFFFFF' }}
               >
@@ -763,7 +763,7 @@ const StatChip = ({ icon: Icon, color, bg, count, label }) => (
     accessibilityLabel={`${count} ${label}`}
   >
     <Icon size={11} color={color} strokeWidth={2.5} />
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="ml-1"
       style={{ fontSize: 11, fontWeight: '700', color }}
     >

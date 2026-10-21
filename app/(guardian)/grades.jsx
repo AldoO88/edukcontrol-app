@@ -195,7 +195,7 @@ export default function GradesScreen() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0f172a" />
-          <Text className="text-sm text-slate-500 mt-3 font-medium">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-3 font-medium">
             Cargando calificaciones...
           </Text>
         </View>
@@ -213,10 +213,10 @@ export default function GradesScreen() {
         <View className="flex-1 items-center justify-center px-6">
           <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
             <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-            <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
               No se pudieron cargar las calificaciones
             </Text>
-            <Text className="text-xs text-slate-500 mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
               {error}
             </Text>
             <Pressable
@@ -226,7 +226,7 @@ export default function GradesScreen() {
               accessibilityLabel="Reintentar carga de calificaciones"
             >
               <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-              <Text className="text-sm font-semibold text-white ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                 Reintentar
               </Text>
             </Pressable>
@@ -262,10 +262,10 @@ export default function GradesScreen() {
             TÍTULO + SUBTÍTULO
             ============================================================ */}
         <View className="px-4 pt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Calificaciones
           </Text>
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             Rendimiento académico por materia y periodo.
           </Text>
         </View>
@@ -281,7 +281,7 @@ export default function GradesScreen() {
             PROMEDIO GENERAL
             ============================================================ */}
         <View className="mx-4 mt-6">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Promedio general
           </Text>
 
@@ -293,13 +293,13 @@ export default function GradesScreen() {
           ) : (
             <>
               <View className="flex-row items-baseline mt-1">
-                <Text className="text-5xl font-bold text-sky-500">
+                <Text maxFontSizeMultiplier={1.3} className="text-5xl font-bold text-sky-500">
                   {grades?.average?.toFixed(1) || '0.0'}
                 </Text>
               </View>
 
               {grades?.subjects?.length > 0 && (
-                <Text className="text-xs text-slate-500 mt-3 leading-relaxed">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-3 leading-relaxed">
                   {grades.subjects.length} materias evaluadas
                   {grades.periods?.length > 0 && ` · ${grades.periods[grades.periods.length - 1].name}`}
                 </Text>
@@ -311,7 +311,7 @@ export default function GradesScreen() {
         {/* ============================================================
             CALIFICACIONES POR TRIMESTRE
             ============================================================ */}
-        <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
+        <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
           Calificaciones por trimestre
         </Text>
 
@@ -344,7 +344,7 @@ export default function GradesScreen() {
         {/* ============================================================
             HORARIO ESCOLAR + SELECTOR DE DÍA
             ============================================================ */}
-        <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
+        <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-7 mb-3 px-5">
           Horario escolar
         </Text>
 
@@ -368,7 +368,7 @@ export default function GradesScreen() {
                 accessibilityState={{ selected: isActive }}
                 accessibilityLabel={`Ver horario del ${day.labelFull}`}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className={clsx(
                     'text-xs font-bold tracking-wider',
                     isActive ? 'text-white' : 'text-slate-700',

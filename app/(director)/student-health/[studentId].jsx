@@ -351,7 +351,7 @@ export default function HealthFormScreen() {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center">
         <ActivityIndicator size="large" color="#4F46E5" />
-        <Text className="text-slate-400 text-sm mt-3">Cargando expediente...</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando expediente...</Text>
       </View>
     );
   }
@@ -360,10 +360,10 @@ export default function HealthFormScreen() {
     return (
       <View className="flex-1 bg-slate-50 items-center justify-center px-6">
         <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-        <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-        <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
         <TouchableOpacity onPress={() => router.back()} className="mt-4 px-6 py-2.5 rounded-xl bg-slate-900">
-          <Text className="text-white font-semibold">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Volver</Text>
         </TouchableOpacity>
       </View>
     );
@@ -392,13 +392,13 @@ export default function HealthFormScreen() {
           className="flex-row items-center"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">Volver</Text>
         </TouchableOpacity>
 
         <View className="mt-2">
-          <Text className="text-xl font-bold text-slate-900">Expediente del Alumno</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Expediente del Alumno</Text>
           {fullName ? (
-            <Text className="text-sm text-slate-500 mt-0.5">{fullName}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-0.5">{fullName}</Text>
           ) : null}
         </View>
       </View>

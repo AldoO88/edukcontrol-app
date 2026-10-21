@@ -65,7 +65,7 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
                 <View className="items-center justify-center" style={{ backgroundColor: '#FEF2F2', padding: 8, borderRadius: 12 }}>
                   <TrendingUp size={20} color="#DC2626" strokeWidth={2.25} />
                 </View>
-                <Text className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }}>
                   Conducta
                 </Text>
               </View>
@@ -76,13 +76,13 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
 
             {/* Score Card */}
             <View className="bg-white rounded-2xl p-4 mb-4 border border-slate-100 items-center" style={{ shadowColor: '#0F172A', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 1 }}>
-              <Text className="text-slate-500 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 Score de Conducta
               </Text>
-              <Text style={{ fontSize: 40, fontWeight: '800', color: scoreColor }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 40, fontWeight: '800', color: scoreColor }}>
                 {currentScore}
               </Text>
-              <Text className="text-slate-400 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>
                 de {baseline} puntos
               </Text>
 
@@ -93,8 +93,8 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
 
               {/* Leyenda */}
               <View className="flex-row justify-between w-full mt-2">
-                <Text className="text-slate-400" style={{ fontSize: 10 }}>0</Text>
-                <Text className="text-slate-400" style={{ fontSize: 10 }}>{baseline}</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 10 }}>0</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 10 }}>{baseline}</Text>
               </View>
             </View>
 
@@ -112,23 +112,23 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
 
               return (
                 <View className="mb-4">
-                  <Text className="text-slate-500 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                     Resumen
                   </Text>
                   <View className="flex-row" style={{ gap: 8 }}>
                     <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100 items-center" style={{ elevation: 1 }}>
-                      <Text style={{ fontSize: 10, fontWeight: '700', color: '#DC2626', textTransform: 'uppercase' }}>Deméritos</Text>
-                      <Text style={{ fontSize: 28, fontWeight: '800', color: '#DC2626' }}>{demeritsCount}</Text>
-                      <Text style={{ fontSize: 11, fontWeight: '500', color: '#94A3B8' }}>-{demeritsPoints} pts</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '700', color: '#DC2626', textTransform: 'uppercase' }}>Deméritos</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 28, fontWeight: '800', color: '#DC2626' }}>{demeritsCount}</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '500', color: '#94A3B8' }}>-{demeritsPoints} pts</Text>
                     </View>
                     <View className="flex-1 bg-white rounded-2xl p-3 border border-slate-100 items-center" style={{ elevation: 1 }}>
-                      <Text style={{ fontSize: 10, fontWeight: '700', color: '#059669', textTransform: 'uppercase' }}>Méritos</Text>
-                      <Text style={{ fontSize: 28, fontWeight: '800', color: '#059669' }}>{meritsCount}</Text>
-                      <Text style={{ fontSize: 11, fontWeight: '500', color: '#94A3B8' }}>+{meritsPoints} pts</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '700', color: '#059669', textTransform: 'uppercase' }}>Méritos</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 28, fontWeight: '800', color: '#059669' }}>{meritsCount}</Text>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '500', color: '#94A3B8' }}>+{meritsPoints} pts</Text>
                     </View>
                   </View>
                   <View className="items-center mt-2">
-                    <Text style={{ fontSize: 11, fontWeight: '600', color: netPoints >= 0 ? '#059669' : '#DC2626' }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '600', color: netPoints >= 0 ? '#059669' : '#DC2626' }}>
                       Neto: {netPoints >= 0 ? '+' : ''}{netPoints} puntos
                     </Text>
                   </View>
@@ -137,7 +137,7 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
             })()}
 
             {/* Historial de reportes */}
-            <Text className="text-slate-500 mt-2 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Historial de Reportes
             </Text>
 
@@ -155,15 +155,15 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
                         )}
                       </View>
                       <View className="flex-1 ml-3">
-                        <Text className="text-slate-900" style={{ fontSize: 13, fontWeight: '600' }} numberOfLines={2}>
+                        <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 13, fontWeight: '600' }} numberOfLines={2}>
                           {log.description || 'Sin descripción'}
                         </Text>
-                        <Text className="text-slate-400 mt-0.5" style={{ fontSize: 11, fontWeight: '500' }}>
+                        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-0.5" style={{ fontSize: 11, fontWeight: '500' }}>
                           {log.createdAt ? new Date(log.createdAt).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}
                         </Text>
                       </View>
                       {log.points_impact != null && (
-                        <Text className={`text-xs font-bold ml-2 ${log.eventType === 'demerit' ? 'text-rose-600' : 'text-emerald-600'}`}>
+                        <Text maxFontSizeMultiplier={1.3} className={`text-xs font-bold ml-2 ${log.eventType === 'demerit' ? 'text-rose-600' : 'text-emerald-600'}`}>
                           {log.eventType === 'merit' ? '+' : '-'}{log.points_impact}
                         </Text>
                       )}
@@ -174,12 +174,12 @@ const ConductModal = ({ isVisible, onClose, conductLogs, conductConfig }) => {
             ) : (
               <View className="bg-white rounded-2xl p-6 items-center border border-slate-100" style={{ shadowColor: '#0F172A', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 1 }}>
                 <AlertTriangle size={24} color="#10B981" strokeWidth={1.5} />
-                <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '500' }}>Sin reportes de conducta</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '500' }}>Sin reportes de conducta</Text>
               </View>
             )}
 
             <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Cerrar" className="items-center justify-center rounded-xl mt-4" style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}>
-              <Text className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
             </Pressable>
           </ScrollView>
         </View>

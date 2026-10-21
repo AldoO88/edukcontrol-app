@@ -138,8 +138,8 @@ export default function DirectorStudentsScreen() {
             />
           </View>
           <View className="flex-1">
-            <Text className="text-sm font-bold text-slate-900">{item.last_name}, {item.first_name}</Text>
-            <Text className="text-xs text-slate-500 mt-0.5">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">{item.last_name}, {item.first_name}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-0.5">
               {item.current_group_id?.grade || ''}°{item.current_group_id?.section || ''} • {item.controlNumber || ''}
             </Text>
           </View>
@@ -157,7 +157,7 @@ export default function DirectorStudentsScreen() {
         <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#4F46E5" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando alumnos...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando alumnos...</Text>
         </View>
       </View>
     );
@@ -173,14 +173,14 @@ export default function DirectorStudentsScreen() {
       <SchoolInfoCard school={school} isLoading={!school} className="mx-4 mt-2" teacher={dashboardData?.director} date={currentDate} user={user} />
 
       <View className="px-4 mt-4 mb-1">
-        <Text className="text-2xl font-bold text-slate-900">Alumnos</Text>
-        <Text className="text-sm text-slate-500 mt-1">Busca y consulta la información de cualquier alumno</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-2xl font-bold text-slate-900">Alumnos</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">Busca y consulta la información de cualquier alumno</Text>
       </View>
 
       <View className="px-4 mt-3 mb-3 flex-row items-center gap-2">
         <View className="flex-1 flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
           <Search size={16} color="#94A3B8" strokeWidth={2} />
-          <TextInput value={searchText} onChangeText={setSearchText} placeholder="Buscar por nombre, CURP..." placeholderTextColor="#94A3B8" className="flex-1 ml-2 text-sm text-slate-900" style={{ paddingVertical: 0 }} />
+          <TextInput maxFontSizeMultiplier={1.3} value={searchText} onChangeText={setSearchText} placeholder="Buscar por nombre, CURP..." placeholderTextColor="#94A3B8" className="flex-1 ml-2 text-sm text-slate-900" style={{ paddingVertical: 0 }} />
           {searchText.length > 0 && (
             <Pressable onPress={() => setSearchText('')} hitSlop={8}>
               <X size={16} color="#94A3B8" strokeWidth={2} />
@@ -189,7 +189,7 @@ export default function DirectorStudentsScreen() {
         </View>
         <Pressable onPress={() => setShowGroupDropdown(true)} className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3" style={{ height: 40 }}>
           <Filter size={14} color="#64748B" strokeWidth={2} />
-          <Text className="text-xs font-semibold text-slate-700 ml-1.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-700 ml-1.5">
             {selectedGroup ? groups.find((g) => g._id === selectedGroup)?.label || 'Grupo' : 'Grupo'}
           </Text>
           <ChevronDown size={14} color="#64748B" strokeWidth={2} style={{ marginLeft: 4 }} />
@@ -207,7 +207,7 @@ export default function DirectorStudentsScreen() {
         ListEmptyComponent={
           <View className="items-center py-12">
             <GraduationCap size={56} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-slate-400 text-sm mt-3">{students.length === 0 ? 'No hay alumnos' : 'No hay alumnos con estos filtros'}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">{students.length === 0 ? 'No hay alumnos' : 'No hay alumnos con estos filtros'}</Text>
           </View>
         }
         ListFooterComponent={isLoading && students.length > 0 ? <ActivityIndicator size="small" color="#4F46E5" className="my-4" /> : null}
@@ -218,10 +218,10 @@ export default function DirectorStudentsScreen() {
         <Pressable className="flex-1 bg-black/40 justify-center items-center" onPress={() => setShowGroupDropdown(false)}>
           <Pressable className="bg-white rounded-2xl w-64 overflow-hidden" onPress={(e) => e.stopPropagation()}>
             <View className="px-4 py-3 border-b border-slate-100 flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-slate-900">Filtrar por grupo</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900">Filtrar por grupo</Text>
               {selectedGroup && (
                 <Pressable onPress={() => { setSelectedGroup(null); setShowGroupDropdown(false); }}>
-                  <Text className="text-xs text-rose-500 font-semibold">Limpiar</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-rose-500 font-semibold">Limpiar</Text>
                 </Pressable>
               )}
             </View>
@@ -230,7 +230,7 @@ export default function DirectorStudentsScreen() {
                 const isActive = selectedGroup === group._id;
                 return (
                   <Pressable key={group._id} onPress={() => { setSelectedGroup(group._id); setShowGroupDropdown(false); }} className="px-4 py-3 flex-row items-center justify-between" style={{ backgroundColor: isActive ? '#EEF2FF' : 'transparent' }}>
-                    <Text style={{ fontSize: 14, fontWeight: isActive ? '600' : '400', color: isActive ? '#4F46E5' : '#334155' }}>{group.label}</Text>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: isActive ? '600' : '400', color: isActive ? '#4F46E5' : '#334155' }}>{group.label}</Text>
                     {isActive && <View className="w-2 h-2 rounded-full bg-indigo-500" />}
                   </Pressable>
                 );

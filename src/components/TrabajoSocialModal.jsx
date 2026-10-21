@@ -76,7 +76,7 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
                 <View className="items-center justify-center" style={{ backgroundColor: '#D1FAE5', padding: 8, borderRadius: 12 }}>
                   <Brain size={20} color="#059669" strokeWidth={2.25} />
                 </View>
-                <Text className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={2}>
+                <Text maxFontSizeMultiplier={1.3} className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={2}>
                   Trabajo Social
                 </Text>
               </View>
@@ -91,12 +91,12 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
               {hi.learning_style ? (
                 <>
                   <View className="self-start px-3 py-1 rounded-full" style={{ backgroundColor: '#0284C7' }}>
-                    <Text className="text-white" style={{ fontSize: 11, fontWeight: '800', letterSpacing: 1 }}>
+                    <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 11, fontWeight: '800', letterSpacing: 1 }}>
                       {LEARNING_STYLE_LABELS[hi.learning_style] || hi.learning_style}
                     </Text>
                   </View>
                   {hi.style_hint ? (
-                    <Text className="mt-2 text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
+                    <Text maxFontSizeMultiplier={1.3} className="mt-2 text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
                       {hi.style_hint}
                     </Text>
                   ) : null}
@@ -108,7 +108,7 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
             <SectionTitle>Diagnóstico</SectionTitle>
             <InfoCard isEmpty={!hi.diagnosis}>
               {hi.diagnosis ? (
-                <Text className="text-slate-700" style={{ fontSize: 13, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-700" style={{ fontSize: 13, fontWeight: '600' }}>
                   {hi.diagnosis}
                 </Text>
               ) : null}
@@ -120,13 +120,13 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
               {hi.disability_type && hi.disability_type !== 'ninguna' ? (
                 <View className="flex-row items-center flex-wrap">
                   <View className="px-3 py-1 rounded-full mr-2" style={{ backgroundColor: '#E0E7FF' }}>
-                    <Text style={{ fontSize: 11, fontWeight: '800', color: '#4338CA', letterSpacing: 0.5 }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '800', color: '#4338CA', letterSpacing: 0.5 }}>
                       {DISABILITY_LABELS[hi.disability_type] || hi.disability_type}
                     </Text>
                   </View>
                   {hi.disability_severity ? (
                     <View className="px-3 py-1 rounded-full" style={{ backgroundColor: '#FEF3C7' }}>
-                      <Text style={{ fontSize: 11, fontWeight: '800', color: '#92400E', letterSpacing: 0.5 }}>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '800', color: '#92400E', letterSpacing: 0.5 }}>
                         {SEVERITY_LABELS[hi.disability_severity] || hi.disability_severity}
                       </Text>
                     </View>
@@ -143,7 +143,7 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
                   {hi.medications.map((med, idx) => (
                     <View key={idx} className="flex-row items-center mr-3 mb-1">
                       <Pill size={12} color="#059669" strokeWidth={2} style={{ marginRight: 4 }} />
-                      <Text className="text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
                         {med}
                       </Text>
                     </View>
@@ -174,17 +174,17 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
                       </View>
                       <View className="flex-1 ml-3">
                         <View className="flex-row items-center">
-                          <Text className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>
+                          <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>
                             {alert.label || config.label}
                           </Text>
                           <View className="ml-2 px-1.5 py-0.5 rounded" style={{ backgroundColor: `${config.color}15` }}>
-                            <Text style={{ fontSize: 9, fontWeight: '700', color: config.color, textTransform: 'uppercase' }}>
+                            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: config.color, textTransform: 'uppercase' }}>
                               {config.label}
                             </Text>
                           </View>
                         </View>
                         {alert.description ? (
-                          <Text className="text-slate-500 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>
+                          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>
                             {alert.description}
                           </Text>
                         ) : null}
@@ -203,7 +203,7 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
               className="items-center justify-center rounded-xl mt-2"
               style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}
             >
-              <Text className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
             </Pressable>
           </ScrollView>
         </View>
@@ -213,7 +213,7 @@ const TrabajoSocialModal = ({ isVisible, onClose, healthInclusion }) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <Text className="text-slate-500 mt-4 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+  <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-4 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
     {children}
   </Text>
 );
@@ -221,7 +221,7 @@ const SectionTitle = ({ children }) => (
 const InfoCard = ({ isEmpty, children }) => (
   <View className="bg-white rounded-2xl p-4 mb-4 border border-slate-100" style={{ shadowColor: '#0F172A', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 1 }}>
     {isEmpty ? (
-      <Text className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>Sin datos registrados</Text>
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>Sin datos registrados</Text>
     ) : children}
   </View>
 );

@@ -496,14 +496,14 @@ export default function TeacherGradeEntryScreen() {
           accessibilityLabel="Volver al detalle del grupo"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
 
         {/* B) Título + Trimestre + grupo. */}
         <View className="px-4 mt-2">
-          <Text style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 22, fontWeight: '700', color: '#0F172A' }}>
             Registro de Calificaciones
           </Text>
           <View className="mt-2 flex-row items-center justify-between">
@@ -513,7 +513,7 @@ export default function TeacherGradeEntryScreen() {
               accessibilityRole="button"
               accessibilityLabel="Seleccionar periodo"
             >
-              <Text style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#0F172A' }}>
                 {selectedPeriod?.name || (periodsLoading ? 'Cargando...' : 'Sin períodos')}
               </Text>
               <ChevronDown
@@ -542,7 +542,7 @@ export default function TeacherGradeEntryScreen() {
                       backgroundColor: selectedPeriod?._id === period._id ? '#F0F9FF' : '#FFFFFF',
                     }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 13,
                         fontWeight: selectedPeriod?._id === period._id ? '700' : '500',
@@ -556,7 +556,7 @@ export default function TeacherGradeEntryScreen() {
               </View>
             )}
 
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="font-bold text-[#0F172A] ml-3"
               style={{ fontSize: 13 }}
               numberOfLines={1}
@@ -577,7 +577,7 @@ export default function TeacherGradeEntryScreen() {
             style={{ backgroundColor: '#0284C7', gap: 6, flex: 1 }}
           >
             <Plus size={16} color="#ffffff" strokeWidth={2.5} />
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}
               numberOfLines={1}
             >
@@ -605,16 +605,16 @@ export default function TeacherGradeEntryScreen() {
         {/* Conteo de alumnos (en una nueva fila debajo de los botones). */}
         <View className="px-4 mt-1 flex-row items-center">
           <Users size={15} color="#64748B" strokeWidth={2} />
-          <Text className="text-[13px] text-[#475569] ml-2">
+          <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
             {students.length} Alumnos
           </Text>
         </View>
 
         {columns.length > 0 && (
           <View className="px-4 mt-2 flex-row items-center">
-            <Text className="text-xs text-slate-500">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500">
               Modo:{' '}
-              <Text className="font-bold text-slate-700">
+              <Text maxFontSizeMultiplier={1.3} className="font-bold text-slate-700">
                 {gradesLoading
                   ? 'Cargando...'
                   : gradingMode === 'weighted'
@@ -622,7 +622,7 @@ export default function TeacherGradeEntryScreen() {
                     : 'Simple'}
               </Text>
               {!gradesLoading && gradingMode === 'weighted' && standardCount > 0 && (
-                <Text> · Suma de porcentajes: {sumPct}% / 100%</Text>
+                <Text maxFontSizeMultiplier={1.3}> · Suma de porcentajes: {sumPct}% / 100%</Text>
               )}
             </Text>
             {extraCount > 0 && (
@@ -630,7 +630,7 @@ export default function TeacherGradeEntryScreen() {
                 className="ml-2 px-2 py-0.5 rounded-full"
                 style={{ backgroundColor: '#F3E8FF' }}
               >
-                <Text style={{ fontSize: 10, fontWeight: '800', color: '#6B21A8' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '800', color: '#6B21A8' }}>
                   +{extraCount} {extraCount === 1 ? 'Extra' : 'Extras'}
                 </Text>
               </View>
@@ -646,7 +646,7 @@ export default function TeacherGradeEntryScreen() {
             style={{ backgroundColor: '#FEF2F2', gap: 8 }}
           >
             <Lock size={16} color="#DC2626" strokeWidth={2.25} />
-            <Text style={{ fontSize: 13, fontWeight: '600', color: '#991B1B', flex: 1 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#991B1B', flex: 1 }}>
               Trimestre cerrado. Solo lectura. Desbloquea desde la lista de validación para editar.
             </Text>
           </View>
@@ -669,7 +669,7 @@ export default function TeacherGradeEntryScreen() {
                     className="border-r border-b border-slate-100 bg-slate-50"
                     style={{ height: 35, justifyContent: 'center', paddingLeft: 12 }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       style={{
                         fontSize: 11,
                         fontWeight: '700',
@@ -698,7 +698,7 @@ export default function TeacherGradeEntryScreen() {
                       <View style={{ flex: 1, marginLeft: 8 }}>
                         {/* numberOfLines={3} (antes 2) + fontSize 15 (antes
                             16): los nombres largos ya no se cortan. */}
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           numberOfLines={3}
                           ellipsizeMode="tail"
                           style={{
@@ -734,7 +734,7 @@ export default function TeacherGradeEntryScreen() {
                             justifyContent: 'center',
                           }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 11,
                               fontWeight: '700',
@@ -776,14 +776,14 @@ export default function TeacherGradeEntryScreen() {
                                     strokeWidth={2.25}
                                     style={{ marginRight: 3 }}
                                   />
-                                  <Text
+                                  <Text maxFontSizeMultiplier={1.3}
                                     style={{ fontSize: 12, fontWeight: '800', color: fg }}
                                   >
                                     {col.abbr}
                                   </Text>
                                 </View>
                               ) : (
-                                <Text style={{ fontSize: 12, fontWeight: '800', color: fg }}>
+                                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '800', color: fg }}>
                                   {col.abbr}
                                 </Text>
                               )}
@@ -797,7 +797,7 @@ export default function TeacherGradeEntryScreen() {
                                     backgroundColor: badgeBg,
                                   }}
                                 >
-                                  <Text
+                                  <Text maxFontSizeMultiplier={1.3}
                                     style={{ fontSize: 10, fontWeight: '800', color: badgeFg }}
                                   >
                                     {col.percentage}%
@@ -805,7 +805,7 @@ export default function TeacherGradeEntryScreen() {
                                 </View>
                               )}
                               {isExtra && col.maxExtra > 0 && (
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   style={{
                                     fontSize: 9,
                                     fontWeight: '700',
@@ -832,7 +832,7 @@ export default function TeacherGradeEntryScreen() {
                           borderRightColor: '#F1F5F9',
                         }}
                       >
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           style={{
                             fontSize: 10,
                             fontWeight: '800',
@@ -842,7 +842,7 @@ export default function TeacherGradeEntryScreen() {
                         >
                           Promedio
                         </Text>
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           style={{
                             fontSize: 10,
                             fontWeight: '700',
@@ -878,7 +878,7 @@ export default function TeacherGradeEntryScreen() {
                               }}
                             >
                               <FilePlus size={28} color="#94A3B8" strokeWidth={2} />
-                              <Text
+                              <Text maxFontSizeMultiplier={1.3}
                                 style={{
                                   fontSize: 12,
                                   fontWeight: '700',
@@ -889,7 +889,7 @@ export default function TeacherGradeEntryScreen() {
                               >
                                 Aún no has agregado evaluaciones para este trimestre.
                               </Text>
-                              <Text
+                              <Text maxFontSizeMultiplier={1.3}
                                 style={{
                                   fontSize: 11,
                                   color: '#94A3B8',
@@ -929,7 +929,7 @@ export default function TeacherGradeEntryScreen() {
                                       borderColor: '#E2E8F0',
                                     }}
                                   >
-                                    <Text
+                                    <Text maxFontSizeMultiplier={1.3}
                                       style={{
                                         fontSize: 14,
                                         fontWeight: '700',
@@ -961,7 +961,7 @@ export default function TeacherGradeEntryScreen() {
                                 backgroundColor: avgStyle.bg,
                               }}
                             >
-                              <Text
+                              <Text maxFontSizeMultiplier={1.3}
                                 style={{
                                   fontSize: 14,
                                   fontWeight: '800',
@@ -1012,7 +1012,7 @@ export default function TeacherGradeEntryScreen() {
             }}
           >
             <Download size={16} color="#0284C7" strokeWidth={2.25} />
-            <Text style={{ fontSize: 13, fontWeight: '600', color: '#0284C7' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, fontWeight: '600', color: '#0284C7' }}>
               Exportar Reporte
             </Text>
           </Pressable>

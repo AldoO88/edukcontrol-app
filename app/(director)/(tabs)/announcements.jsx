@@ -106,21 +106,21 @@ export default function DirectorAnnouncementsScreen() {
           <View className="flex-1 mr-3">
             <View className="flex-row items-center mb-1">
               <View className={`w-2 h-2 rounded-full ${colors.dot} mr-2`} />
-              <Text className={`text-xs font-bold uppercase ${colors.text}`}>
+              <Text maxFontSizeMultiplier={1.3} className={`text-xs font-bold uppercase ${colors.text}`}>
                 {item.priority === 'urgent' ? 'Urgente' : item.priority === 'high' ? 'Alta' : 'Normal'}
               </Text>
             </View>
-            <Text className="text-sm font-bold text-slate-900" numberOfLines={1}>
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900" numberOfLines={1}>
               {item.title}
             </Text>
-            <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>
               {item.message}
             </Text>
             <View className="flex-row items-center mt-2">
               <Megaphone size={12} color="#64748b" />
-              <Text className="text-[10px] text-slate-400 ml-1">{targetLabel}</Text>
-              <Text className="text-[10px] text-slate-300 mx-2">•</Text>
-              <Text className="text-[10px] text-slate-400">
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 ml-1">{targetLabel}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-300 mx-2">•</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400">
                 {item.sender?.name || 'Desconocido'}
               </Text>
             </View>
@@ -148,8 +148,8 @@ export default function DirectorAnnouncementsScreen() {
       />
 
       <View className="flex-row items-center justify-between px-4 mt-4 mb-2">
-        <Text className="text-lg font-bold text-slate-900">Avisos</Text>
-        <Text className="text-xs text-slate-400">
+        <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">Avisos</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400">
           {announcements.length} aviso{announcements.length !== 1 ? 's' : ''}
         </Text>
       </View>
@@ -157,15 +157,15 @@ export default function DirectorAnnouncementsScreen() {
       {isLoading && !isRefreshing ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando avisos...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando avisos...</Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#e11d48" strokeWidth={1.5} />
-          <Text className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
-          <Text className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-900 text-lg font-bold mt-4">Error al cargar</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-500 text-sm mt-2 text-center">{error}</Text>
           <Pressable onPress={handleRefresh} className="mt-4 bg-sky-500 px-6 py-2.5 rounded-xl">
-            <Text className="text-white font-semibold">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold">Reintentar</Text>
           </Pressable>
         </View>
       ) : (
@@ -180,7 +180,7 @@ export default function DirectorAnnouncementsScreen() {
           ListEmptyComponent={
             <View className="items-center py-16">
               <Megaphone size={40} color="#CBD5E1" strokeWidth={1.5} />
-              <Text className="text-slate-400 text-sm mt-4">No hay avisos</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-4">No hay avisos</Text>
             </View>
           }
         />

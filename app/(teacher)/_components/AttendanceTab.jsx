@@ -69,7 +69,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
       >
         {/* Presentes. */}
         <View className="flex-1 items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -80,7 +80,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
           >
             Presentes
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1"
             style={{ fontSize: 20, fontWeight: '800', color: '#15803D' }}
           >
@@ -92,7 +92,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
 
         {/* Faltas. */}
         <View className="flex-1 items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -103,7 +103,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
           >
             Faltas
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1"
             style={{ fontSize: 20, fontWeight: '800', color: '#B91C1C' }}
           >
@@ -115,7 +115,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
 
         {/* Retardos. */}
         <View className="flex-1 items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -126,7 +126,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
           >
             Retardos
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1"
             style={{ fontSize: 20, fontWeight: '800', color: '#92400E' }}
           >
@@ -138,7 +138,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
 
         {/* Fj. Justificadas. */}
         <View className="flex-1 items-center">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{
               fontSize: 10,
               fontWeight: '700',
@@ -149,7 +149,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
           >
             Fj. Justif.
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1"
             style={{ fontSize: 20, fontWeight: '800', color: '#1D4ED8' }}
           >
@@ -172,7 +172,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500"
             style={{ fontSize: 13, fontWeight: '600' }}
           >
@@ -180,7 +180,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
               ? 'Sin sesiones registradas'
               : 'Sin sesiones registradas'}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-400 mt-1 text-center"
             style={{ fontSize: 11 }}
           >
@@ -205,7 +205,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
               }}
             >
               {/* Date. */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-700"
                 style={{
                   fontSize: 13,
@@ -225,7 +225,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
                   className="mr-2 px-2 py-0.5 rounded-full"
                   style={{ backgroundColor: '#F1F5F9' }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 10,
                       fontWeight: '800',
@@ -242,7 +242,7 @@ const AttendanceTab = ({ file, selectedPeriod = 'T1' }) => {
                 className="px-3 py-1 rounded-full"
                 style={{ backgroundColor: style.bg }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '800',

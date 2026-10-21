@@ -167,13 +167,13 @@ export default function TeacherGroupsScreen() {
             SECCIÓN "Mis Grupos y Asignaturas" + badge contador
             ========================================================== */}
         <View className="mt-5">
-          <Text className="text-[22px] font-bold text-[#0F172A]">
+          <Text maxFontSizeMultiplier={1.3} className="text-[22px] font-bold text-[#0F172A]">
             Mis Grupos y Asignaturas
           </Text>
 
           {/* Badge contador. */}
           <View className="self-start mt-2 px-3 py-1 rounded-full bg-[#E0F2FE]">
-            <Text className="text-xs font-bold text-[#0369A1]">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-[#0369A1]">
               {groups.length} Grupo{groups.length !== 1 ? 's' : ''} Asignado{groups.length !== 1 ? 's' : ''}
             </Text>
           </View>
@@ -183,7 +183,7 @@ export default function TeacherGroupsScreen() {
         {loading && (
           <View className="items-center justify-center mt-12">
             <ActivityIndicator size="large" color="#0284C7" />
-            <Text className="text-slate-400 text-sm mt-3">
+            <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
               Cargando grupos...
             </Text>
           </View>
@@ -195,7 +195,7 @@ export default function TeacherGroupsScreen() {
         {!loading && (
           <View className="mt-4">
             {groups.length === 0 && (
-              <Text className="text-slate-400 text-center text-sm py-6">
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-center text-sm py-6">
                 No tienes grupos asignados.
               </Text>
             )}
@@ -239,7 +239,7 @@ export default function TeacherGroupsScreen() {
                       >
                         <SubjectIcon size={16} color={subjectColor} strokeWidth={2.25} />
                       </View>
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-[17px] font-bold text-[#0F172A] flex-1"
                         numberOfLines={1}
                       >
@@ -250,7 +250,7 @@ export default function TeacherGroupsScreen() {
                       className="flex-row items-center px-2.5 py-1 rounded-lg ml-2"
                       style={{ backgroundColor: tagBg }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-[11px] font-bold"
                         style={{ color: tagTextColor }}
                       >
@@ -261,7 +261,7 @@ export default function TeacherGroupsScreen() {
 
                   {/* Materia (debajo del título). */}
                   {group.subject?.name && (
-                    <Text className="text-[13px] text-[#64748B] mt-1">
+                    <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1">
                       {group.subject.name}
                     </Text>
                   )}
@@ -270,19 +270,19 @@ export default function TeacherGroupsScreen() {
                   <View className="mt-3">
                     <View className="flex-row items-center">
                       <Users size={15} color="#64748B" strokeWidth={2} />
-                      <Text className="text-[13px] text-[#475569] ml-2">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                         {group.totalStudents} Alumnos
                       </Text>
                     </View>
                     <View className="flex-row items-center mt-1.5">
                       <Clock size={15} color="#64748B" strokeWidth={2} />
-                      <Text className="text-[13px] text-[#475569] ml-2">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                         {schedule?.dayName || '—'} {timeRange}
                       </Text>
                     </View>
                     <View className="flex-row items-center mt-1.5">
                       <MapPin size={15} color="#64748B" strokeWidth={2} />
-                      <Text className="text-[13px] text-[#475569] ml-2">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#475569] ml-2">
                         {classroom}
                       </Text>
                     </View>
@@ -291,7 +291,7 @@ export default function TeacherGroupsScreen() {
                       <View className="flex-row items-center mt-1.5">
                         <Calendar size={15} color="#0284C7" strokeWidth={2} />
                         <View className="ml-2 px-2 py-0.5 rounded-full bg-[#E0F2FE]">
-                          <Text className="text-[11px] font-bold text-[#0369A1]">
+                          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold text-[#0369A1]">
                             Hoy
                           </Text>
                         </View>
@@ -309,7 +309,7 @@ export default function TeacherGroupsScreen() {
                       accessibilityLabel={`Pase de lista de ${group.label}`}
                     >
                       <UserCheck size={16} color="#ffffff" strokeWidth={2.25} />
-                      <Text className="text-white font-bold text-[12px] ml-1.5">
+                      <Text maxFontSizeMultiplier={1.3} className="text-white font-bold text-[12px] ml-1.5">
                         Asistencia
                       </Text>
                     </Pressable>
@@ -322,7 +322,7 @@ export default function TeacherGroupsScreen() {
                       accessibilityLabel={`Calificar ${group.label}`}
                     >
                       <FileSpreadsheet size={16} color="#0F172A" strokeWidth={2.25} />
-                      <Text className="text-[#0F172A] font-bold text-[12px] ml-1.5">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[#0F172A] font-bold text-[12px] ml-1.5">
                         Calificar
                       </Text>
                     </Pressable>
@@ -335,7 +335,7 @@ export default function TeacherGroupsScreen() {
                       accessibilityLabel={`Directorio de alumnos de ${group.label}`}
                     >
                       <List size={16} color="#0F172A" strokeWidth={2.25} />
-                      <Text className="text-[#0F172A] font-bold text-[12px] ml-1.5">
+                      <Text maxFontSizeMultiplier={1.3} className="text-[#0F172A] font-bold text-[12px] ml-1.5">
                         Alumnos
                       </Text>
                     </Pressable>

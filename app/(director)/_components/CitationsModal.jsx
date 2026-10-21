@@ -63,12 +63,12 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                 <View className="items-center justify-center" style={{ backgroundColor: '#FEF3C7', padding: 8, borderRadius: 12 }}>
                   <FileText size={20} color="#D97706" strokeWidth={2.25} />
                 </View>
-                <Text className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }}>
+                <Text maxFontSizeMultiplier={1.3} className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }}>
                   Citatorios
                 </Text>
                 {activeCitations.length > 0 && (
                   <View className="px-2.5 py-1 rounded-full ml-2" style={{ backgroundColor: '#FED7AA' }}>
-                    <Text style={{ fontSize: 10, fontWeight: '800', color: '#C2410C' }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, fontWeight: '800', color: '#C2410C' }}>
                       {activeCitations.length}
                     </Text>
                   </View>
@@ -95,18 +95,18 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
                           <AlertTriangle size={14} color={typeStyle.fg} strokeWidth={2.5} />
                         </View>
                         <View className="px-2 py-0.5 rounded-full ml-2" style={{ backgroundColor: typeStyle.bg }}>
-                          <Text style={{ fontSize: 9, fontWeight: '700', color: typeStyle.fg, letterSpacing: 0.3 }}>{typeStyle.label}</Text>
+                          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: typeStyle.fg, letterSpacing: 0.3 }}>{typeStyle.label}</Text>
                         </View>
                         <View className="px-2 py-0.5 rounded-full ml-auto" style={{ backgroundColor: statusStyle.bg }}>
-                          <Text style={{ fontSize: 9, fontWeight: '700', color: statusStyle.fg, letterSpacing: 0.3 }}>{statusStyle.label}</Text>
+                          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: statusStyle.fg, letterSpacing: 0.3 }}>{statusStyle.label}</Text>
                         </View>
                       </View>
-                      <Text className="text-slate-900 mt-2" style={{ fontSize: 13, fontWeight: '600' }} numberOfLines={2}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-900 mt-2" style={{ fontSize: 13, fontWeight: '600' }} numberOfLines={2}>
                         {citation.reason || citation.subject?.name || 'Sin asunto'}
                       </Text>
                       <View className="flex-row items-center mt-1.5">
                         <Calendar size={11} color="#94A3B8" strokeWidth={2} />
-                        <Text className="text-slate-400 ml-1" style={{ fontSize: 11, fontWeight: '500' }}>{scheduledDate}</Text>
+                        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 ml-1" style={{ fontSize: 11, fontWeight: '500' }}>{scheduledDate}</Text>
                       </View>
                     </View>
                   );
@@ -115,12 +115,12 @@ const CitationsModal = ({ isVisible, onClose, citations }) => {
             ) : (
               <View className="bg-white rounded-2xl p-6 items-center border border-slate-100" style={{ shadowColor: '#0F172A', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 1 }}>
                 <FileText size={24} color="#CBD5E1" strokeWidth={1.5} />
-                <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '500' }}>Sin citatorios registrados</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '500' }}>Sin citatorios registrados</Text>
               </View>
             )}
 
             <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Cerrar" className="items-center justify-center rounded-xl mt-4" style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}>
-              <Text className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
             </Pressable>
           </ScrollView>
         </View>

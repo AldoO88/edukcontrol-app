@@ -343,7 +343,7 @@ export default function PrefectReportDetail() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#E11D48" />
-          <Text className="text-sm text-[#64748B] mt-3 font-medium">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-[#64748B] mt-3 font-medium">
             Cargando reporte...
           </Text>
         </View>
@@ -360,14 +360,14 @@ export default function PrefectReportDetail() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center px-6">
           <AlertCircle size={40} color="#F59E0B" strokeWidth={1.5} />
-          <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
             {error || 'Reporte no encontrado'}
           </Text>
           <Pressable
             onPress={() => router.back()}
             className="mt-4 px-5 py-2 rounded-full bg-[#E11D48]"
           >
-            <Text className="text-white font-semibold text-[13px]">Volver</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold text-[13px]">Volver</Text>
           </Pressable>
         </View>
       </View>
@@ -408,14 +408,14 @@ export default function PrefectReportDetail() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
 
         {/* Título */}
         <View className="px-4 mt-2 mb-1">
-          <Text className="text-xl font-bold text-slate-900">Detalle del Reporte</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-xl font-bold text-slate-900">Detalle del Reporte</Text>
         </View>
 
         {/* ============================================================
@@ -440,7 +440,7 @@ export default function PrefectReportDetail() {
               style={{ backgroundColor: event.bg }}
             >
               <EventIcon size={12} color={event.color} strokeWidth={2.5} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1"
                 style={{
                   fontSize: 10,
@@ -459,7 +459,7 @@ export default function PrefectReportDetail() {
               className="px-2.5 py-1 rounded-full"
               style={{ backgroundColor: status.bg }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 10,
                   fontWeight: '800',
@@ -473,7 +473,7 @@ export default function PrefectReportDetail() {
           </View>
 
           {/* Nombre del alumno. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-3 text-slate-900"
             style={{ fontSize: 18, fontWeight: '800' }}
             numberOfLines={2}
@@ -485,7 +485,7 @@ export default function PrefectReportDetail() {
           {reporterName ? (
             <View className="flex-row items-center mt-2">
               <Users size={13} color="#64748B" strokeWidth={2} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{ fontSize: 12, fontWeight: '500' }}
               >
@@ -508,7 +508,7 @@ export default function PrefectReportDetail() {
             elevation: 1,
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-slate-500 mb-2"
             style={{
               fontSize: 11,
@@ -529,11 +529,11 @@ export default function PrefectReportDetail() {
               <EventIcon size={16} color={event.color} strokeWidth={2} />
             </View>
             <View className="ml-3">
-              <Text className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 14, fontWeight: '700' }}>
                 {event.label}
               </Text>
               {log.severity && (
-                <Text className="text-slate-500" style={{ fontSize: 12, fontWeight: '500' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 12, fontWeight: '500' }}>
                   Gravedad: {SEVERITY_LABELS[log.severity] || log.severity}
                 </Text>
               )}
@@ -549,7 +549,7 @@ export default function PrefectReportDetail() {
                   backgroundColor: log.eventType === 'demerit' ? '#FEF2F2' : '#ECFDF5',
                 }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 14,
                     fontWeight: '800',
@@ -564,7 +564,7 @@ export default function PrefectReportDetail() {
 
           {/* Date. */}
           {formattedDate && (
-            <Text className="text-[10px] text-slate-400 mt-3">{formattedDate}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-[10px] text-slate-400 mt-3">{formattedDate}</Text>
           )}
         </View>
 
@@ -584,7 +584,7 @@ export default function PrefectReportDetail() {
           <View className="flex-row items-center justify-between mb-2">
             <View className="flex-row items-center">
               <FileText size={14} color="#E11D48" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-1.5 text-slate-500"
                 style={{
                   fontSize: 11,
@@ -605,7 +605,7 @@ export default function PrefectReportDetail() {
                 accessibilityLabel="Editar descripción"
               >
                 <Pencil size={12} color="#0284C7" strokeWidth={2} />
-                <Text className="ml-1 text-sky-600" style={{ fontSize: 11, fontWeight: '600' }}>
+                <Text maxFontSizeMultiplier={1.3} className="ml-1 text-sky-600" style={{ fontSize: 11, fontWeight: '600' }}>
                   Editar
                 </Text>
               </Pressable>
@@ -615,7 +615,7 @@ export default function PrefectReportDetail() {
           {isEditingDescription ? (
             /* Modo edición */
             <View>
-              <TextInput
+              <TextInput maxFontSizeMultiplier={1.3}
                 value={editedDescription}
                 onChangeText={setEditedDescription}
                 placeholder="Describe la incidencia..."
@@ -636,7 +636,7 @@ export default function PrefectReportDetail() {
                 maxLength={1000}
               />
               {actionError && (
-                <Text className="text-rose-600 mt-1" style={{ fontSize: 11 }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-rose-600 mt-1" style={{ fontSize: 11 }}>
                   {actionError}
                 </Text>
               )}
@@ -653,7 +653,7 @@ export default function PrefectReportDetail() {
                   accessibilityRole="button"
                 >
                   <X size={14} color="#64748B" strokeWidth={2} />
-                  <Text className="ml-1 text-slate-600" style={{ fontSize: 12, fontWeight: '600' }}>
+                  <Text maxFontSizeMultiplier={1.3} className="ml-1 text-slate-600" style={{ fontSize: 12, fontWeight: '600' }}>
                     Cancelar
                   </Text>
                 </Pressable>
@@ -671,7 +671,7 @@ export default function PrefectReportDetail() {
                   ) : (
                     <>
                       <Check size={14} color="#ffffff" strokeWidth={2.5} />
-                      <Text className="ml-1 text-white" style={{ fontSize: 12, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="ml-1 text-white" style={{ fontSize: 12, fontWeight: '600' }}>
                         Guardar
                       </Text>
                     </>
@@ -681,7 +681,7 @@ export default function PrefectReportDetail() {
             </View>
           ) : (
             /* Modo lectura */
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-900"
               style={{ fontSize: 13, fontWeight: '500', lineHeight: 19 }}
             >
@@ -695,7 +695,7 @@ export default function PrefectReportDetail() {
             ============================================================ */}
         {(canCancel || canDelete) && log.status === 'active' && (
           <View className="mx-4 mt-4">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="text-slate-500 mb-2"
               style={{
                 fontSize: 11,
@@ -708,7 +708,7 @@ export default function PrefectReportDetail() {
             </Text>
 
             {actionError && (
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-rose-600 text-center mb-2"
                 style={{ fontSize: 12 }}
               >
@@ -737,7 +737,7 @@ export default function PrefectReportDetail() {
                   ) : (
                     <>
                       <X size={16} color="#E11D48" strokeWidth={2.25} />
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="ml-1.5"
                         style={{ fontSize: 13, fontWeight: '700', color: '#E11D48' }}
                       >
@@ -768,7 +768,7 @@ export default function PrefectReportDetail() {
                   ) : (
                     <>
                       <Trash2 size={16} color="#DC2626" strokeWidth={2.25} />
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="ml-1.5"
                         style={{ fontSize: 13, fontWeight: '700', color: '#DC2626' }}
                       >

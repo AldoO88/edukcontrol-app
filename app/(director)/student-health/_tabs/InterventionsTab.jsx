@@ -49,10 +49,10 @@ const SubSection = ({ icon: Icon, color, title, count, children }) => (
       <View className="w-7 h-7 rounded-lg items-center justify-center mr-2" style={{ backgroundColor: color + '15' }}>
         <Icon size={14} color={color} strokeWidth={2} />
       </View>
-      <Text className="text-sm font-bold text-slate-900 flex-1">{title}</Text>
+      <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1">{title}</Text>
       {count !== undefined && (
         <View className="px-2 py-0.5 rounded-full bg-slate-100">
-          <Text className="text-[10px] font-bold text-slate-500">{count}</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-slate-500">{count}</Text>
         </View>
       )}
     </View>
@@ -189,13 +189,13 @@ export default function InterventionsTab({
           className="flex-row items-center justify-center bg-purple-500 rounded-xl py-2.5 mb-3"
         >
           <Plus size={14} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 6 }} />
-          <Text className="text-white text-xs font-bold">Nuevo Acuerdo</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-bold">Nuevo Acuerdo</Text>
         </TouchableOpacity>
 
         {(!agreements || agreements.length === 0) ? (
           <View className="bg-slate-50 rounded-xl p-4 items-center border border-slate-100">
             <Handshake size={20} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-xs text-slate-400 mt-2">Sin acuerdos registrados</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-2">Sin acuerdos registrados</Text>
           </View>
         ) : (
           agreements.map((ag) => {
@@ -221,24 +221,24 @@ export default function InterventionsTab({
                 className="bg-slate-50 rounded-xl p-3 mb-2 border border-slate-100"
               >
                 <View className="flex-row items-center justify-between mb-1">
-                  <Text className="text-sm font-bold text-slate-900 flex-1" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1" numberOfLines={1}>
                     {ag.title}
                   </Text>
                   <View className="flex-row items-center ml-2">
                     <View className="px-2 py-0.5 rounded-full" style={{ backgroundColor: tc.bg }}>
-                      <Text style={{ fontSize: 9, fontWeight: '700', color: tc.fg }}>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: tc.fg }}>
                         {ag.agreement_type}
                       </Text>
                     </View>
                     <View className="px-2 py-0.5 rounded-full ml-1" style={{ backgroundColor: sc.bg }}>
-                      <Text style={{ fontSize: 9, fontWeight: '700', color: sc.fg }}>
+                      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: sc.fg }}>
                         {ag.status}
                       </Text>
                     </View>
                   </View>
                 </View>
                 {ag.description ? (
-                  <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>
                     {ag.description}
                   </Text>
                 ) : null}
@@ -262,13 +262,13 @@ export default function InterventionsTab({
           className="flex-row items-center justify-center bg-sky-600 rounded-xl py-2.5 mb-3"
         >
           <Plus size={14} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 6 }} />
-          <Text className="text-white text-xs font-bold">Nueva Canalización</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-bold">Nueva Canalización</Text>
         </TouchableOpacity>
 
         {(!referrals || referrals.length === 0) ? (
           <View className="bg-slate-50 rounded-xl p-4 items-center border border-slate-100">
             <Building2 size={20} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-xs text-slate-400 mt-2">Sin canalizaciones registradas</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-2">Sin canalizaciones registradas</Text>
           </View>
         ) : (
           referrals.map((ref) => {
@@ -288,16 +288,16 @@ export default function InterventionsTab({
                 className="bg-slate-50 rounded-xl p-3 mb-2 border border-slate-100"
               >
                 <View className="flex-row items-center justify-between mb-1">
-                  <Text className="text-sm font-bold text-slate-900 flex-1" numberOfLines={1}>
+                  <Text maxFontSizeMultiplier={1.3} className="text-sm font-bold text-slate-900 flex-1" numberOfLines={1}>
                     {ref.institution_name}
                   </Text>
                   <View className="px-2 py-0.5 rounded-full" style={{ backgroundColor: sc.bg }}>
-                    <Text style={{ fontSize: 9, fontWeight: '700', color: sc.fg }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 9, fontWeight: '700', color: sc.fg }}>
                       {ref.status}
                     </Text>
                   </View>
                 </View>
-                <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>
                   {ref.reason}
                 </Text>
               </TouchableOpacity>
@@ -320,13 +320,13 @@ export default function InterventionsTab({
           className="flex-row items-center justify-center bg-emerald-500 rounded-xl py-2.5 mb-3"
         >
           <Plus size={14} color="#FFFFFF" strokeWidth={2.5} style={{ marginRight: 6 }} />
-          <Text className="text-white text-xs font-bold">Registrar Visita</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-white text-xs font-bold">Registrar Visita</Text>
         </TouchableOpacity>
 
         {homeVisits.length === 0 ? (
           <View className="bg-slate-50 rounded-xl p-4 items-center border border-slate-100">
             <MapPin size={20} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-xs text-slate-400 mt-2">Sin visitas registradas</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-2">Sin visitas registradas</Text>
           </View>
         ) : (
           homeVisits.map((visit, idx) => (
@@ -338,7 +338,7 @@ export default function InterventionsTab({
               <View className="flex-row items-center justify-between mb-1">
                 <View className="flex-row items-center">
                   <Calendar size={12} color="#059669" strokeWidth={2} />
-                  <Text className="text-xs font-bold text-slate-700 ml-1">
+                  <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-700 ml-1">
                     {visit.date ? formatVisitDate(visit.date) : 'Sin fecha'}
                   </Text>
                 </View>
@@ -346,15 +346,15 @@ export default function InterventionsTab({
                   onPress={() => handleRemoveVisit(idx)}
                   hitSlop={8}
                 >
-                  <Text className="text-[10px] font-semibold text-red-500">Eliminar</Text>
+                  <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-semibold text-red-500">Eliminar</Text>
                 </TouchableOpacity>
               </View>
               {visit.observations ? (
-                <Text className="text-xs text-slate-500 mt-1" numberOfLines={2}>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1" numberOfLines={2}>
                   {visit.observations}
                 </Text>
               ) : (
-                <Text className="text-xs text-slate-400 italic mt-1">Sin observaciones</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 italic mt-1">Sin observaciones</Text>
               )}
             </TouchableOpacity>
           ))
@@ -416,7 +416,7 @@ export default function InterventionsTab({
           <View className="flex-1 bg-white">
             {/* HEADER */}
             <View className="flex-row items-center justify-between px-4 py-3 border-b border-slate-200">
-              <Text className="text-lg font-bold text-slate-900">
+              <Text maxFontSizeMultiplier={1.3} className="text-lg font-bold text-slate-900">
                 {selectedVisitIndex !== null ? 'Editar Visita' : 'Nueva Visita'}
               </Text>
               <Pressable onPress={() => setShowVisitModal(false)} hitSlop={8}>
@@ -426,13 +426,13 @@ export default function InterventionsTab({
 
             <ScrollView className="flex-1 px-4 py-4" keyboardShouldPersistTaps="handled">
               {/* FECHA */}
-              <Text className="text-xs font-bold text-slate-600 mb-1">Fecha de la Visita *</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Fecha de la Visita *</Text>
               <Pressable
                 onPress={() => setShowVisitDatePicker(true)}
                 className="bg-slate-50 rounded-xl px-3 py-2.5 border border-slate-200 mb-4 flex-row items-center"
               >
                 <Calendar size={16} color="#059669" strokeWidth={2} style={{ marginRight: 8 }} />
-                <Text className="text-sm text-slate-900 flex-1">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-900 flex-1">
                   {formatVisitDate(visitDate)}
                 </Text>
               </Pressable>
@@ -449,8 +449,8 @@ export default function InterventionsTab({
               )}
 
               {/* OBSERVACIONES */}
-              <Text className="text-xs font-bold text-slate-600 mb-1">Observaciones</Text>
-              <TextInput
+              <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-slate-600 mb-1">Observaciones</Text>
+              <TextInput maxFontSizeMultiplier={1.3}
                 value={visitObservations}
                 onChangeText={setVisitObservations}
                 placeholder="Describe las observaciones de la visita..."
@@ -468,14 +468,14 @@ export default function InterventionsTab({
                 onPress={() => setShowVisitModal(false)}
                 className="flex-1 bg-slate-100 rounded-xl py-3 items-center"
               >
-                <Text className="text-sm font-semibold text-slate-600">Cancelar</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-slate-600">Cancelar</Text>
               </Pressable>
               <Pressable
                 onPress={handleSaveVisit}
                 className="flex-1 bg-emerald-500 rounded-xl py-3 items-center flex-row justify-center"
               >
                 <Check size={16} color="#FFF" strokeWidth={2.5} />
-                <Text className="text-sm font-semibold text-white ml-1.5">
+                <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                   {selectedVisitIndex !== null ? 'Guardar' : 'Registrar'}
                 </Text>
               </Pressable>

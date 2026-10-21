@@ -115,7 +115,7 @@ const DirectoryToolbar = ({
           }}
         >
           <Search size={18} color="#94A3B8" strokeWidth={2} />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchTerm}
             onChangeText={setSearchTerm}
             placeholder="Buscar alumno por nombre, N.L. o No. de Control..."
@@ -195,7 +195,7 @@ const DirectoryToolbar = ({
               >
                 {/* Header de sección. */}
                 <View className="px-4 py-3 border-b border-slate-100">
-                  <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     Ordenar por
                   </Text>
                 </View>
@@ -221,7 +221,7 @@ const DirectoryToolbar = ({
                         color={isActive ? '#0284C7' : '#64748B'}
                         strokeWidth={2.25}
                       />
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className={clsx(
                           'flex-1 ml-3 text-sm',
                           isActive

@@ -324,7 +324,7 @@ export default function SetPasswordScreen() {
                 dice al usuario que NO es un freeze y que no cierre la
                 app. Se oculta sola en cuanto el request termina. */}
             {isLoading && slowHint && (
-              <Text className="text-slate-400 text-xs text-center mt-3 leading-4">
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-xs text-center mt-3 leading-4">
                 Está tardando más de lo normal (el servidor puede tardar
                 hasta 1 minuto la primera vez). Espera un momento y no
                 cierres la app.

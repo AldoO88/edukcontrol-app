@@ -350,7 +350,7 @@ export default function CreateAnnouncementModal({
             style={{ opacity: studentIds.length === 0 ? 0.4 : 1 }}
           >
             <Check size={22} color="#02C79E" strokeWidth={2.5} />
-            <Text style={{ fontSize: 20, fontWeight: '700', color: '#02C79E', marginLeft: 4 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 20, fontWeight: '700', color: '#02C79E', marginLeft: 4 }}>
               Listo
             </Text>
           </Pressable>
@@ -370,7 +370,7 @@ export default function CreateAnnouncementModal({
 
     return (
       <View className="flex-row items-center justify-between mb-5">
-        <Text style={{ fontSize: 20, fontWeight: '700', color: '#0F172A' }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 20, fontWeight: '700', color: '#0F172A' }}>
           {isDirectMode ? 'Enviar Aviso' : 'Crear Nuevo Aviso'}
         </Text>
         <Pressable
@@ -398,7 +398,7 @@ export default function CreateAnnouncementModal({
       {/* A) TARGET TYPE SELECTOR — solo en modo normal */}
       {!isDirectMode && (
         <>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="uppercase mb-2"
             style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
           >
@@ -429,7 +429,7 @@ export default function CreateAnnouncementModal({
                   accessibilityState={{ selected: isActive }}
                   accessibilityLabel={option.label}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 14,
                       fontWeight: isActive ? '700' : '400',
@@ -448,7 +448,7 @@ export default function CreateAnnouncementModal({
       {/* B) DESTINATARIOS — en modo directo mostrar card del alumno */}
       {isDirectMode ? (
         <>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="uppercase mt-5 mb-2"
             style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
           >
@@ -462,14 +462,14 @@ export default function CreateAnnouncementModal({
             {renderAvatar(student, 56)}
             {/* Nombre + control number */}
             <View className="flex-1 ml-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }}
                 numberOfLines={1}
               >
                 {student.fullName || student.name}
               </Text>
               {student.controlNumber && (
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{ fontSize: 12, fontWeight: '400', color: '#64748B', marginTop: 2 }}
                 >
                   No. Control: {student.controlNumber}
@@ -480,7 +480,7 @@ export default function CreateAnnouncementModal({
         </>
       ) : (
         <>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="uppercase mt-5 mb-2"
             style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
           >
@@ -498,14 +498,14 @@ export default function CreateAnnouncementModal({
           onPress={() => { setGroupIds([]); setStudentIds([]); }}
           style={{ alignSelf: 'flex-end', marginTop: 8 }}
         >
-          <Text style={{ fontSize: 12, fontWeight: '600', color: '#0284C7' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '600', color: '#0284C7' }}>
             Limpiar selección
           </Text>
         </Pressable>
       )}
 
       {/* C) PRIORIDAD */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="uppercase mt-5 mb-2"
         style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
       >
@@ -532,7 +532,7 @@ export default function CreateAnnouncementModal({
               accessibilityState={{ selected: isActive }}
               accessibilityLabel={option.label}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 14,
                   fontWeight: isActive ? '700' : '400',
@@ -549,13 +549,13 @@ export default function CreateAnnouncementModal({
       </View>
 
       {/* D) TÍTULO */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="uppercase mt-5 mb-2"
         style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
       >
         Título del aviso
       </Text>
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={title}
         onChangeText={setTitle}
         placeholder="Ej. Material para la siguiente clase de Ofimática"
@@ -575,7 +575,7 @@ export default function CreateAnnouncementModal({
       />
 
       {/* E) MENSAJE */}
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="uppercase mt-5 mb-2"
         style={{ fontSize: 12, fontWeight: '700', color: '#275972', letterSpacing: 0.5 }}
       >
@@ -587,7 +587,7 @@ export default function CreateAnnouncementModal({
               ? 'Mensaje para los tutores'
               : 'Mensaje para el alumno / tutor'}
       </Text>
-      <TextInput
+      <TextInput maxFontSizeMultiplier={1.3}
         value={message}
         onChangeText={setMessage}
         placeholder="Escribe los detalles de la tarea, aviso o indicación..."
@@ -629,7 +629,7 @@ export default function CreateAnnouncementModal({
           strokeWidth={2.25}
           style={{ transform: [{ rotate: '-15deg' }], marginRight: 8 }}
         />
-        <Text style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, fontWeight: '700', color: '#ffffff' }}>
           {isSubmitting ? 'Enviando...' : isDirectMode ? 'Enviar Aviso' : 'Publicar Aviso'}
         </Text>
       </Pressable>
@@ -643,7 +643,7 @@ export default function CreateAnnouncementModal({
           accessibilityRole="button"
           accessibilityLabel="Guardar como borrador"
         >
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#64748B' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '600', color: '#64748B' }}>
             Guardar como borrador
           </Text>
         </Pressable>
@@ -670,17 +670,17 @@ export default function CreateAnnouncementModal({
       <View>
         {/* Header de la vista de alumnos. */}
         <View className="items-center px-5 pb-3 border-b border-[#E2E8F0]">
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, fontWeight: '700', color: '#0F172A' }}>
             {studentModalGroup.type === 'taller'
               ? getTallerDisplayName(studentModalGroup.section)
               : studentModalGroup.label}
           </Text>
           {studentModalGroup.tallerGrade != null && (
-            <Text style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>
               {studentModalGroup.tallerGrade}° Grado
             </Text>
           )}
-          <Text style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, color: '#64748B', marginTop: 2 }}>
             {students.length} alumno{students.length !== 1 ? 's' : ''}
             {studentIds.length > 0 && (
               <> — {studentIds.length} seleccionado{studentIds.length !== 1 ? 's' : ''}</>
@@ -692,7 +692,7 @@ export default function CreateAnnouncementModal({
         {students.length === 0 ? (
           <View className="flex-1 items-center justify-center px-6">
             <User size={40} color="#CBD5E1" strokeWidth={1.5} />
-            <Text className="text-[14px] text-[#64748B] mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-[14px] text-[#64748B] mt-3 text-center">
               No hay alumnos registrados en este grupo.
             </Text>
           </View>
@@ -723,12 +723,12 @@ export default function CreateAnnouncementModal({
                       justifyContent: 'center',
                     }}
                   >
-                    <Text style={{ color: '#0369A1', fontSize: 15, fontWeight: '700' }}>
+                    <Text maxFontSizeMultiplier={1.3} style={{ color: '#0369A1', fontSize: 15, fontWeight: '700' }}>
                       {initials}
                     </Text>
                   </View>
 
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       flex: 1,
                       marginLeft: 12,
@@ -798,7 +798,7 @@ export default function CreateAnnouncementModal({
         {isSelected && (
           <Check size={14} color="#ffffff" strokeWidth={2.75} style={{ marginBottom: 2 }} />
         )}
-        <Text style={{
+        <Text maxFontSizeMultiplier={1.3} style={{
           color: textColor,
           fontWeight: isSelected ? '600' : '500',
           fontSize: 14,
@@ -806,7 +806,7 @@ export default function CreateAnnouncementModal({
           {group.label}
         </Text>
         {badge != null && badge > 0 && (
-          <Text style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
             ({badge})
           </Text>
         )}
@@ -844,7 +844,7 @@ export default function CreateAnnouncementModal({
         {isSelected && (
           <Check size={14} color="#ffffff" strokeWidth={2.75} style={{ marginBottom: 2 }} />
         )}
-        <Text style={{
+        <Text maxFontSizeMultiplier={1.3} style={{
           color: textColor,
           fontWeight: isSelected ? '600' : '500',
           fontSize: 12,
@@ -852,12 +852,12 @@ export default function CreateAnnouncementModal({
           {displayName}
         </Text>
         {group.tallerGrade != null && (
-          <Text style={{ fontSize: 10, color: isSelected ? '#ffffff' : '#94A3B8', marginTop: 1 }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 10, color: isSelected ? '#ffffff' : '#94A3B8', marginTop: 1 }}>
             {group.tallerGrade}° Grado
           </Text>
         )}
         {badge != null && badge > 0 && (
-          <Text style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ color: '#C76F02', fontSize: 11, marginTop: 2, fontWeight: '500' }}>
             ({badge})
           </Text>
         )}
@@ -872,7 +872,7 @@ export default function CreateAnnouncementModal({
     if (targetType === TARGET_TYPES.GENERAL) {
       return (
         <View style={{ backgroundColor: '#F0F9FF', borderRadius: 12, padding: 14, marginTop: 4 }}>
-          <Text style={{ fontSize: 13, color: '#0284C7', fontWeight: '600', lineHeight: 20 }}>
+          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, color: '#0284C7', fontWeight: '600', lineHeight: 20 }}>
             Este aviso se enviará a toda la escuela.
           </Text>
         </View>
@@ -897,7 +897,7 @@ export default function CreateAnnouncementModal({
                     backgroundColor: isActive ? '#275972' : '#F1F5F9',
                   }}
                 >
-                  <Text style={{
+                  <Text maxFontSizeMultiplier={1.3} style={{
                     fontSize: 12,
                     fontWeight: isActive ? '700' : '500',
                     color: isActive ? '#ffffff' : '#64748B',
@@ -912,7 +912,7 @@ export default function CreateAnnouncementModal({
           {/* Placeholder cuando no hay filtro seleccionado */}
           {selectedGrade === null && (
             <View style={{ paddingVertical: 16, alignItems: 'center' }}>
-              <Text style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
                 Selecciona un grado para ver los grupos
               </Text>
             </View>
@@ -921,7 +921,7 @@ export default function CreateAnnouncementModal({
           {/* Grid de grupos */}
           {selectedGrade !== null && regularByGrade.map(([grade, gradeGroups]) => (
             <View key={`grade-${grade}`}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 {grade}° Grado
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -931,7 +931,7 @@ export default function CreateAnnouncementModal({
           ))}
           {selectedGrade !== null && tallerGroups.length > 0 && (
             <View>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 Tecnología
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -961,7 +961,7 @@ export default function CreateAnnouncementModal({
                   backgroundColor: isActive ? '#275972' : '#F1F5F9',
                 }}
               >
-                <Text style={{
+                <Text maxFontSizeMultiplier={1.3} style={{
                   fontSize: 12,
                   fontWeight: isActive ? '700' : '500',
                   color: isActive ? '#ffffff' : '#64748B',
@@ -976,7 +976,7 @@ export default function CreateAnnouncementModal({
         {/* Placeholder cuando no hay filtro seleccionado */}
         {selectedGrade === null && (
           <View style={{ paddingVertical: 16, alignItems: 'center' }}>
-            <Text style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 13, color: '#94A3B8', textAlign: 'center' }}>
               Selecciona un grado para ver los grupos
             </Text>
           </View>
@@ -985,7 +985,7 @@ export default function CreateAnnouncementModal({
         {/* Grid de grupos */}
         {selectedGrade !== null && regularByGrade.map(([grade, gradeGroups]) => (
           <View key={`student-grade-${grade}`}>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 10, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
               {grade}° Grado
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -1009,7 +1009,7 @@ export default function CreateAnnouncementModal({
         ))}
         {selectedGrade !== null && tallerGroups.length > 0 && (
           <View>
-            <Text style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 14, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#64748B', marginTop: 14, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>
               Tecnología
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -1035,7 +1035,7 @@ export default function CreateAnnouncementModal({
         {studentIds.length > 0 && (
           <View className="flex-row items-center mt-3 px-1">
             <User size={14} color="#C76F02" strokeWidth={2} />
-            <Text style={{ fontSize: 12, color: '#C76F02', fontWeight: '600', marginLeft: 4 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, color: '#C76F02', fontWeight: '600', marginLeft: 4 }}>
               {studentIds.length} alumno{studentIds.length > 1 ? 's' : ''} seleccionado{studentIds.length > 1 ? 's' : ''}
             </Text>
           </View>

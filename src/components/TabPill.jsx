@@ -16,7 +16,7 @@ const TabPill = ({ active, label, onPress }) => (
       elevation: active ? 2 : 0,
     }}
   >
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       style={{
         fontSize: 11,
         fontWeight: '700',

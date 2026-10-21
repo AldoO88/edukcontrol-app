@@ -8,7 +8,7 @@ const StatCard = ({ label, value, valueColor, bgColor }) => (
       backgroundColor: bgColor,
     }}
   >
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       style={{
         fontSize: 10,
         fontWeight: '700',
@@ -19,7 +19,7 @@ const StatCard = ({ label, value, valueColor, bgColor }) => (
     >
       {label}
     </Text>
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="mt-1"
       style={{ fontSize: 22, fontWeight: '800', color: valueColor }}
     >

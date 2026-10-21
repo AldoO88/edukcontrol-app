@@ -59,7 +59,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                 <View className="items-center justify-center" style={{ backgroundColor: '#D1FAE5', padding: 8, borderRadius: 12 }}>
                   <Eye size={20} color="#059669" strokeWidth={2.25} />
                 </View>
-                <Text className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={2}>
+                <Text maxFontSizeMultiplier={1.3} className="ml-3 text-slate-900 flex-1" style={{ fontSize: 17, fontWeight: '700' }} numberOfLines={2}>
                   Ficha de Inclusión y Salud
                 </Text>
               </View>
@@ -73,16 +73,16 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
               {pedagogical?.learningStyle ? (
                 <>
                   <View className="self-start px-3 py-1 rounded-full" style={{ backgroundColor: '#0284C7' }}>
-                    <Text className="text-white" style={{ fontSize: 11, fontWeight: '800', letterSpacing: 1 }}>
+                    <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 11, fontWeight: '800', letterSpacing: 1 }}>
                       {pedagogical.learningStyle}
                     </Text>
                   </View>
-                  <Text className="mt-2 text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
+                  <Text maxFontSizeMultiplier={1.3} className="mt-2 text-slate-700" style={{ fontSize: 13, fontWeight: '500' }}>
                     {pedagogical.styleHint}
                   </Text>
                 </>
               ) : (
-                <Text className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>Sin datos registrados</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>Sin datos registrados</Text>
               )}
             </View>
 
@@ -97,7 +97,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                 <SectionTitle>Alergias o Cuidados Especiales</SectionTitle>
                 <View className="rounded-xl p-3 mb-4 flex-row items-center" style={{ backgroundColor: '#FEF2F2', borderWidth: 1, borderColor: '#FECACA' }}>
                   <AlertCircle size={18} color="#DC2626" strokeWidth={2.25} />
-                  <Text className="flex-1 ml-3 text-rose-900" style={{ fontSize: 13, fontWeight: '600' }}>
+                  <Text maxFontSizeMultiplier={1.3} className="flex-1 ml-3 text-rose-900" style={{ fontSize: 13, fontWeight: '600' }}>
                     {pedagogical.allergies}
                   </Text>
                 </View>
@@ -105,7 +105,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
             ) : null}
 
             <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Cerrar" className="items-center justify-center rounded-xl mt-2" style={{ backgroundColor: '#0284C7', paddingVertical: 12 }}>
-              <Text className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-white" style={{ fontSize: 14, fontWeight: '700' }}>Cerrar</Text>
             </Pressable>
           </ScrollView>
         </View>
@@ -115,7 +115,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
 };
 
 const SectionTitle = ({ children }) => (
-  <Text className="text-slate-500 mt-4 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+  <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-4 mb-2" style={{ fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 }}>
     {children}
   </Text>
 );
@@ -124,7 +124,7 @@ const AlertList = ({ alerts, emptyText }) => {
   if (alerts.length === 0) {
     return (
       <View className="bg-white rounded-2xl p-6 items-center mb-4 border border-slate-100" style={{ shadowColor: '#0F172A', shadowOpacity: 0.04, shadowRadius: 6, shadowOffset: { width: 0, height: 1 }, elevation: 1 }}>
-        <Text className="text-slate-500" style={{ fontSize: 13, fontWeight: '600' }}>{emptyText}</Text>
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-500" style={{ fontSize: 13, fontWeight: '600' }}>{emptyText}</Text>
       </View>
     );
   }
@@ -139,8 +139,8 @@ const AlertList = ({ alerts, emptyText }) => {
               <Icon size={20} color={color} strokeWidth={2.25} />
             </View>
             <View className="flex-1 ml-3">
-              <Text className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>{alert.title}</Text>
-              <Text className="text-slate-500 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>{alert.subtitle}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-900" style={{ fontSize: 13, fontWeight: '700' }}>{alert.title}</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-0.5" style={{ fontSize: 12, fontWeight: '500' }}>{alert.subtitle}</Text>
             </View>
           </View>
         );

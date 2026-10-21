@@ -259,25 +259,25 @@ export default function DirectorAnnouncementsScreen() {
               style={{ backgroundColor: tagConfig.bg }}
             >
               <TagIcon size={13} color={tagConfig.color} strokeWidth={2.5} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-[12px] font-bold ml-1.5"
                 style={{ color: tagConfig.color }}
               >
                 {tagConfig.label}
               </Text>
             </View>
-            <Text className="text-[12px] text-[#64748B]">
+            <Text maxFontSizeMultiplier={1.3} className="text-[12px] text-[#64748B]">
               {formatRelativeDateTime(item.createdAt)}
             </Text>
           </View>
 
           {/* Título. */}
-          <Text className="text-[16px] font-bold text-[#0F172A] mt-1.5">
+          <Text maxFontSizeMultiplier={1.3} className="text-[16px] font-bold text-[#0F172A] mt-1.5">
             {item.title}
           </Text>
 
           {/* Body: 2 líneas truncado. */}
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-[13px] text-[#475569] mt-1"
             numberOfLines={2}
           >
@@ -292,7 +292,7 @@ export default function DirectorAnnouncementsScreen() {
                 className="px-2 py-0.5 rounded-md"
                 style={{ backgroundColor: priorityBg }}
               >
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   style={{
                     fontSize: 11,
                     fontWeight: '600',
@@ -305,7 +305,7 @@ export default function DirectorAnnouncementsScreen() {
               {item.totalRecipients != null && (
                 <View className="flex-row items-center ml-2">
                   <CheckCircle2 size={12} color="#16A34A" strokeWidth={2.25} />
-                  <Text className="text-[11px] font-semibold text-[#334155] ml-1">
+                  <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-semibold text-[#334155] ml-1">
                     {item.readCount != null
                       ? `${item.readCount}/${item.totalRecipients}`
                       : `${item.totalRecipients}`}
@@ -315,7 +315,7 @@ export default function DirectorAnnouncementsScreen() {
             </View>
             {senderName ? (
               <View className="flex-row items-center">
-                <Text className="text-[12px] text-[#64748B]" numberOfLines={1}>
+                <Text maxFontSizeMultiplier={1.3} className="text-[12px] text-[#64748B]" numberOfLines={1}>
                   {senderName}
                   {roleLabel ? ` · ${roleLabel}` : ''}
                 </Text>
@@ -335,7 +335,7 @@ export default function DirectorAnnouncementsScreen() {
       onPress={onPress}
       className={`px-3 py-1.5 rounded-full ${active ? 'bg-sky-500' : 'bg-slate-100'}`}
     >
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className={`text-xs font-semibold ${active ? 'text-white' : 'text-slate-600'}`}
       >
         {children}
@@ -357,13 +357,13 @@ export default function DirectorAnnouncementsScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0284C7" />
-          <Text className="text-slate-400 text-sm mt-3">Cargando avisos...</Text>
+          <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">Cargando avisos...</Text>
         </View>
       </View>
     );
@@ -383,23 +383,23 @@ export default function DirectorAnnouncementsScreen() {
           className="flex-row items-center px-4 mt-4"
         >
           <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-          <Text className="text-sm font-semibold text-sky-600 ml-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
             Volver
           </Text>
         </Pressable>
         <View className="flex-1 items-center justify-center px-6">
           <AlertTriangle size={40} color="#F59E0B" strokeWidth={1.5} />
-          <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
             No se pudieron cargar los avisos
           </Text>
-          <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+          <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
             {error}
           </Text>
           <Pressable
             onPress={handleRefresh}
             className="mt-4 px-5 py-2 rounded-full bg-[#0284C7]"
           >
-            <Text className="text-white font-semibold text-[13px]">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-semibold text-[13px]">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -431,7 +431,7 @@ export default function DirectorAnnouncementsScreen() {
         className="flex-row items-center px-4 mt-4"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -442,15 +442,15 @@ export default function DirectorAnnouncementsScreen() {
       <View className="px-4 mt-4 mb-1">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center">
-            <Text className="text-[22px] font-bold text-[#0F172A]">Avisos</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-[22px] font-bold text-[#0F172A]">Avisos</Text>
             {hasSearch && (
               <View className="ml-2 bg-sky-100 rounded-full px-2 py-0.5">
-                <Text className="text-[10px] font-bold text-sky-700">Filtrado</Text>
+                <Text maxFontSizeMultiplier={1.3} className="text-[10px] font-bold text-sky-700">Filtrado</Text>
               </View>
             )}
           </View>
         </View>
-        <Text className="text-sm text-slate-500 mt-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
           {pagination.total} aviso{pagination.total !== 1 ? 's' : ''}
         </Text>
       </View>
@@ -470,7 +470,7 @@ export default function DirectorAnnouncementsScreen() {
               accessibilityState={{ selected: isActive }}
               accessibilityLabel={tab}
             >
-              <Text className={clsx(
+              <Text maxFontSizeMultiplier={1.3} className={clsx(
                 'text-[15px] font-semibold pb-2.5',
                 isActive ? 'text-[#0284C7]' : 'text-[#64748B]',
               )}>
@@ -495,7 +495,7 @@ export default function DirectorAnnouncementsScreen() {
         {activeSegment === SEGMENT_TABS[1] && (
           <View className="flex-row items-center mb-2">
             <Filter size={14} color="#64748B" strokeWidth={2} style={{ marginRight: 6 }} />
-            <Text style={{ fontSize: 12, fontWeight: '600', color: '#64748B', marginRight: 8 }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '600', color: '#64748B', marginRight: 8 }}>
               Prioridad:
             </Text>
             {['informative', 'urgent'].map((p) => {
@@ -515,7 +515,7 @@ export default function DirectorAnnouncementsScreen() {
                     paddingVertical: 5,
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 11,
                       fontWeight: isActive ? '700' : '500',
@@ -531,7 +531,7 @@ export default function DirectorAnnouncementsScreen() {
             })}
             {selectedPriority && (
               <Pressable onPress={() => setSelectedPriority(null)} style={{ marginLeft: 'auto' }}>
-                <Text style={{ fontSize: 11, fontWeight: '600', color: '#0284C7' }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11, fontWeight: '600', color: '#0284C7' }}>
                   Limpiar
                 </Text>
               </Pressable>
@@ -554,7 +554,7 @@ export default function DirectorAnnouncementsScreen() {
         {/* Fila 2: Búsqueda */}
         <View className="flex-row items-center bg-white rounded-xl border border-slate-200 px-3 py-2 mb-1">
           <Search size={16} color="#94A3B8" />
-          <TextInput
+          <TextInput maxFontSizeMultiplier={1.3}
             value={searchText}
             onChangeText={setSearchText}
             placeholder="Buscar por maestro, grupo o alumno..."
@@ -572,11 +572,11 @@ export default function DirectorAnnouncementsScreen() {
         {/* Indicador de búsqueda activa */}
         {hasSearch && (
           <View className="flex-row items-center justify-between mt-1 mb-1">
-            <Text className="text-[11px] text-slate-400">
+            <Text maxFontSizeMultiplier={1.3} className="text-[11px] text-slate-400">
               Mostrando {filteredItems.length} de {items.length} avisos
             </Text>
             <Pressable onPress={clearSearch}>
-              <Text className="text-[11px] font-semibold text-sky-600">Limpiar</Text>
+              <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-semibold text-sky-600">Limpiar</Text>
             </Pressable>
           </View>
         )}
@@ -604,30 +604,30 @@ export default function DirectorAnnouncementsScreen() {
             {hasSearch ? (
               <>
                 <Search size={40} color="#CBD5E1" strokeWidth={1.5} />
-                <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
                   No hay avisos con estos filtros
                 </Text>
-                <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
                   Intenta con otros términos de búsqueda.
                 </Text>
               </>
             ) : activeSegment === SEGMENT_TABS[0] ? (
               <>
                 <Megaphone size={40} color="#CBD5E1" strokeWidth={1.5} />
-                <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
                   No has publicado avisos
                 </Text>
-                <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
                   Crea tu primer aviso usando el botón de abajo.
                 </Text>
               </>
             ) : (
               <>
                 <Megaphone size={40} color="#CBD5E1" strokeWidth={1.5} />
-                <Text className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[14px] font-semibold text-[#0F172A] mt-3 text-center">
                   No hay avisos
                 </Text>
-                <Text className="text-[13px] text-[#64748B] mt-1 text-center">
+                <Text maxFontSizeMultiplier={1.3} className="text-[13px] text-[#64748B] mt-1 text-center">
                   Los avisos aparecerán cuando se publiquen.
                 </Text>
               </>

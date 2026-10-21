@@ -342,12 +342,12 @@ export default function GradeReviewScreen() {
             borderColor: '#FECACA',
           }}
         >
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 13, fontWeight: '700', color: '#DC2626' }}
           >
             Error al cargar
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="mt-1"
             style={{ fontSize: 12, color: '#991B1B' }}
           >
@@ -358,7 +358,7 @@ export default function GradeReviewScreen() {
             className="self-start mt-2 px-3 py-1.5 rounded-lg"
             style={{ backgroundColor: '#DC2626' }}
           >
-            <Text className="text-white font-bold text-xs">Reintentar</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-white font-bold text-xs">Reintentar</Text>
           </Pressable>
         </View>
       </View>
@@ -390,7 +390,7 @@ export default function GradeReviewScreen() {
         accessibilityLabel="Volver al detalle del grupo"
       >
         <ChevronLeft size={18} color="#0ea5e9" strokeWidth={2.5} />
-        <Text className="text-sm font-semibold text-sky-600 ml-1">
+        <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-sky-600 ml-1">
           Volver
         </Text>
       </Pressable>
@@ -401,7 +401,7 @@ export default function GradeReviewScreen() {
       <View className="px-4 mt-4">
         <View className="flex-row items-center">
           <View className="flex-1 ml-1">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{ fontSize: 17, fontWeight: '700', color: '#0F172A' }}
               numberOfLines={1}
             >
@@ -439,7 +439,7 @@ export default function GradeReviewScreen() {
           >
             <SubjectIcon size={14} color={subjectColor} strokeWidth={2.25} />
           </View>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 15, fontWeight: '700', color: '#0F172A' }}
             numberOfLines={1}
           >
@@ -461,7 +461,7 @@ export default function GradeReviewScreen() {
               marginRight: 6,
             }}
           />
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 12, fontWeight: '700', color: '#92400E' }}
           >
             Validando: {periodName}
@@ -471,12 +471,12 @@ export default function GradeReviewScreen() {
         {/* Fila 3: promedio general + total alumnos. */}
         <View className="flex-row items-center justify-between mt-3">
           <View className="flex-row items-center">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{ fontSize: 11, fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.4 }}
             >
               PROM GRUPO:{' '}
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 16,
                 fontWeight: '800',
@@ -489,7 +489,7 @@ export default function GradeReviewScreen() {
             </Text>
           </View>
 
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 12, fontWeight: '600', color: '#64748B' }}
           >
             {groupStats.gradedCount}/{sortedStudents.length} Alumnos
@@ -544,7 +544,7 @@ export default function GradeReviewScreen() {
       >
         {sortedStudents.length === 0 ? (
           <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
-            <Text className="text-sm text-slate-500 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
               No hay alumnos registrados en este grupo.
             </Text>
           </View>
@@ -589,17 +589,17 @@ export default function GradeReviewScreen() {
       >
         {/* Graded count. */}
         <View className="flex-row items-center justify-center mb-3">
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 13, fontWeight: '600', color: '#64748B' }}
           >
             Alumnos con calificación:{' '}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 14, fontWeight: '800', color: '#0F172A' }}
           >
             {gradedCount}
           </Text>
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             style={{ fontSize: 14, fontWeight: '600', color: '#64748B' }}
           >
             {' '}/ {sortedStudents.length}
@@ -626,7 +626,7 @@ export default function GradeReviewScreen() {
             ) : (
               <Lock size={18} color="#FFFFFF" strokeWidth={2.25} />
             )}
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="ml-2"
               style={{ fontSize: 15, fontWeight: '700', color: '#FFFFFF' }}
             >
@@ -762,7 +762,7 @@ const StudentAccordion = ({
               backgroundColor: `${borderColor}33`,
             }}
           >
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 14,
                 fontWeight: '800',
@@ -775,13 +775,13 @@ const StudentAccordion = ({
 
           {/* Name + average. */}
           <View className="flex-1">
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{ fontSize: 14, fontWeight: '700', color: '#0F172A' }}
               numberOfLines={1}
             >
               {index + 1}. {student.fullName}
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               className="mt-0.5"
               style={{ fontSize: 12, fontWeight: '600', color: '#94A3B8' }}
             >
@@ -831,7 +831,7 @@ const StudentAccordion = ({
                   accessibilityRole="button"
                   accessibilityLabel={`${evalType.name}: ${display}. Tocar para editar.`}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 10,
                       fontWeight: '700',
@@ -841,7 +841,7 @@ const StudentAccordion = ({
                   >
                     {evalType.abbreviation || evalType.name}
                   </Text>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="mt-1"
                     style={{
                       fontSize: 18,
@@ -873,9 +873,9 @@ const StudentAccordion = ({
                 borderColor: isApproved ? '#A7F3D0' : (studentAvg == null ? '#E2E8F0' : '#FECACA'),
               }}
             >
-              <Text style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#475569' }}>
                 Promedio:{' '}
-                <Text style={{ fontWeight: '900', color: finalColor }}>
+                <Text maxFontSizeMultiplier={1.3} style={{ fontWeight: '900', color: finalColor }}>
                   {studentAvg != null ? studentAvg.toFixed(1) : '—'}
                 </Text>
               </Text>
@@ -895,7 +895,7 @@ const StudentAccordion = ({
                   marginRight: 5,
                 }}
               />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 11,
                   fontWeight: '700',
@@ -938,7 +938,7 @@ const StatChip = ({ icon: Icon, color, bg, count, label }) => (
     accessibilityLabel={`${count} ${label}`}
   >
     <Icon size={11} color={color} strokeWidth={2.5} />
-    <Text
+    <Text maxFontSizeMultiplier={1.3}
       className="ml-1"
       style={{ fontSize: 11, fontWeight: '700', color }}
     >

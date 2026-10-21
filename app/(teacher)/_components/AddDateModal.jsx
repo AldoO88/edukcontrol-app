@@ -193,7 +193,7 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
 
           {/* Header. */}
           <View className="flex-row items-center justify-between mb-2">
-            <Text style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 18, fontWeight: '700', color: '#0F172A' }}>
               Agregar Nueva Fecha
             </Text>
             <Pressable
@@ -206,7 +206,7 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
             </Pressable>
           </View>
 
-          <Text className="text-xs text-slate-500 mb-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mb-3">
             Selecciona la fecha en la que vas a pasar lista. Por defecto,
             se usará el día de hoy. No puedes agregar fechas futuras.
           </Text>
@@ -259,10 +259,10 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
             className="flex-row items-center mt-3 rounded-xl px-3 py-2.5"
             style={{ backgroundColor: '#F0F9FF', borderWidth: 1, borderColor: '#BAE6FD' }}
           >
-            <Text style={{ fontSize: 12, fontWeight: '700', color: '#0369A1' }}>
+            <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#0369A1' }}>
               Seleccionado:
             </Text>
-            <Text
+            <Text maxFontSizeMultiplier={1.3}
               style={{
                 fontSize: 13,
                 fontWeight: '700',
@@ -275,10 +275,10 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
             </Text>
           </View>
           {error ? (
-            <Text className="text-xs text-rose-600 mt-2">{error}</Text>
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-rose-600 mt-2">{error}</Text>
           ) : null}
 
-          <Text className="text-xs text-slate-500 mt-3">
+          <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-3">
             Las celdas se inicializarán como "Presente" (P). Luego puedes
             tocar cada celda para cambiar el estado.
           </Text>
@@ -300,7 +300,7 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ fontSize: 14, fontWeight: '700', color: '#475569' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '700', color: '#475569' }}>
                 Cancelar
               </Text>
             </Pressable>
@@ -320,7 +320,7 @@ const AddDateModal = ({ visible, existingDates, onAdd, onClose }) => {
               }}
             >
               <Plus size={16} color="#ffffff" strokeWidth={2.5} />
-              <Text style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
+              <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 14, fontWeight: '700', color: '#ffffff' }}>
                 Agregar Columna
               </Text>
             </Pressable>

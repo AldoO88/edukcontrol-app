@@ -114,7 +114,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                 >
                   <Eye size={20} color="#D97706" strokeWidth={2.25} />
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-3 text-slate-900 flex-1"
                   style={{ fontSize: 17, fontWeight: '700' }}
                   numberOfLines={2}
@@ -156,7 +156,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                     className="self-start px-3 py-1 rounded-full"
                     style={{ backgroundColor: '#0284C7' }}
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-white"
                       style={{
                         fontSize: 11,
@@ -167,7 +167,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                       {pedagogical.learningStyle}
                     </Text>
                   </View>
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="mt-2 text-slate-700"
                     style={{ fontSize: 13, fontWeight: '500' }}
                   >
@@ -175,7 +175,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                   </Text>
                 </>
               ) : (
-                <Text className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400" style={{ fontSize: 13, fontWeight: '500' }}>
                   Sin datos registrados
                 </Text>
               )}
@@ -227,7 +227,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                     color="#DC2626"
                     strokeWidth={2.25}
                   />
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="flex-1 ml-3 text-rose-900"
                     style={{ fontSize: 13, fontWeight: '600' }}
                   >
@@ -250,7 +250,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
                 paddingVertical: 12,
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-white"
                 style={{ fontSize: 14, fontWeight: '700' }}
               >
@@ -270,7 +270,7 @@ const InclusionModal = ({ isVisible, onClose, pedagogical }) => {
 
 // Title de sección: solo texto (uppercase, slate-500).
 const SectionTitle = ({ children }) => (
-  <Text
+  <Text maxFontSizeMultiplier={1.3}
     className="text-slate-500 mt-4 mb-2"
     style={{
       fontSize: 11,
@@ -298,7 +298,7 @@ const AlertList = ({ alerts, emptyText }) => {
           elevation: 1,
         }}
       >
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="text-slate-500"
           style={{ fontSize: 13, fontWeight: '600' }}
         >
@@ -343,13 +343,13 @@ const AlertList = ({ alerts, emptyText }) => {
               <Icon size={20} color={color} strokeWidth={2.25} />
             </View>
             <View className="flex-1 ml-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 13, fontWeight: '700' }}
               >
                 {alert.title}
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-0.5"
                 style={{ fontSize: 12, fontWeight: '500' }}
               >

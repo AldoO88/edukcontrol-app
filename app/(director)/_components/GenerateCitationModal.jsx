@@ -213,7 +213,7 @@ const TimeStepper = ({ value, onChange }) => {
       >
         <ChevronDown size={20} color="#64748B" strokeWidth={2.25} />
       </Pressable>
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="flex-1 text-center text-slate-900"
         style={{ fontSize: 14, fontWeight: '700' }}
       >
@@ -239,7 +239,7 @@ const TimeStepper = ({ value, onChange }) => {
 // Label de sección reutilizable (PASO 1, PASO 2, MOTIVO, etc.).
 // ---------------------------------------------------------------------
 const SectionLabel = ({ children, mt = 5 }) => (
-  <Text
+  <Text maxFontSizeMultiplier={1.3}
     className="text-slate-500 mb-2"
     style={{
       fontSize: 11,
@@ -529,7 +529,7 @@ const GenerateCitationModal = ({
                 >
                   <FileText size={20} color="#DC2626" strokeWidth={2.25} />
                 </View>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="ml-3 text-slate-900"
                   style={{ fontSize: 18, fontWeight: '700' }}
                   numberOfLines={1}
@@ -571,14 +571,14 @@ const GenerateCitationModal = ({
                   {isLoadingGroups ? (
                     <View className="py-8 items-center">
                       <ActivityIndicator size="small" color="#0284C7" />
-                      <Text className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-400 mt-2" style={{ fontSize: 12 }}>
                         Cargando grupos...
                       </Text>
                     </View>
                   ) : groups.length === 0 ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <Users size={24} color="#94A3B8" strokeWidth={2} />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         No hay grupos asignados
                       </Text>
                     </View>
@@ -624,7 +624,7 @@ const GenerateCitationModal = ({
                                   >
                                     <Users size={16} color="#0284C7" strokeWidth={2.25} />
                                   </View>
-                                  <Text
+                                  <Text maxFontSizeMultiplier={1.3}
                                     className="ml-2 text-slate-900"
                                     style={{ fontSize: 15, fontWeight: '700' }}
                                   >
@@ -637,7 +637,7 @@ const GenerateCitationModal = ({
                                       backgroundColor: isTaller ? '#FEF3C7' : '#F1F5F9',
                                     }}
                                   >
-                                    <Text
+                                    <Text maxFontSizeMultiplier={1.3}
                                       style={{
                                         fontSize: 10,
                                         fontWeight: '700',
@@ -653,7 +653,7 @@ const GenerateCitationModal = ({
                                 {subjectNames ? (
                                   <View className="flex-row items-center mt-1.5 ml-10">
                                     <BookOpen size={12} color="#64748B" strokeWidth={2} />
-                                    <Text
+                                    <Text maxFontSizeMultiplier={1.3}
                                       className="ml-1 text-slate-500"
                                       style={{ fontSize: 11, fontWeight: '500' }}
                                       numberOfLines={1}
@@ -662,7 +662,7 @@ const GenerateCitationModal = ({
                                     </Text>
                                   </View>
                                 ) : null}
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   className="ml-10 text-slate-400 mt-0.5"
                                   style={{ fontSize: 11 }}
                                 >
@@ -692,7 +692,7 @@ const GenerateCitationModal = ({
                     accessibilityRole="button"
                     accessibilityLabel="Volver a seleccionar grupo"
                   >
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-sky-600"
                       style={{ fontSize: 12, fontWeight: '600' }}
                     >
@@ -707,14 +707,14 @@ const GenerateCitationModal = ({
                   {isLoadingStudents ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <ActivityIndicator size="small" color="#0284C7" />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         Cargando alumnos...
                       </Text>
                     </View>
                   ) : selectedGroup.students?.length === 0 ? (
                     <View className="bg-white rounded-2xl p-6 items-center border border-slate-100">
                       <User size={24} color="#94A3B8" strokeWidth={2} />
-                      <Text className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
+                      <Text maxFontSizeMultiplier={1.3} className="text-slate-500 mt-2" style={{ fontSize: 13, fontWeight: '600' }}>
                         No hay alumnos en este grupo
                       </Text>
                     </View>
@@ -752,7 +752,7 @@ const GenerateCitationModal = ({
                               textColor="#0284C7"
                             />
                             <View className="ml-3 flex-1">
-                              <Text
+                              <Text maxFontSizeMultiplier={1.3}
                                 className="text-slate-900"
                                 style={{ fontSize: 14, fontWeight: '600' }}
                                 numberOfLines={1}
@@ -760,7 +760,7 @@ const GenerateCitationModal = ({
                                 {`${index + 1}. ${stu.last_name || ''} ${stu.first_name || ''}`}
                               </Text>
                               {isTaller && stu.originGroup && (
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   className="text-slate-400"
                                   style={{ fontSize: 11 }}
                                 >
@@ -801,14 +801,14 @@ const GenerateCitationModal = ({
                           textColor="#0284C7"
                         />
                         <View className="flex-1 ml-2">
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-900"
                             style={{ fontSize: 13, fontWeight: '700' }}
                             numberOfLines={1}
                           >
                             {resolvedStudent?.fullName || `${resolvedStudent?.last_name || ''} ${resolvedStudent?.first_name || ''}`}
                           </Text>
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-500"
                             style={{ fontSize: 11 }}
                           >
@@ -821,7 +821,7 @@ const GenerateCitationModal = ({
                           accessibilityRole="button"
                           accessibilityLabel="Cambiar alumno"
                         >
-                          <Text className="text-sky-600" style={{ fontSize: 11, fontWeight: '600' }}>
+                          <Text maxFontSizeMultiplier={1.3} className="text-sky-600" style={{ fontSize: 11, fontWeight: '600' }}>
                             Cambiar
                           </Text>
                         </Pressable>
@@ -842,12 +842,12 @@ const GenerateCitationModal = ({
                             >
                               <User size={13} color="#64748B" strokeWidth={2.25} />
                             </View>
-                            <Text
+                            <Text maxFontSizeMultiplier={1.3}
                               className="flex-1 ml-2 text-slate-700"
                               style={{ fontSize: 12 }}
                               numberOfLines={1}
                             >
-                              <Text
+                              <Text maxFontSizeMultiplier={1.3}
                                 className="text-slate-900"
                                 style={{ fontWeight: '700' }}
                               >
@@ -855,7 +855,7 @@ const GenerateCitationModal = ({
                               </Text>
                               {` (${resolvedStudent.guardian.relationship || 'Tutor'})`}
                             </Text>
-                            <Text
+                            <Text maxFontSizeMultiplier={1.3}
                               className="text-slate-500 ml-2"
                               style={{ fontSize: 11 }}
                             >
@@ -878,7 +878,7 @@ const GenerateCitationModal = ({
                       }}
                     >
                       <View className="flex-row items-center">
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           className="flex-1 text-slate-900"
                           style={{ fontSize: 14, fontWeight: '700' }}
                           numberOfLines={1}
@@ -890,7 +890,7 @@ const GenerateCitationModal = ({
                             className="px-2 py-1 rounded-full ml-2"
                             style={{ backgroundColor: '#FEE2E2' }}
                           >
-                            <Text
+                            <Text maxFontSizeMultiplier={1.3}
                               style={{
                                 fontSize: 11,
                                 fontWeight: '800',
@@ -903,7 +903,7 @@ const GenerateCitationModal = ({
                         ) : null}
                       </View>
 
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-slate-500 mt-1"
                         style={{ fontSize: 11 }}
                         numberOfLines={1}
@@ -925,12 +925,12 @@ const GenerateCitationModal = ({
                         >
                           <User size={13} color="#64748B" strokeWidth={2.25} />
                         </View>
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           className="flex-1 ml-2 text-slate-700"
                           style={{ fontSize: 12 }}
                           numberOfLines={1}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-900"
                             style={{ fontWeight: '700' }}
                           >
@@ -938,7 +938,7 @@ const GenerateCitationModal = ({
                           </Text>
                           {` (${student?.tutor?.relationship || 'Tutor'})`}
                         </Text>
-                        <Text
+                        <Text maxFontSizeMultiplier={1.3}
                           className="text-slate-500 ml-2"
                           style={{ fontSize: 11 }}
                         >
@@ -975,7 +975,7 @@ const GenerateCitationModal = ({
                             borderColor: isActive ? '#DC2626' : '#E2E8F0',
                           }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
@@ -1003,7 +1003,7 @@ const GenerateCitationModal = ({
                             borderColor: '#0284C7',
                           }}
                         >
-                          <Text style={{ fontSize: 12, fontWeight: '700', color: '#FFFFFF' }}>
+                          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 12, fontWeight: '700', color: '#FFFFFF' }}>
                             {selectedGroup.subjects[0].name}
                           </Text>
                         </View>
@@ -1025,7 +1025,7 @@ const GenerateCitationModal = ({
                                   borderColor: isActive ? '#0284C7' : '#E2E8F0',
                                 }}
                               >
-                                <Text
+                                <Text maxFontSizeMultiplier={1.3}
                                   style={{
                                     fontSize: 12,
                                     fontWeight: '700',
@@ -1103,7 +1103,7 @@ const GenerateCitationModal = ({
                             borderColor: isActive ? '#0284C7' : 'transparent',
                           }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 12,
                               fontWeight: '700',
@@ -1130,7 +1130,7 @@ const GenerateCitationModal = ({
                         borderColor: isCustomLocation ? '#0284C7' : 'transparent',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 12,
                           fontWeight: '700',
@@ -1144,7 +1144,7 @@ const GenerateCitationModal = ({
 
                   {/* Input de lugar personalizado — solo visible cuando "Otro lugar" está activo */}
                   {isCustomLocation && (
-                    <TextInput
+                    <TextInput maxFontSizeMultiplier={1.3}
                       value={customLocation}
                       onChangeText={(text) => {
                         setCustomLocation(text);
@@ -1166,7 +1166,7 @@ const GenerateCitationModal = ({
 
                   {/* OBSERVACIONES */}
                   <View className="flex-row items-center justify-between mt-5 mb-2">
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-slate-500"
                       style={{
                         fontSize: 11,
@@ -1177,14 +1177,14 @@ const GenerateCitationModal = ({
                     >
                       Observaciones
                     </Text>
-                    <Text
+                    <Text maxFontSizeMultiplier={1.3}
                       className="text-slate-400"
                       style={{ fontSize: 10, fontWeight: '600' }}
                     >
                       {`${reason.length} / 1000`}
                     </Text>
                   </View>
-                  <TextInput
+                  <TextInput maxFontSizeMultiplier={1.3}
                     value={reason}
                     onChangeText={setReason}
                     placeholder="Añade notas adicionales para el tutor..."
@@ -1226,7 +1226,7 @@ const GenerateCitationModal = ({
                     paddingVertical: 12,
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-slate-700"
                     style={{ fontSize: 13, fontWeight: '700' }}
                   >
@@ -1250,7 +1250,7 @@ const GenerateCitationModal = ({
                   ) : (
                     <>
                       <CheckCircle size={16} color="#ffffff" strokeWidth={2.25} />
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         className="text-white ml-2"
                         style={{ fontSize: 13, fontWeight: '700' }}
                       >

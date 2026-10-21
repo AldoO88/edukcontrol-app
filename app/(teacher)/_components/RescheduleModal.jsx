@@ -140,7 +140,7 @@ const TimeStepper = ({ value, onChange }) => {
       >
         <ChevronDown size={20} color="#64748B" strokeWidth={2.25} />
       </Pressable>
-      <Text
+      <Text maxFontSizeMultiplier={1.3}
         className="flex-1 text-center text-slate-900"
         style={{ fontSize: 14, fontWeight: '700' }}
       >
@@ -255,7 +255,7 @@ const RescheduleModal = ({
           >
             {/* HEADER */}
             <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 16, fontWeight: '700' }}
               >
@@ -277,7 +277,7 @@ const RescheduleModal = ({
               contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8 }}
             >
               {/* NUEVA FECHA */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mb-2"
                 style={{
                   fontSize: 11,
@@ -322,7 +322,7 @@ const RescheduleModal = ({
               </View>
 
               {/* NUEVA HORA */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-4 mb-2"
                 style={{
                   fontSize: 11,
@@ -336,7 +336,7 @@ const RescheduleModal = ({
               <TimeStepper value={newTime} onChange={setNewTime} />
 
               {/* NUEVO LUGAR */}
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-4 mb-2"
                 style={{
                   fontSize: 11,
@@ -367,7 +367,7 @@ const RescheduleModal = ({
                         borderColor: isActive ? '#0284C7' : 'transparent',
                       }}
                     >
-                      <Text
+                      <Text maxFontSizeMultiplier={1.3}
                         style={{
                           fontSize: 12,
                           fontWeight: '700',
@@ -394,7 +394,7 @@ const RescheduleModal = ({
                     borderColor: isCustomLocation ? '#0284C7' : 'transparent',
                   }}
                 >
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     style={{
                       fontSize: 12,
                       fontWeight: '700',
@@ -408,7 +408,7 @@ const RescheduleModal = ({
 
               {/* Input de lugar personalizado — solo visible cuando "Otro lugar" está activo */}
               {isCustomLocation && (
-                <TextInput
+                <TextInput maxFontSizeMultiplier={1.3}
                   value={customLocation}
                   onChangeText={(text) => {
                     setCustomLocation(text);
@@ -429,7 +429,7 @@ const RescheduleModal = ({
 
               {/* ERROR */}
               {submitError && (
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-rose-600 text-center mt-3"
                   style={{ fontSize: 12 }}
                 >
@@ -451,7 +451,7 @@ const RescheduleModal = ({
                 {isSubmitting ? (
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
-                  <Text
+                  <Text maxFontSizeMultiplier={1.3}
                     className="text-white"
                     style={{ fontSize: 14, fontWeight: '700' }}
                   >

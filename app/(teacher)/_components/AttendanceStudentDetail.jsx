@@ -131,14 +131,14 @@ const AttendanceStudentDetail = ({
               <User size={18} color="#B91C1C" strokeWidth={2.25} />
             </View>
             <View className="flex-1 ml-3">
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-900"
                 style={{ fontSize: 16, fontWeight: '700' }}
                 numberOfLines={1}
               >
                 {student?.fullName || 'Alumno'}
               </Text>
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="text-slate-500 mt-0.5"
                 style={{ fontSize: 12, fontWeight: '500' }}
                 numberOfLines={1}
@@ -169,7 +169,7 @@ const AttendanceStudentDetail = ({
               className="px-3 py-1.5 rounded-full"
               style={{ backgroundColor: '#FEE2E2' }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{
                   fontSize: 12,
                   fontWeight: '700',
@@ -193,7 +193,7 @@ const AttendanceStudentDetail = ({
             {loading && (
               <View className="items-center py-10">
                 <ActivityIndicator size="large" color="#0284C7" />
-                <Text className="text-slate-400 text-sm mt-3">
+                <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3">
                   Cargando historial...
                 </Text>
               </View>
@@ -202,7 +202,7 @@ const AttendanceStudentDetail = ({
             {/* Lista de historial. */}
             {!loading && history && (
               <>
-                <Text
+                <Text maxFontSizeMultiplier={1.3}
                   className="text-slate-500 mb-2"
                   style={{
                     fontSize: 11,
@@ -224,7 +224,7 @@ const AttendanceStudentDetail = ({
                   }}
                 >
                   {history.history.length === 0 && (
-                    <Text className="text-slate-400 text-center text-sm py-6">
+                    <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-center text-sm py-6">
                       No hay inasistencias registradas.
                     </Text>
                   )}
@@ -254,18 +254,18 @@ const AttendanceStudentDetail = ({
                             backgroundColor: style.bg,
                           }}
                         >
-                          <Text style={{ fontSize: 11 }}>{style.icon}</Text>
+                          <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 11 }}>{style.icon}</Text>
                         </View>
 
                         {/* Date + subject. */}
                         <View className="flex-1 ml-3">
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-900"
                             style={{ fontSize: 13, fontWeight: '600' }}
                           >
                             {item.date}
                           </Text>
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             className="text-slate-500 mt-0.5"
                             style={{ fontSize: 11, fontWeight: '500' }}
                           >
@@ -278,7 +278,7 @@ const AttendanceStudentDetail = ({
                           className="px-2 py-1 rounded-full"
                           style={{ backgroundColor: style.bg }}
                         >
-                          <Text
+                          <Text maxFontSizeMultiplier={1.3}
                             style={{
                               fontSize: 10,
                               fontWeight: '700',
@@ -314,7 +314,7 @@ const AttendanceStudentDetail = ({
               accessibilityLabel={`Crear citatorio para ${student?.fullName}`}
             >
               <AlertTriangle size={16} color="#FFFFFF" strokeWidth={2.25} />
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 className="ml-2"
                 style={{
                   fontSize: 14,

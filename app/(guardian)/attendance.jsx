@@ -132,7 +132,7 @@ export default function AttendanceScreen() {
         <DashboardHeader />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0f172a" />
-          <Text className="text-sm text-slate-500 mt-3 font-medium">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-3 font-medium">
             Cargando asistencia...
           </Text>
         </View>
@@ -150,10 +150,10 @@ export default function AttendanceScreen() {
         <View className="flex-1 items-center justify-center px-6">
           <View className="bg-white rounded-3xl p-6 items-center shadow-sm border border-rose-100">
             <AlertCircle size={32} color="#e11d48" strokeWidth={2} />
-            <Text className="text-sm font-semibold text-rose-700 mt-3 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-rose-700 mt-3 text-center">
               No se pudo cargar la asistencia
             </Text>
-            <Text className="text-xs text-slate-500 mt-1 text-center">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-500 mt-1 text-center">
               {error}
             </Text>
             <Pressable
@@ -163,7 +163,7 @@ export default function AttendanceScreen() {
               accessibilityLabel="Reintentar carga de asistencia"
             >
               <RefreshCw size={14} color="#ffffff" strokeWidth={2.5} />
-              <Text className="text-sm font-semibold text-white ml-1.5">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm font-semibold text-white ml-1.5">
                 Reintentar
               </Text>
             </Pressable>
@@ -200,10 +200,10 @@ export default function AttendanceScreen() {
             TÍTULO + SUBTÍTULO
             ============================================================ */}
         <View className="px-4 pt-6">
-          <Text className="text-3xl font-bold text-slate-900">
+          <Text maxFontSizeMultiplier={1.3} className="text-3xl font-bold text-slate-900">
             Asistencia
           </Text>
-          <Text className="text-sm text-slate-500 mt-1">
+          <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 mt-1">
             Registro de entradas, salidas y faltas.
           </Text>
         </View>
@@ -238,10 +238,10 @@ export default function AttendanceScreen() {
               />
 
               <View className="flex-row items-center justify-between w-full mt-5">
-                <Text className="text-xs font-semibold text-slate-500">
+                <Text maxFontSizeMultiplier={1.3} className="text-xs font-semibold text-slate-500">
                   Progreso del Ciclo Escolar
                 </Text>
-                <Text className={clsx('text-xs font-bold', progressColor)}>
+                <Text maxFontSizeMultiplier={1.3} className={clsx('text-xs font-bold', progressColor)}>
                   {summary?.progressLabel || 'Sin datos'}
                 </Text>
               </View>
@@ -285,7 +285,7 @@ export default function AttendanceScreen() {
             INASISTENCIAS RECIENTES
             ============================================================ */}
         <View className="flex-row items-center justify-between mt-7 px-5 mb-3">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Inasistencias recientes
           </Text>
           <Pressable
@@ -296,7 +296,7 @@ export default function AttendanceScreen() {
             accessibilityRole="link"
             accessibilityLabel="Ver calendario completo"
           >
-            <Text className="text-xs font-bold text-sky-600">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-sky-600">
               Ver Calendario
             </Text>
           </Pressable>
@@ -329,10 +329,10 @@ export default function AttendanceScreen() {
             ))
           ) : (
             <View className="bg-white rounded-2xl p-6 items-center">
-              <Text className="text-sm text-slate-500 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-sm text-slate-500 text-center">
                 Sin inasistencias recientes.
               </Text>
-              <Text className="text-xs text-slate-400 mt-1 text-center">
+              <Text maxFontSizeMultiplier={1.3} className="text-xs text-slate-400 mt-1 text-center">
                 ¡Puntaje perfecto de asistencia!
               </Text>
             </View>
@@ -343,7 +343,7 @@ export default function AttendanceScreen() {
             ENTRADAS Y SALIDAS
             ============================================================ */}
         <View className="flex-row items-center justify-between mt-7 px-5 mb-3">
-          <Text className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <Text maxFontSizeMultiplier={1.3} className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Entradas y Salidas
           </Text>
           <Pressable
@@ -354,7 +354,7 @@ export default function AttendanceScreen() {
             accessibilityRole="link"
             accessibilityLabel="Ver historial completo"
           >
-            <Text className="text-xs font-bold text-sky-600">
+            <Text maxFontSizeMultiplier={1.3} className="text-xs font-bold text-sky-600">
               Ver Historial
             </Text>
           </Pressable>

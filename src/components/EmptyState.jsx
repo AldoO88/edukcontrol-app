@@ -32,11 +32,11 @@ const EmptyState = ({
   return (
     <View className={clsx('items-center justify-center py-12 px-6', className)}>
       {Icon && <Icon size={iconSize} color={iconColor} strokeWidth={1.5} />}
-      <Text className="text-slate-400 text-sm mt-3 font-medium text-center">
+      <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-sm mt-3 font-medium text-center">
         {title}
       </Text>
       {message && (
-        <Text className="text-slate-400 text-xs mt-1 text-center">
+        <Text maxFontSizeMultiplier={1.3} className="text-slate-400 text-xs mt-1 text-center">
           {message}
         </Text>
       )}

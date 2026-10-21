@@ -142,7 +142,7 @@ export default function PrefectProfileScreen() {
                 borderColor: '#FDE68A',
               }}
             >
-              <Text
+              <Text maxFontSizeMultiplier={1.3}
                 style={{ fontSize: 32, fontWeight: '800', color: '#B45309' }}
               >
                 {initials}
@@ -150,14 +150,14 @@ export default function PrefectProfileScreen() {
             </View>
           </View>
 
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-4"
             style={{ fontSize: 20, fontWeight: '800', color: '#0F172A' }}
           >
             {fullName}
           </Text>
 
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-4 mt-1"
             style={{ fontSize: 13, fontWeight: '500', color: '#64748B' }}
           >
@@ -170,20 +170,20 @@ export default function PrefectProfileScreen() {
           >
             <View className="flex-row items-center py-1.5">
               <Phone size={16} color="#64748B" strokeWidth={2} />
-              <Text className="ml-3" style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}>
+              <Text maxFontSizeMultiplier={1.3} className="ml-3" style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}>
                 Tel: {dashboardData?.prefect?.phoneNumber || user?.phoneNumber || '—'}
               </Text>
             </View>
             <View style={{ height: 1, backgroundColor: '#E2E8F0' }} />
             <View className="flex-row items-center py-1.5">
               <Mail size={16} color="#64748B" strokeWidth={2} />
-              <Text className="ml-3" style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}>
+              <Text maxFontSizeMultiplier={1.3} className="ml-3" style={{ fontSize: 13, fontWeight: '600', color: '#334155' }}>
                 {dashboardData?.prefect?.email || user?.email || '—'}
               </Text>
             </View>
           </View>
 
-          <Text
+          <Text maxFontSizeMultiplier={1.3}
             className="text-center px-6 mt-4 pb-5"
             style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8', fontStyle: 'italic', lineHeight: 18 }}
           >
@@ -192,7 +192,7 @@ export default function PrefectProfileScreen() {
         </View>
 
         {/* SEGURIDAD Y CUENTA */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{ fontSize: 11, fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.5 }}
         >
@@ -219,7 +219,7 @@ export default function PrefectProfileScreen() {
         </View>
 
         {/* PREFERENCIAS */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{ fontSize: 11, fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.5 }}
         >
@@ -268,7 +268,7 @@ export default function PrefectProfileScreen() {
         </View>
 
         {/* SOPORTE */}
-        <Text
+        <Text maxFontSizeMultiplier={1.3}
           className="mx-4 mt-5 mb-2"
           style={{ fontSize: 11, fontWeight: '700', color: '#64748B', textTransform: 'uppercase', letterSpacing: 0.5 }}
         >
@@ -315,7 +315,7 @@ export default function PrefectProfileScreen() {
         </View>
 
         {/* VERSIÓN */}
-        <Text className="text-center mt-5" style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8' }}>
+        <Text maxFontSizeMultiplier={1.3} className="text-center mt-5" style={{ fontSize: 12, fontWeight: '500', color: '#94A3B8' }}>
           Versión: 1.0.1
         </Text>
 
@@ -334,7 +334,7 @@ export default function PrefectProfileScreen() {
         >
           <View className="flex-row items-center justify-center py-3.5">
             <LogOut size={18} color="#DC2626" strokeWidth={2.25} />
-            <Text className="ml-2" style={{ fontSize: 15, fontWeight: '700', color: '#DC2626' }}>
+            <Text maxFontSizeMultiplier={1.3} className="ml-2" style={{ fontSize: 15, fontWeight: '700', color: '#DC2626' }}>
               Cerrar Sesión
             </Text>
           </View>
@@ -359,11 +359,11 @@ const ProfileRow = ({ icon: Icon, iconBg, iconColor, label, trailing, onPress })
     >
       <Icon size={18} color={iconColor} strokeWidth={2.25} />
     </View>
-    <Text className="flex-1" style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }}>
+    <Text maxFontSizeMultiplier={1.3} className="flex-1" style={{ fontSize: 14, fontWeight: '600', color: '#0F172A' }}>
       {label}
     </Text>
     {trailing || (
-      <Text style={{ fontSize: 16, color: '#CBD5E1' }}>›</Text>
+      <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 16, color: '#CBD5E1' }}>›</Text>
     )}
   </Pressable>
 );
