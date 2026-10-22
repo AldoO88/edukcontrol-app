@@ -166,6 +166,18 @@ export const AuthProvider = ({ children }) => {
     return { success: true, user: result.user };
   }, [persistSession]);
 
+  // loginWithApple — Sign in with Apple (Guideline 4.8). Mismo camino
+  // que login(): llama al backend (/auth/apple) con el identityToken
+  // y persiste la sesión con persistSession (SecureStore + cache del
+  // user + header axios + estado React). Al setear user, los Redirect
+  // declarativos de index.jsx redirigen al dashboard del rol solos.
+  const loginWithApple = useCallback(async (identityToken, remember) => {
+    const result = await authService.loginWithApple(identityToken, remember);
+    if (!result.success) return result;
+    await persistSession(result.authToken, result.user, result.refreshToken);
+    return { success: true, user: result.user };
+  }, [persistSession]);
+
   // setSession — usado por activación de cuenta y otros flows que ya
   // tienen tokens del backend. Devuelve { success, user } igual que
   // login() para que el caller pueda leer user.role (set-password
@@ -211,13 +223,14 @@ export const AuthProvider = ({ children }) => {
     () => ({
       user,
       login,
+      loginWithApple,
       logout,
       setSession,
       isLoading,
       isAuthenticated: !!user,
       userRole: user?.role || null,
     }),
-    [user, login, logout, setSession, isLoading],
+    [user, login, loginWithApple, logout, setSession, isLoading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

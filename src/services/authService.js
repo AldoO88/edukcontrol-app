@@ -81,6 +81,54 @@ export const login = async (phone, password, remember) => {
 };
 
 // =====================================================================
+// loginWithApple: POST /auth/apple con el identityToken de Sign in
+// with Apple (Guideline 4.8 del App Store Review: ofrecer un login de
+// terceros equivalente al OTP de WhatsApp).
+// Devuelve la MISMA forma que login() ({ success, user, authToken,
+// refreshToken, message }) para que AuthContext persista la sesión con
+// el mismo camino (persistSession) y los gates de rol existentes
+// redijan igual.
+//
+// Errores: `errorMessage` traduce status; los 403/409 del backend
+// traen mensaje en español listo para pintar en el Alert del hook
+// ("Tu institución no tiene una cuenta con este correo de Apple...").
+// =====================================================================
+export const loginWithApple = async (identityToken, remember) => {
+  try {
+    // Timeout 45s por la misma razón que login(): cold start de Render.
+    const response = await api.post(
+      '/auth/apple',
+      {
+        identityToken,
+        remember: !!remember,
+        client: 'app',
+      },
+      { timeout: 45000 },
+    );
+    const { authToken, refreshToken } = response.data || {};
+    if (!authToken) {
+      return { success: false, message: 'Respuesta inválida del servidor.' };
+    }
+    const payload = decodeJwtPayload(authToken);
+    const user = payloadToAppUser(payload);
+    if (!user) {
+      return { success: false, message: 'Token inválido o expirado.' };
+    }
+    return {
+      success: true,
+      user,
+      authToken,
+      refreshToken: remember ? refreshToken : null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: errorMessage(error, 'No fue posible iniciar sesión con Apple.'),
+    };
+  }
+};
+
+// =====================================================================
 // refresh: POST /auth/refresh con el refresh actual. Devuelve el par
 // nuevo. Si falla (inválido/expirado/reusado), AuthContext decide
 // cerrar sesión.
@@ -134,6 +182,7 @@ export const changePassword = async (currentPassword, newPassword) => {
 
 const authService = {
   login,
+  loginWithApple,
   refresh,
   verify,
   changePassword,

@@ -10,8 +10,12 @@
 //     título "Bienvenido", inputs, "Recordar mi sesión", botón
 //     submit, link "¿Olvidaste tu contraseña?", divisor y link
 //     "¿Es tu primera vez?".
+//   - Opción de login alternativo: botón NATIVO "Sign in with
+//     Apple" (Guideline 4.8 del App Store Review — ver detalle
+//     en el bloque correspondiente más abajo). Solo se pinta en
+//     dispositivos con disponibilidad (iOS 13+), nunca en Android.
 //   - Delegar TODO el estado y la lógica al hook useLoginForm
-//     (validación, submit, errores inline).
+//     (validación, submit, errores inline, flujo con Apple).
 //   - Mostrar el spinner durante el submit (loading prop del Button).
 //   - NO navega tras éxito: el AuthGate del layout raíz detecta el
 //     cambio de user y hace Redirect a /dashboard automáticamente.
@@ -24,8 +28,9 @@
 //   hace falta lógica de UI adicional aquí.
 // =====================================================================
 
-// React.
-import React, { useState } from 'react';
+// React: useState para el checkbox y la disponibilidad de Apple;
+// useEffect para consultar isAvailableAsync una sola vez al montar.
+import React, { useState, useEffect } from 'react';
 
 // Primitivas RN: View (card + checkbox), Text, Pressable.
 import { View, Text, Pressable } from 'react-native';
@@ -58,6 +63,14 @@ import TextField from '../../src/components/TextField';
 import PasswordField from '../../src/components/PasswordField';
 import Button from '../../src/components/Button';
 
+// Sign in with Apple (Guideline 4.8): botón nativo del sistema
+// (ASAuthorizationAppleIDButton) que Apple exige como opción de login
+// equivalente cuando un tercero (WhatsApp/OTP) participa en la creación
+// o verificación de la cuenta. El botón del sistema cumple solo con las
+// reglas de branding de Apple (título, logo, colores aprobados) — no
+// hay que dibujarlo a mano.
+import * as AppleAuthentication from 'expo-apple-authentication';
+
 // Constantes de color para los iconos de los inputs. Sacarlas a
 // constantes locales evita magic numbers repetidos y deja claro
 // que son parte del sistema visual del login (no del sistema global).
@@ -78,6 +91,48 @@ export default function LoginForm() {
   // Sin marcar, solo persistimos el access token (15 min) — al
   // expirar, la app vuelve al login.
   const [rememberMe, setRememberMe] = useState(false);
+
+  // Disponibilidad de Sign in with Apple. isAvailableAsync() da true
+  // en iOS 13+ y false en Android/web — con eso basta para renderizar
+  // el botón SOLO donde tiene sentido (la Guideline 4.8 es del App
+  // Store; en Google Play no existe requisito equivalente porque ahí
+  // no hay OTP de WhatsApp como servicio de login... de todos modos
+  // el requisito es de la tienda que está revisando: iOS).
+  const [appleAvailable, setAppleAvailable] = useState(false);
+
+  // Guard de doble-tap mientras el sheet de Apple o el POST /auth/apple
+  // están en vuelo (el botón nativo no acepta "disabled", así que el
+  // guard es en onPress).
+  const [appleBusy, setAppleBusy] = useState(false);
+
+  // Chequeo único de disponibilidad al montar. Si falla (no debería),
+  // dejamos el botón oculto: mejor no mostrar una opción muerta.
+  useEffect(() => {
+    let cancelled = false;
+    AppleAuthentication.isAvailableAsync()
+      .then((ok) => {
+        if (!cancelled) setAppleAvailable(!!ok);
+      })
+      .catch(() => {
+        // Sin disponibilidad confirmada → sin botón (silencio).
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // onPress del botón nativo de Apple. Pasa el MISMO checkbox
+  // "Recordar mi sesión" que el submit normal: si está marcado, el
+  // backend emite el refresh de 30 días igual que con teléfono+password.
+  const handleApplePress = async () => {
+    if (appleBusy || form.isSubmitting) return;
+    setAppleBusy(true);
+    try {
+      await form.handleSubmitApple(rememberMe);
+    } finally {
+      setAppleBusy(false);
+    }
+  };
 
   return (
     // ------------------------------------------------------------
@@ -236,6 +291,44 @@ export default function LoginForm() {
           ¿Olvidaste tu contraseña?
         </Text>
       </Pressable>
+
+      {/* ----------------------------------------------------
+          LOGIN ALTERNATIVO: SIGN IN WITH APPLE
+          (Guideline 4.8 — App Store Review)
+          ----------------------------------------------------
+          Contexto: la app usa WhatsApp/Twilio (tercero) para crear
+          y verificar cuentas (OTP de activación y recuperación),
+          así que Apple exige ofrecer además una opción de login de
+          terceros equivalente que: (1) solo recolecte nombre y
+          correo, (2) permita ocultar el correo, (3) no rastree
+          interacciones para publicidad. Sign in with Apple cumple
+          los tres (lo indica el propio mensaje de review).
+
+          - Botón NATIVO del sistema (no un Pressable con texto):
+            cumple las reglas de branding de Apple automáticamente.
+          - gated por appleAvailable: iOS 13+ solamente; en Android
+            este bloque no se pinta (el requisito es de la tienda
+            que revisa, App Store).
+          - cornerRadius/style: el radius va por prop (NO backgroundColor
+            ni borderRadius en style — contra las guías de Apple).
+          - height/width obligatorios: sin ellos el botón no renderiza.
+          - onPress → handleApplePress → form.handleSubmitApple
+            (sheet nativo → identityToken → POST /auth/apple).
+          ---------------------------------------------------- */}
+      {appleAvailable && (
+        <>
+          {/* Divisor de apertura del bloque Apple. */}
+          <View className="border-t border-slate-200 my-4" />
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={8}
+            style={{ width: '100%', height: 48 }}
+            onPress={handleApplePress}
+            accessibilityLabel="Continuar con Apple"
+          />
+        </>
+      )}
 
       {/* ----------------------------------------------------
           DIVISOR
