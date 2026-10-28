@@ -4,7 +4,8 @@
 // Pantalla 2/3 del flujo de activación: verificación del código OTP.
 // URL: /activation/verify
 //
-// El usuario ingresa el código de 6 dígitos que recibió por WhatsApp y
+// El usuario ingresa el código de 6 dígitos que recibió por SMS
+// (o WhatsApp, si dio consentimiento) y
 // presiona "Verificar código". Mock: simula la validación y navega
 // a la pantalla de creación de contraseña.
 //
@@ -184,7 +185,7 @@ export default function VerifyScreen() {
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Código de verificación"
-            subtitle="Hemos enviado un código de 6 dígitos por WhatsApp a tu celular."
+            subtitle="Hemos enviado un código de 6 dígitos por SMS a tu celular."
           >
             {/* Input OTP.
                 - label "CÓDIGO" UPPERCASE con labelClassName.
@@ -193,7 +194,7 @@ export default function VerifyScreen() {
                 - maxLength={6}.
                 - autoComplete="one-time-code" + textContentType=
                   "oneTimeCode": iOS/Android sugieren automáticamente
-                  el código recibido por WhatsApp. Es la mejor UX posible
+                  el código recibido por SMS. Es la mejor UX posible
                   para OTP. */}
             <TextField
               label="CÓDIGO"

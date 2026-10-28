@@ -6,7 +6,7 @@
 // URL: /forgot-password
 //
 // El usuario ingresa el número de 10 dígitos asociado a su cuenta y
-// presiona "Enviar código por WhatsApp". Llama a:
+// presiona "Enviar código". Llama a:
 //   POST /auth/forgot-password/request  { phone }
 // Response 200: { message, expiresAt }  ← el expiresAt se usa para
 //   mostrar un countdown de 10 minutos.
@@ -176,7 +176,7 @@ export default function ForgotPasswordIndexScreen() {
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Recuperar contraseña"
-            subtitle="Ingresa el número de celular asociado a tu cuenta. Te enviaremos un código por WhatsApp."
+            subtitle="Ingresa el número de celular asociado a tu cuenta. Te enviaremos un código por SMS."
           >
             {/* CAMPO: TELÉFONO */}
             <TextField
@@ -214,9 +214,10 @@ export default function ForgotPasswordIndexScreen() {
               </View>
             )}
 
-            {/* Botón "Enviar código por WhatsApp" */}
+            {/* Botón "Enviar código" — el código llega por SMS
+                (siempre) y por WhatsApp si hay consentimiento. */}
             <Button
-              title="Enviar código por WhatsApp"
+              title="Enviar código"
               onPress={handleSendCode}
               loading={isLoading}
               disabled={!isValid || isLoading}
@@ -225,7 +226,7 @@ export default function ForgotPasswordIndexScreen() {
               iconSize={20}
               iconColor="#ffffff"
               className="mt-4"
-              accessibilityLabel="Botón enviar código por WhatsApp"
+              accessibilityLabel="Botón enviar código de verificación"
             />
 
             {/* Divisor + link Cancelar. */}
