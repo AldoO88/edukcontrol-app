@@ -46,24 +46,31 @@ const ENDPOINTS = {
 };
 
 // ---------------------------------------------------------------------
-// requestActivationOtp(phone)
+// requestActivationOtp(phone, options)
+//   options.deliveryChannel: 'sms' | 'whatsapp' — refleja el selector
+//   de la pantalla 1 (radio de canal); se manda como `delivery_channel`.
 // ---------------------------------------------------------------------
 // POST /auth/request-activation
-// Body: { phone: string }  (el server también acepta "phoneNumber")
+// Body: { phone: string, delivery_channel?: 'sms' | 'whatsapp' }
 // Response 200: { message, expiresAt }  (ISO 8601 string)
 // Errores comunes:
 //   400 → número con formato inválido
 //   404 → número no registrado en la institución
 //   429 → rate limit (5/hora por IP)
-export const requestActivationOtp = async (phone) => {
+export const requestActivationOtp = async (phone, options = {}) => {
   try {
     // Timeout 30s (el default de api.js es 15s): el backend ESPERA el
-    // envío del WhatsApp de Meta antes de responder, y ese send externo
-    // fácilmente rebasa 15 s. Con 30s evitamos el falso "sin conexión"
-    // mientras el código sí se envía.
+    // envío del SMS/WhatsApp de Twilio antes de responder, y ese send
+    // externo fácilmente rebasa 15 s. Con 30s evitamos el falso
+    // "sin conexión" mientras el código sí se envía.
     const response = await api.post(
       ENDPOINTS.requestOtp,
-      { phone },
+      {
+        phone,
+        ...(options.deliveryChannel
+          ? { delivery_channel: options.deliveryChannel }
+          : {}),
+      },
       { timeout: 30000 },
     );
     const { message, expiresAt } = response.data || {};

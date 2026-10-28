@@ -75,6 +75,8 @@ export default function VerifyScreen() {
   // el param no existirá y caemos al login.
   const params = useLocalSearchParams();
   const phone = typeof params.phone === 'string' ? params.phone : '';
+  // Canal elegido en la pantalla 1 (para subtítulo y reenvío).
+  const channel = typeof params.channel === 'string' ? params.channel : 'sms';
 
   const [code, setCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -145,7 +147,9 @@ export default function VerifyScreen() {
     if (isResending) return;
     setIsResending(true);
     try {
-      const result = await requestActivationOtp(phone);
+      const result = await requestActivationOtp(phone, {
+        deliveryChannel: channel,
+      });
       if (!result.success) {
         Alert.alert('No se pudo reenviar', result.message);
       } else {
@@ -185,7 +189,11 @@ export default function VerifyScreen() {
         <View className="w-full max-w-sm">
           <ActivationCard
             title="Código de verificación"
-            subtitle="Hemos enviado un código de 6 dígitos por SMS a tu celular."
+            subtitle={
+              channel === 'whatsapp'
+                ? 'Hemos enviado un código de 6 dígitos por WhatsApp a tu celular.'
+                : 'Hemos enviado un código de 6 dígitos por SMS a tu celular.'
+            }
           >
             {/* Input OTP.
                 - label "CÓDIGO" UPPERCASE con labelClassName.

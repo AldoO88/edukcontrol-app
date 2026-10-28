@@ -47,18 +47,29 @@ const ENDPOINTS = {
 };
 
 // ---------------------------------------------------------------------
-// requestReset(phone)
+// requestReset(phone, options)
+//   options.deliveryChannel: 'sms' | 'whatsapp' — refleja el selector
+//   de la pantalla 1 (radio de canal); se manda como `delivery_channel`.
 // ---------------------------------------------------------------------
 // POST /auth/forgot-password/request
-// Body: { phone: string }
+// Body: { phone: string, delivery_channel?: 'sms' | 'whatsapp' }
 // Response 200: { message, expiresAt }  (ISO 8601 string)
 // Errores comunes:
 //   400 → número con formato inválido
 //   404 → número no registrado
 //   429 → rate limit (5/hora por IP)
-export const requestReset = async (phone) => {
+export const requestReset = async (phone, options = {}) => {
   try {
-    const response = await api.post(ENDPOINTS.request, { phone });
+    const response = await api.post(
+      ENDPOINTS.request,
+      {
+        phone,
+        ...(options.deliveryChannel
+          ? { delivery_channel: options.deliveryChannel }
+          : {}),
+      },
+      { timeout: 30000 },
+    );
     const { message, expiresAt } = response.data || {};
     return {
       success: true,

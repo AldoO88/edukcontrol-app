@@ -44,6 +44,9 @@ import BrandHeader from '../../_components/BrandHeader';
 // Card del flow de activación (mismo look que el LoginForm).
 import ActivationCard from '../_components/ActivationCard';
 
+// Selector de canal de entrega del OTP (radio SMS/WhatsApp).
+import DeliveryChannelSelector from '../_components/DeliveryChannelSelector';
+
 // Servicio de activación: requestActivationOtp.
 import { requestActivationOtp } from '../../../src/services/activationService';
 
@@ -78,6 +81,8 @@ const formatCountdown = (totalSeconds) => {
 export default function PhoneInputScreen() {
   const router = useRouter();
   const [phone, setPhone] = useState('');
+  // Canal de entrega del OTP (radio exclusivo): 'sms' (default) | 'whatsapp'.
+  const [channel, setChannel] = useState('sms');
   const [isLoading, setIsLoading] = useState(false);
   // expiresAt: timestamp (ms) hasta el cual el código es válido.
   // null hasta que el backend responda con uno.
@@ -146,7 +151,9 @@ export default function PhoneInputScreen() {
     if (!isValid || isLoading) return;
     setIsLoading(true);
     try {
-      const result = await requestActivationOtp(phone);
+      const result = await requestActivationOtp(phone, {
+        deliveryChannel: channel,
+      });
 
       if (!result.success) {
         Alert.alert('No se pudo enviar el código', result.message);
@@ -168,7 +175,7 @@ export default function PhoneInputScreen() {
       // el número o reenviar el código.
       router.push({
         pathname: '/activation/verify',
-        params: { phone },
+        params: { phone, channel },
       });
       // No reseteamos isLoading: la pantalla 2 se monta y esta
       // se desmonta. Resetear aquí causaría un flash de UI.
@@ -228,6 +235,13 @@ export default function PhoneInputScreen() {
               textContentType="telephoneNumber"
               accessibilityLabel="Campo de teléfono"
             />
+
+            {/* Selector de canal de entrega (radio exclusivo
+                SMS/WhatsApp). Default SMS — el canal nativo que no
+                exige instalar nada (Guideline 4.2.3(i)). Elegir
+                WhatsApp equivale a dar consentimiento; el backend lo
+                persiste y además el SMS queda como respaldo. */}
+            <DeliveryChannelSelector value={channel} onChange={setChannel} />
 
             {/* Countdown timer: solo se muestra cuando hay un código
                 pendiente (expiresAt !== null). Mismo estilo que el

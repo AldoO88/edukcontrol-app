@@ -43,6 +43,9 @@ import BrandHeader from '../../_components/BrandHeader';
 // Card del flow (mismo look que el LoginForm).
 import ActivationCard from '../_components/ActivationCard';
 
+// Selector de canal de entrega del OTP (radio SMS/WhatsApp).
+import DeliveryChannelSelector from '../_components/DeliveryChannelSelector';
+
 // Servicio de recuperación de contraseña.
 import { requestReset } from '../../../src/services/passwordResetService';
 
@@ -74,6 +77,8 @@ const formatCountdown = (totalSeconds) => {
 export default function ForgotPasswordIndexScreen() {
   const router = useRouter();
   const [phone, setPhone] = useState('');
+  // Canal de entrega del OTP (radio exclusivo): 'sms' (default) | 'whatsapp'.
+  const [channel, setChannel] = useState('sms');
   const [isLoading, setIsLoading] = useState(false);
   const [expiresAt, setExpiresAt] = useState(null);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
@@ -128,7 +133,9 @@ export default function ForgotPasswordIndexScreen() {
     if (!isValid || isLoading) return;
     setIsLoading(true);
     try {
-      const result = await requestReset(phone);
+      const result = await requestReset(phone, {
+        deliveryChannel: channel,
+      });
 
       if (!result.success) {
         Alert.alert('No se pudo enviar el código', result.message);
@@ -145,7 +152,7 @@ export default function ForgotPasswordIndexScreen() {
       // Éxito: navegamos a la pantalla 2 pasando el phone.
       router.push({
         pathname: '/forgot-password/verify',
-        params: { phone },
+        params: { phone, channel },
       });
     } catch (error) {
       console.error('[ForgotPassword index] Error inesperado:', error);
@@ -195,6 +202,10 @@ export default function ForgotPasswordIndexScreen() {
               textContentType="telephoneNumber"
               accessibilityLabel="Campo de teléfono"
             />
+
+            {/* Selector de canal de entrega (radio exclusivo
+                SMS/WhatsApp). Default SMS — sin instalar nada extra. */}
+            <DeliveryChannelSelector value={channel} onChange={setChannel} />
 
             {/* Countdown timer: solo cuando hay un código pendiente. */}
             {expiresAt && remainingSeconds > 0 && (
