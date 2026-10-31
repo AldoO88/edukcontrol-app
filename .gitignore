@@ -48,3 +48,7 @@ yarn-error.*
 /ios
 /android
 builds/
+
+# Artefactos de herramientas locales (OpenCode)
+.agents/
+skills-lock.json
