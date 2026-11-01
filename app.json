@@ -10,14 +10,14 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "net.edukcontrol.app",
-      "buildNumber": "6",
+      "buildNumber": "7",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "net.edukcontrol.app",
-      "versionCode": 6,
+      "versionCode": 7,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "backgroundColor": "#0f172a",
