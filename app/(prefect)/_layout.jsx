@@ -32,6 +32,11 @@ import { roleHomeHref } from '../../src/utils/roleRoutes';
 // Hook de push notifications.
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
+// Banner de permiso de notificaciones denegado (Fase 4): se pinta en el
+// top del layout cuando el hook queda en status='denied' y ofrece el
+// salto a Ajustes del sistema con openSettings().
+import PushPermissionBanner from '../../src/components/PushPermissionBanner';
+
 // ---------------------------------------------------------------------
 // Splash: mismo estilo que en el resto de layouts.
 // ---------------------------------------------------------------------
@@ -49,8 +54,9 @@ function RootSplash() {
 export default function PrefectLayout() {
   const { user, isLoading } = useAuth();
 
-  // Push notifications: solo cuando hay user logueado.
-  usePushNotifications(!!user);
+  // Push notifications: solo cuando hay user logueado. Capturamos el
+  // status para poder pintar PushPermissionBanner (Fase 4).
+  const { status: pushStatus } = usePushNotifications(!!user);
 
   // Mientras carga, splash.
   if (isLoading) {
@@ -75,31 +81,37 @@ export default function PrefectLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        animation: 'slide_from_right',
-      }}
-    >
-      {/* Tabs root: contiene TODO el flujo del prefecto (Inicio,
-          Grupos, Alumnos, Maestros, Perfil). */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <View className="flex-1 bg-slate-50">
+      {/* Banner de permiso denegado (Fase 4): solo pinta con
+          status='denied'; ocupa el top y empuja el Stack hacia abajo. */}
+      <PushPermissionBanner status={pushStatus} />
 
-      {/* Feed screens — accesibles desde quick actions del dashboard,
-          NO viven en (tabs)/ porque no son visibles en la bottom tab bar. */}
-      <Stack.Screen name="announcements" options={{ headerShown: false }} />
-      <Stack.Screen name="citations" options={{ headerShown: false }} />
-      <Stack.Screen name="reports" options={{ headerShown: false }} />
-      <Stack.Screen name="exit-passes" options={{ headerShown: false }} />
-      <Stack.Screen name="attendance-summary" options={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          animation: 'slide_from_right',
+        }}
+      >
+        {/* Tabs root: contiene TODO el flujo del prefecto (Inicio,
+            Grupos, Alumnos, Maestros, Perfil). */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-      {/* Pantallas de detalle — header off. */}
-      <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="citations/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="reports/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="exit-passes/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="groups/[groupId]" options={{ headerShown: false }} />
-      <Stack.Screen name="students/[studentId]" options={{ headerShown: false }} />
-      <Stack.Screen name="teachers/[teacherId]" options={{ headerShown: false }} />
-    </Stack>
+        {/* Feed screens — accesibles desde quick actions del dashboard,
+            NO viven en (tabs)/ porque no son visibles en la bottom tab bar. */}
+        <Stack.Screen name="announcements" options={{ headerShown: false }} />
+        <Stack.Screen name="citations" options={{ headerShown: false }} />
+        <Stack.Screen name="reports" options={{ headerShown: false }} />
+        <Stack.Screen name="exit-passes" options={{ headerShown: false }} />
+        <Stack.Screen name="attendance-summary" options={{ headerShown: false }} />
+
+        {/* Pantallas de detalle — header off. */}
+        <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="citations/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="reports/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="exit-passes/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="groups/[groupId]" options={{ headerShown: false }} />
+        <Stack.Screen name="students/[studentId]" options={{ headerShown: false }} />
+        <Stack.Screen name="teachers/[teacherId]" options={{ headerShown: false }} />
+      </Stack>
+    </View>
   );
 }

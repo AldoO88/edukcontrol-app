@@ -16,6 +16,7 @@
 // =====================================================================
 
 import { useEffect, useRef, useState } from 'react';
+import { AppState } from 'react-native';
 import * as Device from 'expo-device';
 import { useRouter } from 'expo-router';
 
@@ -80,6 +81,15 @@ export const usePushNotifications = (enabled = true) => {
   const tokenSubscriptionRef = useRef(null);
   const notificationSubscriptionRef = useRef(null);
   const responseSubscriptionRef = useRef(null);
+
+  // Ref del status actual: los listeners (p.ej. AppState) capturan
+  // closures del mount del effect y verían un status stale si leen el
+  // state directamente. Se sincroniza en un effect (no en render) para
+  // no escribir refs durante el render.
+  const statusRef = useRef(status);
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   useEffect(() => {
     if (!enabled) {
@@ -222,9 +232,38 @@ export const usePushNotifications = (enabled = true) => {
 
     setup();
 
+    // ----------------------------------------------------------------
+    // LISTENER: retorno de Ajustes del sistema con el permiso recién
+    // activado (corazón del banner de Fase 4).
+    // ----------------------------------------------------------------
+    // PushPermissionBanner manda al usuario a Ajustes con openSettings().
+    // Al volver, iOS SUSPENDE y reanuda la app (no la reinicia): este
+    // effect NO se re-ejecuta, status seguiría en 'denied' y — lo peor —
+    // el token NUNCA se registraría aunque el permiso ya esté concedido.
+    // Detectamos el regreso a foreground y, solo si estábamos en
+    // 'denied', re-evaluamos el setup completo (permiso → token →
+    // backend). Si sigue denegado, setup() vuelve a 'denied' y no hay
+    // bucle: el listener solo salta en transiciones de AppState.
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      (nextState) => {
+        if (
+          nextState === 'active' &&
+          !cancelled &&
+          statusRef.current === 'denied'
+        ) {
+          console.log(
+            '[push] Foreground con permisos denegados — reintentando setup (¿cambio en Ajustes?)'
+          );
+          setup();
+        }
+      }
+    );
+
     // Cleanup.
     return () => {
       cancelled = true;
+      appStateSubscription.remove();
       if (tokenSubscriptionRef.current) {
         tokenSubscriptionRef.current.remove();
         tokenSubscriptionRef.current = null;

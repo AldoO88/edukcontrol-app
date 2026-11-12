@@ -13,6 +13,10 @@ import { useAuth } from '../../src/hooks/useAuth';
 // de bucle de este gate).
 import { roleHomeHref } from '../../src/utils/roleRoutes';
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
+// Banner de permiso de notificaciones denegado (Fase 4): se pinta en el
+// top del layout cuando el hook queda en status='denied' y ofrece el
+// salto a Ajustes del sistema con openSettings().
+import PushPermissionBanner from '../../src/components/PushPermissionBanner';
 
 function RootSplash() {
   return (
@@ -28,7 +32,8 @@ function RootSplash() {
 export default function DirectorLayout() {
   const { user, isLoading } = useAuth();
 
-  usePushNotifications(!!user);
+  // Capturamos el status para pintar PushPermissionBanner (Fase 4).
+  const { status: pushStatus } = usePushNotifications(!!user);
 
   if (isLoading) {
     return <RootSplash />;
@@ -51,22 +56,28 @@ export default function DirectorLayout() {
   }
 
   return (
-    <Stack screenOptions={{ animation: 'slide_from_right' }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="announcements" options={{ headerShown: false }} />
-      <Stack.Screen name="citations" options={{ headerShown: false }} />
-      <Stack.Screen name="reports" options={{ headerShown: false }} />
-      <Stack.Screen name="exit-passes" options={{ headerShown: false }} />
-      <Stack.Screen name="attendance-summary" options={{ headerShown: false }} />
-      <Stack.Screen name="justificantes" options={{ headerShown: false }} />
-      <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="citations/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="reports/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="exit-passes/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="groups/[groupId]" options={{ headerShown: false }} />
-      <Stack.Screen name="students/[studentId]" options={{ headerShown: false }} />
-      <Stack.Screen name="student-health/[studentId]" options={{ headerShown: false }} />
-      <Stack.Screen name="teachers/[teacherId]" options={{ headerShown: false }} />
-    </Stack>
+    <View className="flex-1 bg-slate-50">
+      {/* Banner de permiso denegado (Fase 4): solo pinta con
+          status='denied'; ocupa el top y empuja el Stack hacia abajo. */}
+      <PushPermissionBanner status={pushStatus} />
+
+      <Stack screenOptions={{ animation: 'slide_from_right' }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="announcements" options={{ headerShown: false }} />
+        <Stack.Screen name="citations" options={{ headerShown: false }} />
+        <Stack.Screen name="reports" options={{ headerShown: false }} />
+        <Stack.Screen name="exit-passes" options={{ headerShown: false }} />
+        <Stack.Screen name="attendance-summary" options={{ headerShown: false }} />
+        <Stack.Screen name="justificantes" options={{ headerShown: false }} />
+        <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="citations/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="reports/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="exit-passes/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="groups/[groupId]" options={{ headerShown: false }} />
+        <Stack.Screen name="students/[studentId]" options={{ headerShown: false }} />
+        <Stack.Screen name="student-health/[studentId]" options={{ headerShown: false }} />
+        <Stack.Screen name="teachers/[teacherId]" options={{ headerShown: false }} />
+      </Stack>
+    </View>
   );
 }

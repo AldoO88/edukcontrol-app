@@ -314,6 +314,14 @@ export default function LoginForm() {
           - height/width obligatorios: sin ellos el botón no renderiza.
           - onPress → handleApplePress → form.handleSubmitApple
             (sheet nativo → identityToken → POST /auth/apple).
+          - SIN accessibilityLabel hardcodeado (fix a11y, Fase 4): el
+            botón NATIVO ya trae label de VoiceOver "localized and
+            accessible" de fábrica (docs de expo-apple-authentication),
+            o sea que SIEMPRE coincide con el texto visible en el idioma
+            del dispositivo. El "Continuar con Apple" que se puso aquí en
+            b4b0cc0 se desincronizaba del título renderizado en cualquier
+            idioma distinto del español (VoiceOver leía una cosa y el ojo
+            veía otra).
           ---------------------------------------------------- */}
       {appleAvailable && (
         <>
@@ -325,7 +333,6 @@ export default function LoginForm() {
             cornerRadius={8}
             style={{ width: '100%', height: 48 }}
             onPress={handleApplePress}
-            accessibilityLabel="Continuar con Apple"
           />
         </>
       )}

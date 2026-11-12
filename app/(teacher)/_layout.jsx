@@ -55,6 +55,11 @@ import { roleHomeHref } from '../../src/utils/roleRoutes';
 // Hook de push notifications (mismo patrón que el antiguo (app) layout).
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
+// Banner de permiso de notificaciones denegado (Fase 4): se pinta en el
+// top del layout cuando el hook queda en status='denied' y ofrece el
+// salto a Ajustes del sistema con openSettings().
+import PushPermissionBanner from '../../src/components/PushPermissionBanner';
+
 // ---------------------------------------------------------------------
 // Splash: mismo estilo que en app/index.jsx.
 // ---------------------------------------------------------------------
@@ -72,8 +77,9 @@ function RootSplash() {
 export default function TeacherLayout() {
   const { user, isLoading } = useAuth();
 
-  // Push notifications: solo cuando hay user logueado.
-  usePushNotifications(!!user);
+  // Push notifications: solo cuando hay user logueado. Capturamos el
+  // status para poder pintar PushPermissionBanner (Fase 4).
+  const { status: pushStatus } = usePushNotifications(!!user);
 
   // Mientras carga, splash.
   if (isLoading) {
@@ -97,26 +103,32 @@ export default function TeacherLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        animation: 'slide_from_right',
-      }}
-    >
-      {/* Tabs root: contiene TODO el flujo del maestro (Inicio, Mis
-          Grupos, Calificaciones, Perfil) con stacks anidados para
-          drill-down. Ver app/(teacher)/(tabs)/_layout.jsx. */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <View className="flex-1 bg-slate-50">
+      {/* Banner de permiso denegado (Fase 4): solo pinta con
+          status='denied'; ocupa el top y empuja el Stack hacia abajo. */}
+      <PushPermissionBanner status={pushStatus} />
 
-      {/* Top-level routes (placeholders / quick actions). */}
-      <Stack.Screen name="announcements" options={{ headerShown: false }} />
-      <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="attendance" options={{ headerShown: false }} />
-      <Stack.Screen name="citations" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="citations/[id]"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="schedule" options={{ headerShown: false }} />
-    </Stack>
+      <Stack
+        screenOptions={{
+          animation: 'slide_from_right',
+        }}
+      >
+        {/* Tabs root: contiene TODO el flujo del maestro (Inicio, Mis
+            Grupos, Calificaciones, Perfil) con stacks anidados para
+            drill-down. Ver app/(teacher)/(tabs)/_layout.jsx. */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+        {/* Top-level routes (placeholders / quick actions). */}
+        <Stack.Screen name="announcements" options={{ headerShown: false }} />
+        <Stack.Screen name="announcements/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="attendance" options={{ headerShown: false }} />
+        <Stack.Screen name="citations" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="citations/[id]"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="schedule" options={{ headerShown: false }} />
+      </Stack>
+    </View>
   );
 }

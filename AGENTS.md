@@ -345,6 +345,15 @@ const { expoPushToken, status, error, lastNotification, lastNotificationResponse
 | `unsupported` | Simulador o falta `extra.eas.projectId` |
 | `error` | Error inesperado (red, server, etc.) |
 
+### Banner de permiso denegado (`PushPermissionBanner`)
+
+Cuando el hook queda en `status: 'denied'` (el usuario rechazó el prompt del sistema), los **5 layouts de rol** (`(guardian)`, `(teacher)`, `(director)`, `(prefect)`, `(social-worker)`) pintan `src/components/PushPermissionBanner.jsx` en el top de su layout (fuera del `<Stack>`, empujando el contenido):
+
+- Explica que sin permiso no llegan pushes de asistencia/citatorios/avisos al celular.
+- Botón **"Abrir Ajustes"** → `openSettings()` de `expo-linking` (en iOS el prompt NO se puede volver a mostrar una vez denegado — solo vuelve a evaluarse en estado *undetermined* —, así que Ajustes es el único camino; en Android 13+ con "no volver a preguntar" pasa lo mismo).
+- Descartable con la X; el estado vive en el componente, así que reaparece al re-entrar al grupo.
+- **Recuperación de token:** el hook escucha `AppState` y, al volver a foreground con status `'denied'`, re-ejecuta el setup completo — si el usuario activó el permiso en Ajustes, se obtiene y registra el token y el banner desaparece solo. Sin ese listener el usuario que activaba en Ajustes seguía sin token para siempre (era el hueco de la campaña de adopción de tutores).
+
 ### Limitaciones de Expo Go
 
 - **Android:** push remotos NO funcionan en Expo Go desde SDK 53+. Necesita dev build (`eas build --profile development`).

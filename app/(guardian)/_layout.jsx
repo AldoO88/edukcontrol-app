@@ -40,6 +40,11 @@ import { roleHomeHref } from '../../src/utils/roleRoutes';
 // Hook de push notifications (mismo patrón que el antiguo (app) layout).
 import { usePushNotifications } from '../../src/hooks/usePushNotifications';
 
+// Banner de permiso de notificaciones denegado (Fase 4): se pinta en el
+// top del layout cuando el hook queda en status='denied' y ofrece el
+// salto a Ajustes del sistema con openSettings().
+import PushPermissionBanner from '../../src/components/PushPermissionBanner';
+
 // ---------------------------------------------------------------------
 // Splash: mismo estilo que en app/index.jsx.
 // ---------------------------------------------------------------------
@@ -57,8 +62,9 @@ function RootSplash() {
 export default function GuardianLayout() {
   const { user, isLoading } = useAuth();
 
-  // Push notifications: solo cuando hay user logueado.
-  usePushNotifications(!!user);
+  // Push notifications: solo cuando hay user logueado. Capturamos el
+  // status para poder pintar PushPermissionBanner (Fase 4).
+  const { status: pushStatus } = usePushNotifications(!!user);
 
   // Mientras carga, splash.
   if (isLoading) {
@@ -87,20 +93,26 @@ export default function GuardianLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        animation: 'slide_from_right',
-      }}
-    >
-      <Stack.Screen name="dashboard" options={{ headerShown: false }} />
-      <Stack.Screen name="announcements" options={{ headerShown: false }} />
-      <Stack.Screen name="announcements/[kind]/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="conduct" options={{ headerShown: false }} />
-      <Stack.Screen name="conduct/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="grades" options={{ headerShown: false }} />
-      <Stack.Screen name="attendance" options={{ headerShown: false }} />
-      <Stack.Screen name="profile" options={{ headerShown: false }} />
-      <Stack.Screen name="profile/change-password" options={{ headerShown: false }} />
-    </Stack>
+    <View className="flex-1 bg-slate-50">
+      {/* Banner de permiso denegado (Fase 4): solo pinta con
+          status='denied'; ocupa el top y empuja el Stack hacia abajo. */}
+      <PushPermissionBanner status={pushStatus} />
+
+      <Stack
+        screenOptions={{
+          animation: 'slide_from_right',
+        }}
+      >
+        <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+        <Stack.Screen name="announcements" options={{ headerShown: false }} />
+        <Stack.Screen name="announcements/[kind]/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="conduct" options={{ headerShown: false }} />
+        <Stack.Screen name="conduct/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="grades" options={{ headerShown: false }} />
+        <Stack.Screen name="attendance" options={{ headerShown: false }} />
+        <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="profile/change-password" options={{ headerShown: false }} />
+      </Stack>
+    </View>
   );
 }
